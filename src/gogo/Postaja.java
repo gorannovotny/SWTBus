@@ -17,14 +17,14 @@ public class Postaja {
 			ps0.setInt(1, stupacID);
 			String smjer = DbUtil.getSingleResultString(ps0);
 			ps0.close();
-			StringBuffer sql1 = new StringBuffer("SELECT c.ZapSt,e.Naziv from PTStupciVR a,PTVarijanteVR b,PTPostajeVarijantVR c,PTPostajeVR d,PTPostaje e where a.VarijantaVRID = b.ID and   c.VarijantaID = b.ID and   c.NodePostajeVRID = d.ID and   d.PostajaID = e.id and   a.id = ? ORDER BY 1");
+			StringBuffer sql1 = new StringBuffer("SELECT c.ZapSt,e.Naziv,c.DistancaM from PTStupciVR a,PTVarijanteVR b,PTPostajeVarijantVR c,PTPostajeVR d,PTPostaje e where a.VarijantaVRID = b.ID and   c.VarijantaID = b.ID and   c.NodePostajeVRID = d.ID and   d.PostajaID = e.id and   a.id = ? ORDER BY 1");
 			if (smjer.equals("-"))
 				sql1.append(" DESC");
 			PreparedStatement ps = con.prepareStatement(sql1.toString());
 			ps.setInt(1, stupacID);
 			ResultSet rs = ps.executeQuery();
 			while (rs.next()) {
-				nazivList.add(rs.getString(2));
+				nazivList.add(rs.getString(2) + " " + Integer.toString(rs.getInt(3))+ "m");
 				zapStList.add(rs.getInt(1));
 			}
 		} catch (SQLException e) {
