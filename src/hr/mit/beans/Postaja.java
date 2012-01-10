@@ -1,4 +1,6 @@
-package gogo;
+package hr.mit.beans;
+
+import hr.mit.utils.DbUtil;
 
 import java.sql.Connection;
 import java.sql.PreparedStatement;
@@ -10,7 +12,7 @@ public class Postaja {
 	ArrayList<String> nazivList = new ArrayList<String>();
 	ArrayList<Integer> zapStList = new ArrayList<Integer>();
 
-	Postaja(Connection con, Integer stupacID) {
+	public Postaja(Connection con, Integer stupacID) {
 		try {
 			String sql0 = "SELECT smerVoznje FROM PTStupciVR WHERE ID = ?";
 			PreparedStatement ps0 = con.prepareStatement(sql0);
@@ -32,7 +34,7 @@ public class Postaja {
 		}
 	}
 
-	String[] getPostaje() {
+	public String[] getPostaje() {
 		return nazivList.toArray(new String[0]);
 	}
 

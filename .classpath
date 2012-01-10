@@ -8,7 +8,6 @@
 	<classpathentry kind="lib" path="/opt/eclipse/plugins/org.eclipse.equinox.registry_3.5.101.R37x_v20110810-1611.jar" sourcepath="/opt/eclipse/plugins/org.eclipse.equinox.registry_3.5.101.R37x_v20110810-1611.jar"/>
 	<classpathentry kind="lib" path="/opt/eclipse/plugins/org.eclipse.core.runtime_3.7.0.v20110110.jar" sourcepath="/opt/eclipse/plugins/org.eclipse.core.runtime_3.7.0.v20110110.jar"/>
 	<classpathentry kind="lib" path="/opt/eclipse/plugins/org.eclipse.text_3.5.101.r371_v20110810-0800.jar" sourcepath="/opt/eclipse/plugins/org.eclipse.text_3.5.101.r371_v20110810-0800.jar"/>
-	<classpathentry kind="lib" path="/opt/eclipse/plugins/org.eclipse.swt.gtk.linux.x86_64_3.7.1.v3738a.jar" sourcepath="/home/goran/JavaLibs/SWT/src.zip"/>
 	<classpathentry kind="lib" path="/opt/eclipse/plugins/org.eclipse.jface_3.7.0.I20110522-1430.jar" sourcepath="/opt/eclipse/plugins/org.eclipse.jface_3.7.0.I20110522-1430.jar"/>
 	<classpathentry kind="lib" path="/opt/eclipse/plugins/org.eclipse.jface.text_3.7.1.r371_v20110825-0800.jar" sourcepath="/opt/eclipse/plugins/org.eclipse.jface.text_3.7.1.r371_v20110825-0800.jar"/>
 	<classpathentry kind="lib" path="/opt/eclipse/plugins/org.eclipse.ui.workbench_3.7.0.I20110519-0100.jar" sourcepath="/opt/eclipse/plugins/org.eclipse.ui.workbench_3.7.0.I20110519-0100.jar"/>
@@ -19,6 +18,7 @@
 	<classpathentry kind="lib" path="/opt/eclipse/plugins/org.eclipse.core.databinding.observable_1.4.0.I20110222-0800.jar" sourcepath="/opt/eclipse/plugins/org.eclipse.core.databinding.observable_1.4.0.I20110222-0800.jar"/>
 	<classpathentry kind="lib" path="/opt/eclipse/plugins/org.eclipse.core.databinding.property_1.4.0.I20110222-0800.jar" sourcepath="/opt/eclipse/plugins/org.eclipse.core.databinding.property_1.4.0.I20110222-0800.jar"/>
 	<classpathentry kind="lib" path="/opt/eclipse/plugins/org.eclipse.jface.databinding_1.5.0.I20100907-0800.jar" sourcepath="/opt/eclipse/plugins/org.eclipse.jface.databinding_1.5.0.I20100907-0800.jar"/>
-	<classpathentry kind="lib" path="/opt/DbVisualizer-8.0.6/jdbc/sqlite/sqlite.jar"/>
+	<classpathentry kind="var" path="SWT_LIB"/>
+	<classpathentry kind="var" path="SQLITE_LIB"/>
 	<classpathentry kind="output" path="bin"/>
 </classpath>
