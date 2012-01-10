@@ -13,7 +13,7 @@ public class DbUtil {
 		if (con == null) {
 			try {
 				Class.forName("org.sqlite.JDBC");
-				con = DriverManager.getConnection("jdbc:sqlite:/home/goran/work/MitMobile/sqlite.db");
+				con = DriverManager.getConnection("jdbc:sqlite:sqlite.db");
 			} catch (Exception e) {
 				e.printStackTrace();
 			}
