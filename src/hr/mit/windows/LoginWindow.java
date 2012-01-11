@@ -1,5 +1,10 @@
 package hr.mit.windows;
 
+import java.sql.SQLException;
+
+import hr.mit.Starter;
+import hr.mit.beans.Stupac;
+import hr.mit.beans.Vozac;
 import hr.mit.beans.VozniRed;
 import hr.mit.utils.DbUtil;
 
@@ -12,25 +17,31 @@ import org.eclipse.swt.widgets.Display;
 import org.eclipse.swt.widgets.Label;
 import org.eclipse.swt.widgets.Shell;
 import org.eclipse.wb.swt.SWTResourceManager;
+import org.eclipse.swt.events.ModifyListener;
+import org.eclipse.swt.events.ModifyEvent;
 
 public class LoginWindow {
 
 	protected Shell shlPrijava;
 	private Label lblPrijava;
-	private Label lblVoza;
+	private Label lblVozac;
 	private Label lblVozilo;
 	private Label lblLinija;
 	private Label lblPolazak;
-	private Combo combo;
-	private Combo combo_1;
-	private Combo combo_2;
-	private Combo combo_3;
+	private Combo comboVozac;
+	private Combo comboVozilo;
+	private Combo comboLinija;
+	private Combo comboPolazak;
 	private Button button;
 
 	private VozniRed vozniRed;
+	private Vozac vozac;
+	private Stupac polazak;
 
 	public LoginWindow() {
-		vozniRed = new VozniRed(DbUtil.getConnection());
+		vozniRed = new VozniRed();
+		vozac = new Vozac(DbUtil.getConnection());
+		polazak = new Stupac(DbUtil.getConnection());
 	}
 
 	/**
@@ -59,16 +70,18 @@ public class LoginWindow {
 			lblPrijava.setText("Prijava");
 		}
 		{
-			lblVoza = new Label(shlPrijava, SWT.NONE);
-			lblVoza.setAlignment(SWT.RIGHT);
-			lblVoza.setFont(SWTResourceManager.getFont("Liberation Sans", 30, SWT.NORMAL));
-			lblVoza.setBounds(40, 184, 180, 44);
-			lblVoza.setText("Vozač");
+			lblVozac = new Label(shlPrijava, SWT.NONE);
+			lblVozac.setAlignment(SWT.RIGHT);
+			lblVozac.setFont(SWTResourceManager.getFont("Liberation Sans", 30, SWT.NORMAL));
+			lblVozac.setBounds(40, 184, 180, 44);
+			lblVozac.setText("Vozač");
 		}
 		{
-			combo = new Combo(shlPrijava, SWT.READ_ONLY);
-			combo.setFont(SWTResourceManager.getFont("Liberation Sans", 30, SWT.NORMAL));
-			combo.setBounds(230, 184, 380, 44);
+			comboVozac = new Combo(shlPrijava, SWT.READ_ONLY);
+			comboVozac.setFont(SWTResourceManager.getFont("Liberation Sans", 30, SWT.NORMAL));
+			comboVozac.setBounds(230, 184, 380, 44);
+			comboVozac.setItems(vozac.getList());
+			comboVozac.select(0);
 		}
 		{
 			lblVozilo = new Label(shlPrijava, SWT.NONE);
@@ -78,9 +91,9 @@ public class LoginWindow {
 			lblVozilo.setText("Vozilo");
 		}
 		{
-			combo_1 = new Combo(shlPrijava, SWT.READ_ONLY);
-			combo_1.setFont(SWTResourceManager.getFont("Liberation Sans", 30, SWT.NORMAL));
-			combo_1.setBounds(230, 238, 187, 44);
+			comboVozilo = new Combo(shlPrijava, SWT.READ_ONLY);
+			comboVozilo.setFont(SWTResourceManager.getFont("Liberation Sans", 30, SWT.NORMAL));
+			comboVozilo.setBounds(230, 238, 187, 44);
 		}
 		{
 			lblLinija = new Label(shlPrijava, SWT.NONE);
@@ -90,11 +103,10 @@ public class LoginWindow {
 			lblLinija.setText("Linija");
 		}
 		{
-			combo_2 = new Combo(shlPrijava, SWT.READ_ONLY);
-			combo_2.setFont(SWTResourceManager.getFont("Liberation Sans", 20, SWT.NORMAL));
-			combo_2.setBounds(230, 292, 530, 47);
-			combo_2.setItems(vozniRed.getVozniRedi());
-			combo_2.select(0);
+			comboLinija = new Combo(shlPrijava, SWT.READ_ONLY);
+			comboLinija.addModifyListener(new Combo_2ModifyListener());
+			comboLinija.setFont(SWTResourceManager.getFont("Liberation Sans", 20, SWT.NORMAL));
+			comboLinija.setBounds(230, 292, 530, 47);
 		}
 		{
 			lblPolazak = new Label(shlPrijava, SWT.NONE);
@@ -104,9 +116,11 @@ public class LoginWindow {
 			lblPolazak.setText("Polazak");
 		}
 		{
-			combo_3 = new Combo(shlPrijava, SWT.READ_ONLY);
-			combo_3.setFont(SWTResourceManager.getFont("Liberation Sans", 30, SWT.NORMAL));
-			combo_3.setBounds(230, 346, 187, 44);
+			comboPolazak = new Combo(shlPrijava, SWT.READ_ONLY);
+			comboPolazak.setFont(SWTResourceManager.getFont("Liberation Sans", 30, SWT.NORMAL));
+			comboPolazak.setBounds(230, 346, 187, 44);
+			comboLinija.setItems(vozniRed.getList());
+			comboLinija.select(0);
 		}
 		{
 			button = new Button(shlPrijava, SWT.NONE);
@@ -120,7 +134,24 @@ public class LoginWindow {
 
 	private class ButtonSelectionListener extends SelectionAdapter {
 		public void widgetSelected(SelectionEvent e) {
+			Starter.vozacID = vozac.getVozacID(comboVozac.getSelectionIndex());
+			Starter.stupacID = polazak.getPolazakID(comboPolazak.getSelectionIndex());
 			shlPrijava.dispose();
+		}
+	}
+
+	private class Combo_2ModifyListener implements ModifyListener {
+		public void modifyText(ModifyEvent arg0) {
+			if (comboPolazak != null) {
+				try {
+					comboPolazak.setItems(polazak.getList(vozniRed.getID(comboLinija.getSelectionIndex())));
+				} catch (SQLException e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+				}
+				comboPolazak.select(0);
+			}
+
 		}
 	}
 }

@@ -43,4 +43,9 @@ public class DbUtil {
 		return retval;
 	}
 
+	public static String getHHMM(Double time) {
+		Integer hours = (int) (time * 24);
+		Integer mins = (int) ((time * 24 - hours)*60);
+		return String.format("%02d", hours) + ":" + String.format("%02d", mins);
+	}
 }
