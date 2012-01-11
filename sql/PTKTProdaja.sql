@@ -1,0 +1,10 @@
+DROP TABLE PTKTProdaja;
+CREATE TABLE PTKTProdaja ( ID INT NOT NULL , Firma INT NOT NULL, DokumentProdajeID INT, VrsticaProdajeID INT, DokumentBlagajneID INT, BUSProdajaID INT, Datum DATETIME, Vreme DATETIME, VoznaKartaID INT, Code VARCHAR(20) , BRVoznji INT, Cena FLOAT(53), Popust1ID INT, Popust2ID INT, Popust3ID INT, PCenaKarte FLOAT(53), NCenaKarte FLOAT(53), Popust FLOAT(53), ZaPlatiti FLOAT(53), PorezProcent INT, ProdajnoMestoID INT, PrevoznikID INT, VrstaPosadeID INT, Vozac1ID INT, Vozac2ID INT, Vozac3ID INT, Blagajnik INT, Blagajna INT, StupacID INT, OdPostajeID INT, DoPostajeID INT, VoziloID INT, Rezervacija INT, StatusZK INT, KmLinijeVR INT, KmDomaci INT, KmIno INT, BRPutnika INT, BRKarata INT, MobStrojID INT, GUID VARCHAR(40) , CONSTRAINT PK_PTKTProdajaKartiID PRIMARY KEY (ID) );
+CREATE INDEX IX_PTKTProdajaDokumetProdajeID ON PTKTProdaja (DokumentProdajeID);
+CREATE INDEX IX_PTKTProdajaGUID ON PTKTProdaja (GUID);
+CREATE INDEX IX_PTKTPrometProdajeBlagajna ON PTKTProdaja (DokumentBlagajneID);
+CREATE INDEX IX_PTKTPrometProdajeCode ON PTKTProdaja (Code);
+CREATE INDEX IX_PTKTPrometProdajeDatum ON PTKTProdaja (Datum);
+CREATE INDEX IX_PTKTPrometProdajeFirma ON PTKTProdaja (Firma);
+CREATE INDEX IX_PTKTPrometProdajeOdPostajeDo ON PTKTProdaja (OdPostajeID, DoPostajeID);
+CREATE INDEX IX_PTKTPrometProdajeStupac ON PTKTProdaja (StupacID);
