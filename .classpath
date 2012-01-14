@@ -22,5 +22,6 @@
 	<classpathentry kind="var" path="SWT_LIB"/>
 	<classpathentry kind="var" path="SQLITE_LIB"/>
 	<classpathentry kind="con" path="org.eclipse.jdt.junit.JUNIT_CONTAINER/4"/>
+	<classpathentry kind="var" path="MSSQL_LIB"/>
 	<classpathentry kind="output" path="bin"/>
 </classpath>
