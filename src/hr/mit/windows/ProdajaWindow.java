@@ -1,8 +1,6 @@
 package hr.mit.windows;
 
 import hr.mit.beans.Postaja;
-import hr.mit.utils.DbUtil;
-
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.events.ModifyEvent;
 import org.eclipse.swt.events.SelectionAdapter;
