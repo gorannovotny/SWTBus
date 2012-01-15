@@ -11,9 +11,11 @@ import java.util.ArrayList;
 public class Stupac {
 	ArrayList<String> nazivList = new ArrayList<String>();
 	ArrayList<Integer> idList = new ArrayList<Integer>();
+	Connection con;
 	PreparedStatement ps;
 
 	public Stupac(Connection con) {
+		this.con = con;
 		try {
 			String sql = "SELECT id,vremeOdhoda FROM PTStupciVR WHERE VozniRedID = ? ORDER BY 2";
 			ps = con.prepareStatement(sql);
@@ -36,9 +38,11 @@ public class Stupac {
 	}
 
 	public Integer getPolazakID(int selectionIndex) {
-		if (selectionIndex >= 0)
+		if (selectionIndex >= 0) {
 			return idList.get(selectionIndex);
+		}
 		else
 			return new Integer(-1);
 	}
+	
 }

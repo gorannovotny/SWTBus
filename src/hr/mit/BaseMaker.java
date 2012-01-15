@@ -20,17 +20,17 @@ public class BaseMaker {
 			con2 = DriverManager.getConnection("jdbc:sqlite:test.db");
 			con2.setAutoCommit(false);
 
-			 doPTVozniRedi(con1, con2);
-			 doPTVarijanteVR(con1, con2);
-			 doPTStupciVR(con1, con2);
-			 doPTPostaje(con1, con2);
-			 doPTPostajeVR(con1, con2);
-			 doPTPostajeVarijantVR(con1, con2);
-			 doPTCasiVoznjeVR(con1, con2);
-			 doPTKTVozneKarte(con1, con2);
-			 doPTVozaci(con1, con2);
-			 doPTKTTarifniRazrediCenik(con1, con2);
-			 doPTKTVrstePopustov(con1, con2);
+			doPTVozniRedi(con1, con2);
+			doPTVarijanteVR(con1, con2);
+			doPTStupciVR(con1, con2);
+			doPTPostaje(con1, con2);
+			doPTPostajeVR(con1, con2);
+			doPTPostajeVarijantVR(con1, con2);
+			doPTCasiVoznjeVR(con1, con2);
+			doPTKTVozneKarte(con1, con2);
+			doPTVozaci(con1, con2);
+			doPTKTTarifniRazrediCenik(con1, con2);
+			doPTKTVrstePopustov(con1, con2);
 			doPTIzjemeCenikaVR(con1, con2);
 			doPTKTProdaja(con1, con2);
 		} catch (Exception e) {
@@ -40,7 +40,7 @@ public class BaseMaker {
 				con2.close();
 			if (con1 != null)
 				con1.close();
-			System.out.println(String.format("Trajanje: %d ms",(System.currentTimeMillis() - stoperica)));
+			System.out.println(String.format("Trajanje: %d ms", (System.currentTimeMillis() - stoperica)));
 		}
 
 	}
@@ -81,7 +81,7 @@ public class BaseMaker {
 		}
 		ps.executeBatch();
 		con2.commit();
-		System.out.println("PTVozniRedi -> " + i);
+		System.out.println(String.format("%20s -> %7d","PTVozniRedi",i));
 		rs.close();
 		ps.close();
 	}
@@ -106,7 +106,7 @@ public class BaseMaker {
 		}
 		ps.executeBatch();
 		con2.commit();
-		System.out.println("PTVarijanteVR -> " + i);
+		System.out.println(String.format("%20s -> %7d","PTVarijanteVR",i));
 		rs.close();
 		ps.close();
 	}
@@ -144,7 +144,7 @@ public class BaseMaker {
 		}
 		ps.executeBatch();
 		con2.commit();
-		System.out.println("PTStupciVR -> " + i);
+		System.out.println(String.format("%20s -> %7d","PTStupciVR",i));
 		rs.close();
 		ps.close();
 	}
@@ -175,7 +175,7 @@ public class BaseMaker {
 		}
 		ps.executeBatch();
 		con2.commit();
-		System.out.println("PTPostajeVarijantVR -> " + i);
+		System.out.println(String.format("%20s -> %7d","PTPostajeVarijantVR",i));
 		rs.close();
 		ps.close();
 	}
@@ -203,7 +203,7 @@ public class BaseMaker {
 		}
 		ps.executeBatch();
 		con2.commit();
-		System.out.println("PTPostajeVR -> " + i);
+		System.out.println(String.format("%20s -> %7d","PTPostajeVR",i));
 		rs.close();
 		ps.close();
 	}
@@ -227,7 +227,7 @@ public class BaseMaker {
 		}
 		ps.executeBatch();
 		con2.commit();
-		System.out.println("PTPostaje -> " + i);
+		System.out.println(String.format("%20s -> %7d","PTPostaje",i));
 		rs.close();
 		ps.close();
 	}
@@ -255,7 +255,7 @@ public class BaseMaker {
 		}
 		ps.executeBatch();
 		con2.commit();
-		System.out.println("PTCasiVoznjeVR " + i);
+		System.out.println(String.format("%20s -> %7d","PTCasiVoznjeVR",i));
 		rs.close();
 		ps.close();
 	}
@@ -295,7 +295,7 @@ public class BaseMaker {
 		}
 		ps.executeBatch();
 		con2.commit();
-		System.out.println("PTKTVozneKarte " + i);
+		System.out.println(String.format("%20s -> %7d","PTKTVozneKarte",i));
 		rs.close();
 		ps.close();
 	}
@@ -319,7 +319,7 @@ public class BaseMaker {
 		}
 		ps.executeBatch();
 		con2.commit();
-		System.out.println("PTVozaci " + i);
+		System.out.println(String.format("%20s -> %7d","PTVozaci",i));
 		rs.close();
 		ps.close();
 	}
@@ -343,7 +343,7 @@ public class BaseMaker {
 		}
 		ps.executeBatch();
 		con2.commit();
-		System.out.println("PTKTTarifniRazrediCenik " + i);
+		System.out.println(String.format("%20s -> %7d","PTKTTarifniRazrediCenik",i));
 		rs.close();
 		ps.close();
 	}
@@ -369,7 +369,7 @@ public class BaseMaker {
 		}
 		ps.executeBatch();
 		con2.commit();
-		System.out.println("PTKTVrstePopustov " + i);
+		System.out.println(String.format("%20s -> %7d","PTKTVrstePopustov",i));
 		rs.close();
 		ps.close();
 	}
@@ -398,7 +398,7 @@ public class BaseMaker {
 		}
 		ps.executeBatch();
 		con2.commit();
-		System.out.println("PTIzjemeCenikaVR " + i);
+		System.out.println(String.format("%-20s -> %7d","PTIzjemeCenikaVR",i));
 		rs.close();
 		ps.close();
 	}
@@ -410,7 +410,7 @@ public class BaseMaker {
 				.executeUpdate(
 						"CREATE TABLE PTKTProdaja(ID INT NOT NULL ,Firma INT NOT NULL,DokumentProdajeID INT,VrsticaProdajeID INT,DokumentBlagajneID INT,BUSProdajaID INT,Datum DATETIME,Vreme DATETIME,VoznaKartaID INT,Code VARCHAR(20) ,BRVoznji INT,Cena FLOAT(53),Popust1ID INT,Popust2ID INT,Popust3ID INT,PCenaKarte FLOAT(53),NCenaKarte FLOAT(53),Popust FLOAT(53),ZaPlatiti FLOAT(53),PorezProcent INT,ProdajnoMestoID INT,PrevoznikID INT,VrstaPosadeID INT,Vozac1ID INT,Vozac2ID INT,Vozac3ID INT,Blagajnik INT,Blagajna INT,StupacID INT,OdPostajeID INT,DoPostajeID INT,VoziloID INT,Rezervacija INT,StatusZK INT,KmLinijeVR INT,KmDomaci INT,KmIno INT,BRPutnika INT,BRKarata INT,MobStrojID INT,GUID VARCHAR(40) ,PRIMARY KEY (ID))");
 		con2.commit();
-		System.out.println("PTKTProdaja " + i);
+		System.out.println(String.format("%-20s -> %7d","PTKTProdaja",i));
 	}
 
 }
