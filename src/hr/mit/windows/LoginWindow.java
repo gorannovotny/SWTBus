@@ -3,7 +3,7 @@ package hr.mit.windows;
 import java.sql.SQLException;
 
 import hr.mit.Starter;
-import hr.mit.beans.Stupac;
+import hr.mit.beans.StupacList;
 import hr.mit.beans.Vozac;
 import hr.mit.beans.VozniRed;
 import hr.mit.utils.DbUtil;
@@ -36,12 +36,12 @@ public class LoginWindow {
 
 	private VozniRed vozniRed;
 	private Vozac vozac;
-	private Stupac polazak;
+	private StupacList polazak;
 
 	public LoginWindow() {
 		vozniRed = new VozniRed();
 		vozac = new Vozac(DbUtil.getConnection());
-		polazak = new Stupac(DbUtil.getConnection());
+		polazak = new StupacList(DbUtil.getConnection());
 	}
 
 	/**

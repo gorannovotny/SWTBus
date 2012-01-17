@@ -6,6 +6,7 @@ import java.util.Date;
 
 import hr.mit.beans.Postaja;
 import hr.mit.beans.Stupac;
+import hr.mit.beans.StupacList;
 
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.events.ModifyEvent;
@@ -24,18 +25,19 @@ public class ProdajaWindow implements SelectionListener {
 
 	protected Shell shell;
 	private Text txtHello;
-	private Postaja p;
-	private Combo combo_1;
+	private Postaja postaja;
+	private Combo comboOdPostaje;
+	private Combo comboDoPostaje;
 
 	Integer vozacID;
-	Integer stupacID;
+	Stupac stupac;
 	private Label lblClock;
-	private Label lblNewLabel;
+	private Label lblPolazak;
 
 	public ProdajaWindow(Integer vozacID, Integer stupacID) {
 		this.vozacID = vozacID;
-		this.stupacID = stupacID;
-		this.p = new Postaja(stupacID);
+		stupac = new Stupac(stupacID);
+		postaja = new Postaja(stupacID);
 	}
 
 	/**
@@ -48,7 +50,7 @@ public class ProdajaWindow implements SelectionListener {
 		shell.layout();
 		display.timerExec(1000, new Runnable() {
 			public void run() {
-				lblClock.setText(new SimpleDateFormat("hh:mm:ss").format(new Date()));
+				lblClock.setText(new SimpleDateFormat("HH:mm:ss").format(new Date()));
 				display.timerExec(1000, this);
 			}
 		});
@@ -66,29 +68,29 @@ public class ProdajaWindow implements SelectionListener {
 		shell.setSize(800, 600);
 		shell.setText("SWT Application");
 
-		lblNewLabel = new Label(shell, SWT.NONE);
-		lblNewLabel.setFont(SWTResourceManager.getFont("Liberation Sans", 20, SWT.NORMAL));
-		lblNewLabel.setBounds(10, 10, 450, 40);
-		lblNewLabel.setText("??????");
+		lblPolazak = new Label(shell, SWT.NONE);
+		lblPolazak.setFont(SWTResourceManager.getFont("Liberation Sans", 20, SWT.NORMAL));
+		lblPolazak.setBounds(10, 10, 620, 40);
+		lblPolazak.setText(stupac.getLongDesc());
 		{
 			lblClock = new Label(shell, SWT.BORDER | SWT.RIGHT);
 			lblClock.setFont(SWTResourceManager.getFont("Liberation Sans", 20, SWT.NORMAL));
 			lblClock.setBounds(640, 10, 144, 30);
-			lblClock.setText("New Label");
+			lblClock.setText(new SimpleDateFormat("HH:mm:ss").format(new Date()));
 		}
 
-		Combo combo = new Combo(shell, SWT.READ_ONLY);
-		combo.addSelectionListener(this);
-		combo.setFont(SWTResourceManager.getFont("Liberation Sans", 19, SWT.NORMAL));
-		combo.setItems(p.getList());
-		combo.setBounds(20, 80, 340, 50);
-		combo.select(0);
+		comboOdPostaje = new Combo(shell, SWT.READ_ONLY);
+		comboOdPostaje.addSelectionListener(this);
+		comboOdPostaje.setFont(SWTResourceManager.getFont("Liberation Sans", 19, SWT.NORMAL));
+		comboOdPostaje.setItems(postaja.getList());
+		comboOdPostaje.setBounds(20, 80, 340, 50);
+		comboOdPostaje.select(0);
 
-		combo_1 = new Combo(shell, SWT.READ_ONLY);
-		combo_1.setFont(SWTResourceManager.getFont("Liberation Sans", 19, SWT.NORMAL));
-		combo_1.setBounds(389, 80, 340, 50);
-		combo_1.setItems(p.getList());
-		combo_1.select(1);
+		comboDoPostaje = new Combo(shell, SWT.READ_ONLY);
+		comboDoPostaje.setFont(SWTResourceManager.getFont("Liberation Sans", 19, SWT.NORMAL));
+		comboDoPostaje.setBounds(389, 80, 340, 50);
+		comboDoPostaje.setItems(postaja.getList());
+		comboDoPostaje.select(1);
 		Button btnNewButton = new Button(shell, SWT.NONE);
 		btnNewButton.addSelectionListener(new SelectionAdapter() {
 			public void widgetSelected(SelectionEvent e) {
@@ -109,13 +111,13 @@ public class ProdajaWindow implements SelectionListener {
 
 	public void widgetSelected(SelectionEvent e) {
 		Combo c = (Combo) e.widget;
-		txtHello.setText(p.getID(c.getSelectionIndex()).toString());
-		combo_1.select(c.getSelectionIndex() + 1);
+		txtHello.setText(postaja.getID(c.getSelectionIndex()).toString());
+		comboDoPostaje.select(c.getSelectionIndex() + 1);
 	}
 
 	public void widgetDefaultSelected(SelectionEvent e) {
 		Combo c = (Combo) e.widget;
-		txtHello.setText(p.getID(c.getSelectionIndex()).toString());
-		combo_1.select(c.getSelectionIndex() + 1);
+		txtHello.setText(postaja.getID(c.getSelectionIndex()).toString());
+		comboDoPostaje.select(c.getSelectionIndex() + 1);
 	}
 }

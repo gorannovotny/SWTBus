@@ -6,43 +6,34 @@ import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
-import java.util.ArrayList;
 
 public class Stupac {
-	ArrayList<String> nazivList = new ArrayList<String>();
-	ArrayList<Integer> idList = new ArrayList<Integer>();
-	Connection con;
-	PreparedStatement ps;
 
-	public Stupac(Connection con) {
-		this.con = con;
+	private String longDesc;
+	private Integer varijantaID;
+
+	public Stupac(Integer stupacID) {
+		Connection con = DbUtil.getConnection();
 		try {
-			String sql = "SELECT id,vremeOdhoda FROM PTStupciVR WHERE VozniRedID = ? ORDER BY 2";
-			ps = con.prepareStatement(sql);
+			String sql = "select b.Opis1, a.VremeOdhoda,a.VarijantaID from PTStupciVR a,PTVozniRedi b where b.ID = a.VozniRedID and a.id = ? ";
+			PreparedStatement ps = con.prepareStatement(sql);
+			ps.setInt(1, stupacID);
+			ResultSet rs = ps.executeQuery();
+			if (rs.next()) {
+				longDesc = rs.getString("Opis1") + " Polazak:" + DbUtil.getHHMM(rs.getDouble("VremeOdhoda"));
+				varijantaID = rs.getInt("VarijantaID");
+			}
 		} catch (SQLException e) {
 			e.printStackTrace();
 		}
 	}
 
-	public String[] getList(Integer vozniRedID) throws SQLException {
-		nazivList.clear();
-		idList.clear();
-		ps.setInt(1, vozniRedID);
-		ResultSet rs = ps.executeQuery();
-		while (rs.next()) {
-			nazivList.add(DbUtil.getHHMM(rs.getDouble(2)));
-			idList.add(rs.getInt(1));
-		}
-		rs.close();
-		return nazivList.toArray(new String[0]);
+	public String getLongDesc() {
+		return longDesc;
 	}
 
-	public Integer getPolazakID(int selectionIndex) {
-		if (selectionIndex >= 0) {
-			return idList.get(selectionIndex);
-		}
-		else
-			return new Integer(-1);
+	public Integer getVarijantaID() {
+		return varijantaID;
 	}
-	
+
 }
