@@ -15,13 +15,13 @@ public class Stupac {
 	public Stupac(Integer stupacID) {
 		Connection con = DbUtil.getConnection();
 		try {
-			String sql = "select b.Opis1, a.VremeOdhoda,a.VarijantaID from PTStupciVR a,PTVozniRedi b where b.ID = a.VozniRedID and a.id = ? ";
+			String sql = "select b.Opis1, a.VremeOdhoda,a.VarijantaVRID from PTStupciVR a,PTVozniRedi b where b.ID = a.VozniRedID and a.id = ? ";
 			PreparedStatement ps = con.prepareStatement(sql);
 			ps.setInt(1, stupacID);
 			ResultSet rs = ps.executeQuery();
 			if (rs.next()) {
 				longDesc = rs.getString("Opis1") + " Polazak:" + DbUtil.getHHMM(rs.getDouble("VremeOdhoda"));
-				varijantaID = rs.getInt("VarijantaID");
+				varijantaID = rs.getInt("VarijantaVRID");
 			}
 		} catch (SQLException e) {
 			e.printStackTrace();

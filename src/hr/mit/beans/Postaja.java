@@ -15,7 +15,7 @@ public class Postaja  extends SuperBean{
 			ps0.setInt(1, stupacID);
 			String smjer = DbUtil.getSingleResultString(ps0);
 			ps0.close();
-			StringBuffer sql1 = new StringBuffer("SELECT c.ZapSt,e.Naziv,f.VremeOdhoda from PTStupciVR a,PTVarijanteVR b,PTPostajeVarijantVR c,PTPostajeVR d,PTPostaje e,PTCasiVoznjeVR f where a.VarijantaVRID = b.ID and   c.VarijantaID = b.ID and   c.NodePostajeVRID = d.ID and   d.PostajaID = e.id and   a.id = ? AND f.StupacVRID = a.ID AND f.NodePostajeVarijanteVRID = c.ID ORDER BY 1");
+			StringBuffer sql1 = new StringBuffer("SELECT c.ZapSt,e.Naziv,f.VremeOdhoda from PTStupciVR a,PTVarijanteVR b,PTPostajeVarijantVR c,PTPostajeVR d,PTPostaje e,PTCasiVoznjeVR f where a.VarijantaVRID = b.ID and   c.VarijantaID = b.ID and   c.NodePostajeVRID = d.ID and   d.PostajaID = e.id and   a.id = ? AND f.StupacVRID = a.ID AND f.NodePostajeVarijanteVRID = c.ID AND e.Prodaja = 'D' ORDER BY 1");
 			if (smjer.equals("+"))
 				sql1.append(" DESC");
 			PreparedStatement ps = con.prepareStatement(sql1.toString());

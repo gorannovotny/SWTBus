@@ -40,9 +40,8 @@ public class StupacList {
 	public Integer getPolazakID(int selectionIndex) {
 		if (selectionIndex >= 0) {
 			return idList.get(selectionIndex);
-		}
-		else
+		} else
 			return new Integer(-1);
 	}
-	
+
 }

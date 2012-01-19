@@ -4,6 +4,7 @@ import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 
+import hr.mit.beans.KartaList;
 import hr.mit.beans.Postaja;
 import hr.mit.beans.Stupac;
 import hr.mit.beans.StupacList;
@@ -24,20 +25,22 @@ import org.eclipse.swt.widgets.Label;
 public class ProdajaWindow implements SelectionListener {
 
 	protected Shell shell;
-	private Text txtHello;
-	private Postaja postaja;
 	private Combo comboOdPostaje;
 	private Combo comboDoPostaje;
-
-	Integer vozacID;
-	Stupac stupac;
 	private Label lblClock;
 	private Label lblPolazak;
+
+	private Postaja postaja;
+	private KartaList kartaList;
+	private Integer vozacID;
+	private Stupac stupac;
+	private Combo comboKarta;
 
 	public ProdajaWindow(Integer vozacID, Integer stupacID) {
 		this.vozacID = vozacID;
 		stupac = new Stupac(stupacID);
 		postaja = new Postaja(stupacID);
+		kartaList = new KartaList();
 	}
 
 	/**
@@ -91,33 +94,20 @@ public class ProdajaWindow implements SelectionListener {
 		comboDoPostaje.setBounds(389, 80, 340, 50);
 		comboDoPostaje.setItems(postaja.getList());
 		comboDoPostaje.select(1);
-		Button btnNewButton = new Button(shell, SWT.NONE);
-		btnNewButton.addSelectionListener(new SelectionAdapter() {
-			public void widgetSelected(SelectionEvent e) {
-				((Button) e.widget).setText("Bok");
-			}
-		});
-		btnNewButton.setBounds(357, 175, 103, 45);
-		btnNewButton.setText("New Button");
-
-		txtHello = new Text(shell, SWT.BORDER);
-		txtHello.setToolTipText("Tu sam");
-		txtHello.setText("Hello");
-		txtHello.setBounds(365, 257, 75, 24);
-	}
-
-	public void modifyText(ModifyEvent e) {
+		
+		comboKarta = new Combo(shell, SWT.READ_ONLY);
+		comboKarta.setFont(SWTResourceManager.getFont("Liberation Sans", 19, SWT.NORMAL));
+		comboKarta.setBounds(20, 165, 340, 50);
+		comboKarta.setItems(kartaList.getList());
+		comboKarta.select(0);
 	}
 
 	public void widgetSelected(SelectionEvent e) {
-		Combo c = (Combo) e.widget;
-		txtHello.setText(postaja.getID(c.getSelectionIndex()).toString());
-		comboDoPostaje.select(c.getSelectionIndex() + 1);
+		widgetDefaultSelected(e);
 	}
 
 	public void widgetDefaultSelected(SelectionEvent e) {
 		Combo c = (Combo) e.widget;
-		txtHello.setText(postaja.getID(c.getSelectionIndex()).toString());
 		comboDoPostaje.select(c.getSelectionIndex() + 1);
 	}
 }
