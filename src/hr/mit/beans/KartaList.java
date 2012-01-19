@@ -35,7 +35,7 @@ public class KartaList {
 		return nazivList.toArray(new String[0]);
 	}
 
-	public Integer getPolazakID(int selectionIndex) {
+	public Integer getID(int selectionIndex) {
 		if (selectionIndex >= 0) {
 			return idList.get(selectionIndex);
 		} else

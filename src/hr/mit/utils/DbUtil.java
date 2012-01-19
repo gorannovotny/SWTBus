@@ -43,6 +43,19 @@ public class DbUtil {
 		return retval;
 	}
 
+	public static Double getSingleResultDouble(PreparedStatement ps) throws SQLException {
+		Double retval;
+		ResultSet rs = ps.executeQuery();
+		if (rs.next())
+			retval = rs.getDouble(1);
+		else
+			retval = null;
+		rs.close();
+		return retval;
+	}
+
+
+	
 	public static String getHHMM(Double time) {
 		Integer hours = (int) (time * 24);
 		Integer mins = (int) ((time * 24 - hours)*60);

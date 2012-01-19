@@ -1,26 +1,26 @@
 package hr.mit.windows;
 
-import java.text.DateFormat;
-import java.text.SimpleDateFormat;
-import java.util.Date;
-
 import hr.mit.beans.KartaList;
 import hr.mit.beans.Postaja;
 import hr.mit.beans.Stupac;
-import hr.mit.beans.StupacList;
+import hr.mit.beans.Vozac;
+import hr.mit.utils.CijenaKarte;
+
+import java.sql.SQLException;
+import java.text.DecimalFormat;
+import java.text.NumberFormat;
+import java.text.SimpleDateFormat;
+import java.util.Date;
+import java.util.Locale;
 
 import org.eclipse.swt.SWT;
-import org.eclipse.swt.events.ModifyEvent;
-import org.eclipse.swt.events.SelectionAdapter;
 import org.eclipse.swt.events.SelectionEvent;
 import org.eclipse.swt.events.SelectionListener;
-import org.eclipse.swt.widgets.Button;
 import org.eclipse.swt.widgets.Combo;
 import org.eclipse.swt.widgets.Display;
-import org.eclipse.swt.widgets.Shell;
-import org.eclipse.swt.widgets.Text;
-import org.eclipse.wb.swt.SWTResourceManager;
 import org.eclipse.swt.widgets.Label;
+import org.eclipse.swt.widgets.Shell;
+import org.eclipse.wb.swt.SWTResourceManager;
 
 public class ProdajaWindow implements SelectionListener {
 
@@ -29,15 +29,18 @@ public class ProdajaWindow implements SelectionListener {
 	private Combo comboDoPostaje;
 	private Label lblClock;
 	private Label lblPolazak;
+	private Combo comboKarta;
+	private Label lblVozac;
+	private Label lblCijena;
 
 	private Postaja postaja;
 	private KartaList kartaList;
-	private Integer vozacID;
+	private Vozac vozac;
 	private Stupac stupac;
-	private Combo comboKarta;
+	private CijenaKarte cijenaKarte;
 
 	public ProdajaWindow(Integer vozacID, Integer stupacID) {
-		this.vozacID = vozacID;
+		vozac = new Vozac(vozacID);
 		stupac = new Stupac(stupacID);
 		postaja = new Postaja(stupacID);
 		kartaList = new KartaList();
@@ -75,12 +78,11 @@ public class ProdajaWindow implements SelectionListener {
 		lblPolazak.setFont(SWTResourceManager.getFont("Liberation Sans", 20, SWT.NORMAL));
 		lblPolazak.setBounds(10, 10, 620, 40);
 		lblPolazak.setText(stupac.getLongDesc());
-		{
-			lblClock = new Label(shell, SWT.BORDER | SWT.RIGHT);
-			lblClock.setFont(SWTResourceManager.getFont("Liberation Sans", 20, SWT.NORMAL));
-			lblClock.setBounds(640, 10, 144, 30);
-			lblClock.setText(new SimpleDateFormat("HH:mm:ss").format(new Date()));
-		}
+
+		lblClock = new Label(shell, SWT.BORDER | SWT.RIGHT);
+		lblClock.setFont(SWTResourceManager.getFont("Liberation Sans", 20, SWT.NORMAL));
+		lblClock.setBounds(640, 10, 144, 30);
+		lblClock.setText(new SimpleDateFormat("HH:mm:ss").format(new Date()));
 
 		comboOdPostaje = new Combo(shell, SWT.READ_ONLY);
 		comboOdPostaje.addSelectionListener(this);
@@ -90,16 +92,29 @@ public class ProdajaWindow implements SelectionListener {
 		comboOdPostaje.select(0);
 
 		comboDoPostaje = new Combo(shell, SWT.READ_ONLY);
+		comboDoPostaje.addSelectionListener(this);
 		comboDoPostaje.setFont(SWTResourceManager.getFont("Liberation Sans", 19, SWT.NORMAL));
 		comboDoPostaje.setBounds(389, 80, 340, 50);
 		comboDoPostaje.setItems(postaja.getList());
 		comboDoPostaje.select(1);
-		
+
 		comboKarta = new Combo(shell, SWT.READ_ONLY);
+		comboKarta.addSelectionListener(this);
 		comboKarta.setFont(SWTResourceManager.getFont("Liberation Sans", 19, SWT.NORMAL));
 		comboKarta.setBounds(20, 165, 340, 50);
 		comboKarta.setItems(kartaList.getList());
 		comboKarta.select(0);
+
+		lblCijena = new Label(shell, SWT.NONE);
+		lblCijena.setFont(SWTResourceManager.getFont("Liberation Sans", 25, SWT.BOLD));
+		lblCijena.setAlignment(SWT.RIGHT);
+		lblCijena.setBounds(590, 243, 190, 37);
+		lblCijena.setText("0,00");
+
+		lblVozac = new Label(shell, SWT.NONE);
+		lblVozac.setText(vozac.getNaziv());
+		lblVozac.setFont(SWTResourceManager.getFont("Liberation Sans", 20, SWT.NORMAL));
+		lblVozac.setBounds(10, 534, 500, 30);
 	}
 
 	public void widgetSelected(SelectionEvent e) {
@@ -108,6 +123,13 @@ public class ProdajaWindow implements SelectionListener {
 
 	public void widgetDefaultSelected(SelectionEvent e) {
 		Combo c = (Combo) e.widget;
-		comboDoPostaje.select(c.getSelectionIndex() + 1);
+		try {
+			cijenaKarte = new CijenaKarte(kartaList.getID(comboKarta.getSelectionIndex()), stupac.getVarijantaID(), postaja.getID(comboOdPostaje.getSelectionIndex()), postaja.getID(comboDoPostaje
+					.getSelectionIndex()));
+			lblCijena.setText((new DecimalFormat("#.00")).format(cijenaKarte.getCijena()));
+		} catch (SQLException e1) {
+			// TODO Auto-generated catch block
+			e1.printStackTrace();
+		}
 	}
 }

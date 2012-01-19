@@ -35,12 +35,10 @@ public class LoginWindow {
 	private Button button;
 
 	private VozniRed vozniRed;
-	private Vozac vozac;
 	private StupacList polazak;
 
 	public LoginWindow() {
 		vozniRed = new VozniRed();
-		vozac = new Vozac(DbUtil.getConnection());
 		polazak = new StupacList(DbUtil.getConnection());
 	}
 
@@ -80,7 +78,7 @@ public class LoginWindow {
 			comboVozac = new Combo(shlPrijava, SWT.READ_ONLY);
 			comboVozac.setFont(SWTResourceManager.getFont("Liberation Sans", 30, SWT.NORMAL));
 			comboVozac.setBounds(230, 184, 380, 44);
-			comboVozac.setItems(vozac.getList());
+			comboVozac.setItems(Vozac.getList());
 			comboVozac.select(0);
 		}
 		{
@@ -134,7 +132,7 @@ public class LoginWindow {
 
 	private class ButtonSelectionListener extends SelectionAdapter {
 		public void widgetSelected(SelectionEvent e) {
-			Starter.vozacID = vozac.getVozacID(comboVozac.getSelectionIndex());
+			Starter.vozacID = Vozac.getVozacID(comboVozac.getSelectionIndex());
 			Starter.stupacID = polazak.getPolazakID(comboPolazak.getSelectionIndex());
 			shlPrijava.dispose();
 		}

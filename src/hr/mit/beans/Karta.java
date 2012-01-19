@@ -28,7 +28,7 @@ public class Karta {
 			this.id = id;
 			nacinDolocanjaCene = rs.getInt("NacinDolocanjaCene");
 			tarifniRazredID = rs.getInt("TarifniRazredID");
-			fiksnaCena = rs.getBigDecimal("FiksnaCena");
+			fiksnaCena = new BigDecimal(rs.getDouble("FiksnaCena"));
 			popustID = rs.getInt("PopustID");
 			kmPogoja = rs.getInt("KMPogoja");
 		}

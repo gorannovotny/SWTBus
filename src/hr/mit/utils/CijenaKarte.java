@@ -9,7 +9,7 @@ import java.sql.SQLException;
 import java.util.Date;
 
 public class CijenaKarte {
-	BigDecimal cenaKarte;
+//	BigDecimal cenaKarte;
 	BigDecimal znesekPopusta;
 	// Integer distancaCenika;
 	// Integer distancaLinije;
@@ -38,12 +38,6 @@ public class CijenaKarte {
 
 	}
 
-	public static void Fn_PTTblPodatkiCeneVozneKarte(Integer voznaKartaID, Stupac stupac, Integer odPostajeID, Integer doPostajeID, Date zaDan) {
-
-		Fn_PTTblPodatkiDistanceVarVR(stupac.getVarijantaID(), odPostajeID, doPostajeID, "191");
-
-	}
-
 	public Integer getDistancaLinije() throws SQLException {
 		String sql = "SELECT SUM(DistancaM) FROM PTPostajeVarijantVR WHERE VarijantaID = ? AND ZapSt NOT IN (SELECT MIN(ZapSt) FROM PTPostajeVarijantVR WHERE VarijantaID = ?)";
 		PreparedStatement ps = DbUtil.getConnection().prepareStatement(sql);
@@ -66,7 +60,7 @@ public class CijenaKarte {
 	}
 
 	public Integer getDomDistanca() throws SQLException {
-		String sql = "SELECT SUM(DistancaM) FROM PTPostajeVarijantVR a,PTPostajeVR b,PTPostaje c WHERE b.ID = a.NodePostajeVR AND c.ID = b.NodePostaje AND a.VarijantaID = ? AND a.ZapSt > ? AND a.ZapSt <= ? AND c.Drzava = '191'";
+		String sql = "SELECT SUM(a.DistancaM) FROM PTPostajeVarijantVR a,PTPostajeVR b,PTPostaje c WHERE b.ID = a.NodePostajeVRID AND c.ID = b.PostajaID AND a.VarijantaID = ? AND a.ZapSt > ? AND a.ZapSt <= ? AND c.Drzava = '191'";
 		PreparedStatement ps = DbUtil.getConnection().prepareStatement(sql);
 		ps.setInt(1, varijantaID);
 		ps.setInt(2, odZapSt);
@@ -97,21 +91,32 @@ public class CijenaKarte {
 		}
 		return retval;
 	}
-	
-	public BigDecimal getIznos(){
-		if (karta.getNacinDolocanjaCene() == Karta.FIKSNA_CIJENA)
-			return karta.getFiksnaCena();
-		else {
-			// TODO Prvo iznimke, a onda po tarifnim razredima
-			
-		}
-			
-		return null;
-	}
 
-	private static void Fn_PTTblPodatkiDistanceVarVR(Integer varijantaID, Integer odZapStID, Integer doZapStID, String drzava) {
-		String sql_kum = "SELECT SUM(DistancaM) FROM PTPostajeVarijantVR WHERE ID = ? AND ZapSt > ? AND ZapSt <= ?";
-		String sql_ino = "SELECT SUM(DistancaM) FROM PTPostajeVarijantVR WHERE ID = ? AND ZapSt > ? AND ZapSt <= ? AND Drzava != ? ";
-		String sql_distancaLinije = "SELECT SUM(DistancaM) FROM PTPostajeVarijantVR WHERE ID = ? AND ZapSt NOT IN (SELECT MIN(ZapSt) FROM PTPostajeVarijantVR WHERE ID = ?)";
+	public BigDecimal getCijena() throws SQLException {
+		BigDecimal retval = BigDecimal.ZERO;
+		if (karta.getNacinDolocanjaCene() == Karta.FIKSNA_CIJENA)
+			retval = karta.getFiksnaCena();
+		else {
+			if (false) {
+				/*
+				 * TODO Ima iznimke Select IC.Cena from PTIzjemeCenikaVR IC
+				 * Where IC.TarifniCenikID = @TarifniCenikID and IC.VeljaOd <=
+				 * (@ZaDan and IC.VozniRedID = @VozniRedID and IC.VarijantaID in
+				 * (0,@VarijantaID) and IC.StupacID in (0,@StupacID) and
+				 * ((IC.Postaja1ID = @OdPostajeID and IC.Postaja2ID =
+				 * @DoPostajeID) or (IC.Postaja1ID = @DoPostajeID and
+				 * IC.Postaja2ID = @OdPostajeID)) order by IC.VeljaOd desc,
+				 * IC.StupacID desc, IC.VarijantaID desc LIMIT 1;
+				 */
+			} else {
+				String sql = "SELECT Cena FROM PTKTTarifniRazrediCenik WHERE IDRazreda = ? AND VeljaOd <= DATE('now') and OdKM <= ? order by VeljaOd desc, OdKM desc LIMIT 1";
+				PreparedStatement ps = DbUtil.getConnection().prepareStatement(sql);
+				ps.setInt(1, karta.getTarifniRazredID());
+				ps.setInt(2, getDistancaCenika() / 1000);
+				retval = new BigDecimal(DbUtil.getSingleResultDouble(ps));
+				ps.close();
+			}
+		}
+		return retval;
 	}
 }
