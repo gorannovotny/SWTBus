@@ -1,6 +1,7 @@
 package hr.mit.utils;
 
 import hr.mit.beans.Karta;
+import hr.mit.beans.Postaja;
 import hr.mit.beans.Stupac;
 
 import java.math.BigDecimal;
@@ -24,7 +25,7 @@ public class CijenaKarte {
 	private Integer doZapSt;
 	private Karta karta;
 
-	public CijenaKarte(Integer kartaID, Integer varijantaID, Integer odZapSt, Integer doZapSt) throws SQLException {
+	public CijenaKarte(Karta karta, Integer varijantaID, Integer odZapSt, Integer doZapSt) throws SQLException {
 		this.varijantaID = varijantaID;
 		if (odZapSt > doZapSt) {
 			this.odZapSt = doZapSt;
@@ -34,9 +35,23 @@ public class CijenaKarte {
 			this.odZapSt = odZapSt;
 			this.doZapSt = doZapSt;
 		}
-		karta = new Karta(kartaID);
+		this.karta = karta;
 
 	}
+	
+	public CijenaKarte(Stupac stupac,Karta karta,Postaja odPostaje,Postaja doPostaje){
+		this.varijantaID = stupac.getVarijantaID();
+		if (odPostaje.getZapSt() > doPostaje.getZapSt()) {
+			this.odZapSt = doPostaje.getZapSt();
+			this.doZapSt = odPostaje.getZapSt();
+
+		} else {
+			this.odZapSt = odPostaje.getZapSt();
+			this.doZapSt = doPostaje.getZapSt();
+		}
+		this.karta = karta;
+	}
+	
 
 	public Integer getDistancaLinije() throws SQLException {
 		String sql = "SELECT SUM(DistancaM) FROM PTPostajeVarijantVR WHERE VarijantaID = ? AND ZapSt NOT IN (SELECT MIN(ZapSt) FROM PTPostajeVarijantVR WHERE VarijantaID = ?)";

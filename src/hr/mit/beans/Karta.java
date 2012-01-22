@@ -1,14 +1,10 @@
 package hr.mit.beans;
 
-import hr.mit.utils.DbUtil;
-
 import java.math.BigDecimal;
-import java.sql.PreparedStatement;
-import java.sql.ResultSet;
-import java.sql.SQLException;
 
 public class Karta {
 	Integer id;
+	String naziv;
 	Integer nacinDolocanjaCene;
 	Integer tarifniRazredID;
 	BigDecimal fiksnaCena;
@@ -19,23 +15,24 @@ public class Karta {
 	public static Integer FIKSNA_CIJENA = 2;
 	public static Integer FIKSNI_KILOMETRI = 3;
 
-	public Karta(Integer id) throws SQLException {
-		String sql = "SELECT NacinDolocanjaCene,TarifniRazredID,FiksnaCena,PopustID,KMPogoja from PTKTVozneKarte WHERE ID = ?";
-		PreparedStatement ps = DbUtil.getConnection().prepareStatement(sql);
-		ps.setInt(1, id);
-		ResultSet rs = ps.executeQuery();
-		if (rs.next()) {
-			this.id = id;
-			nacinDolocanjaCene = rs.getInt("NacinDolocanjaCene");
-			tarifniRazredID = rs.getInt("TarifniRazredID");
-			fiksnaCena = new BigDecimal(rs.getDouble("FiksnaCena"));
-			popustID = rs.getInt("PopustID");
-			kmPogoja = rs.getInt("KMPogoja");
-		}
+
+
+	public Karta(int id, String naziv, int nacinDolocanjaCene, int tarifniRazredID, BigDecimal FiksnaCena, int popustID, int kmPogoja) {
+		this.id = id;
+		this.naziv = naziv;
+		this.nacinDolocanjaCene = nacinDolocanjaCene;
+		this.tarifniRazredID = tarifniRazredID;
+		this.fiksnaCena = FiksnaCena;
+		this.popustID = popustID;
+		this.kmPogoja = kmPogoja;
 	}
 
 	public Integer getId() {
 		return id;
+	}
+
+	public String getNaziv() {
+		return naziv;
 	}
 
 	public Integer getNacinDolocanjaCene() {

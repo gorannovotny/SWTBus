@@ -13,7 +13,7 @@ public class CijenaKarteTest {
 	static CijenaKarte karta;
 	@BeforeClass
 	public static void setUpBeforeClass() throws Exception {
-		karta = new CijenaKarte(459,24783, 1, 17);
+//		karta = new CijenaKarte(459,24783, 1, 17);
 	}
 
 	@Test
