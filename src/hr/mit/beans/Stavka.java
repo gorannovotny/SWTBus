@@ -1,5 +1,7 @@
 package hr.mit.beans;
 
+import hr.mit.utils.CijenaKarte;
+
 import java.math.BigDecimal;
 
 public class Stavka {
@@ -14,12 +16,17 @@ public class Stavka {
 		this.doPostaje = doPostaje;
 		this.karta = karta;
 		this.popust = popust;
-
-		//		cijena =  
+		CijenaKarte c = new CijenaKarte(stupac, karta, odPostaje, doPostaje);
+		cijena = c.getCijena();
 	}
 
 	public String getDescription() {
-		return odPostaje.getNaziv() + " " + doPostaje.getNaziv();
+		String oddo = odPostaje.getNaziv() + "-" + doPostaje.getNaziv();
+		if (oddo.length()>35) oddo = oddo.substring(0, 35);
+		String k = karta.getNaziv();
+		if (k.length()>15) k = k.substring(0, 15);
+		String out = String.format("%-35s:%-15s %5.2f",oddo,k,getCijena().doubleValue());
+		return out;
 	}
 
 	public BigDecimal getCijena() {

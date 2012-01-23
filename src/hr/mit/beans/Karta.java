@@ -3,13 +3,13 @@ package hr.mit.beans;
 import java.math.BigDecimal;
 
 public class Karta {
-	Integer id;
-	String naziv;
-	Integer nacinDolocanjaCene;
-	Integer tarifniRazredID;
-	BigDecimal fiksnaCena;
-	Integer popustID;
-	Integer kmPogoja;
+	private Integer id;
+	private String naziv;
+	private Integer nacinDolocanjaCene;
+	private Integer tarifniRazredID;
+	private BigDecimal fiksnaCena;
+	private Integer popustID;
+	private Integer kmPogoja;
 
 	public static Integer TARIFNI_DALJINAR = 1;
 	public static Integer FIKSNA_CIJENA = 2;

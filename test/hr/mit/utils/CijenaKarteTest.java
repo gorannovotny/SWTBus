@@ -5,7 +5,6 @@ import static org.junit.Assert.*;
 import java.math.BigDecimal;
 import java.sql.SQLException;
 
-import org.junit.Before;
 import org.junit.BeforeClass;
 import org.junit.Test;
 

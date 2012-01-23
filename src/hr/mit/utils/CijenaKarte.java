@@ -7,7 +7,6 @@ import hr.mit.beans.Stupac;
 import java.math.BigDecimal;
 import java.sql.PreparedStatement;
 import java.sql.SQLException;
-import java.util.Date;
 
 public class CijenaKarte {
 //	BigDecimal cenaKarte;
@@ -107,7 +106,7 @@ public class CijenaKarte {
 		return retval;
 	}
 
-	public BigDecimal getCijena() throws SQLException {
+	public BigDecimal getCijena()  {
 		BigDecimal retval = BigDecimal.ZERO;
 		if (karta.getNacinDolocanjaCene() == Karta.FIKSNA_CIJENA)
 			retval = karta.getFiksnaCena();
@@ -125,11 +124,16 @@ public class CijenaKarte {
 				 */
 			} else {
 				String sql = "SELECT Cena FROM PTKTTarifniRazrediCenik WHERE IDRazreda = ? AND VeljaOd <= DATE('now') and OdKM <= ? order by VeljaOd desc, OdKM desc LIMIT 1";
-				PreparedStatement ps = DbUtil.getConnection().prepareStatement(sql);
-				ps.setInt(1, karta.getTarifniRazredID());
-				ps.setInt(2, getDistancaCenika() / 1000);
-				retval = new BigDecimal(DbUtil.getSingleResultDouble(ps));
-				ps.close();
+				try {
+					PreparedStatement ps = DbUtil.getConnection().prepareStatement(sql);
+					ps.setInt(1, karta.getTarifniRazredID());
+					ps.setInt(2, getDistancaCenika() / 1000);
+					retval = new BigDecimal(DbUtil.getSingleResultDouble(ps));
+					ps.close();
+				} catch (SQLException e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+				}
 			}
 		}
 		return retval;
