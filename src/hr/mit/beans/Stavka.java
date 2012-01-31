@@ -17,7 +17,7 @@ public class Stavka {
 		this.karta = karta;
 		this.popust = popust;
 		CijenaKarte c = new CijenaKarte(stupac, karta, odPostaje, doPostaje);
-		cijena = c.getCijena();
+		cijena = c.getUkupnaCijena();
 	}
 
 	public String getDescription() {

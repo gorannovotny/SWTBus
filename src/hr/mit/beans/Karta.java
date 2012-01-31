@@ -5,6 +5,7 @@ import java.math.BigDecimal;
 public class Karta {
 	private Integer id;
 	private String naziv;
+	private Integer stVoznji;
 	private Integer nacinDolocanjaCene;
 	private Integer tarifniRazredID;
 	private BigDecimal fiksnaCena;
@@ -17,9 +18,10 @@ public class Karta {
 
 
 
-	public Karta(int id, String naziv, int nacinDolocanjaCene, int tarifniRazredID, BigDecimal FiksnaCena, int popustID, int kmPogoja) {
+	public Karta(int id, String naziv,int stVoznji, int nacinDolocanjaCene, int tarifniRazredID, BigDecimal FiksnaCena, int popustID, int kmPogoja) {
 		this.id = id;
 		this.naziv = naziv;
+		this.stVoznji = stVoznji;
 		this.nacinDolocanjaCene = nacinDolocanjaCene;
 		this.tarifniRazredID = tarifniRazredID;
 		this.fiksnaCena = FiksnaCena;
@@ -53,5 +55,9 @@ public class Karta {
 
 	public Integer getKmPogoja() {
 		return kmPogoja;
+	}
+
+	public Integer getStVoznji() {
+		return stVoznji;
 	}
 }

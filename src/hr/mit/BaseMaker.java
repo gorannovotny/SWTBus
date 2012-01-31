@@ -32,6 +32,8 @@ public class BaseMaker {
 			doPTKTVrstePopustov(con1, con2);
 			doPTIzjemeCenikaVR(con1, con2);
 			doPTKTProdaja(con1, con2);
+			doPTKTTipiKarti(con1, con2);
+			doPTKTPopusti(con1, con2);
 		} catch (Exception e) {
 			e.printStackTrace();
 		} finally {
@@ -410,6 +412,57 @@ public class BaseMaker {
 						"CREATE TABLE PTKTProdaja(ID INT NOT NULL ,Firma INT NOT NULL,DokumentProdajeID INT,VrsticaProdajeID INT,DokumentBlagajneID INT,BUSProdajaID INT,Datum DATETIME,Vreme DATETIME,VoznaKartaID INT,Code VARCHAR(20) ,BRVoznji INT,Cena FLOAT(53),Popust1ID INT,Popust2ID INT,Popust3ID INT,PCenaKarte FLOAT(53),NCenaKarte FLOAT(53),Popust FLOAT(53),ZaPlatiti FLOAT(53),PorezProcent INT,ProdajnoMestoID INT,PrevoznikID INT,VrstaPosadeID INT,Vozac1ID INT,Vozac2ID INT,Vozac3ID INT,Blagajnik INT,Blagajna INT,StupacID INT,OdPostajeID INT,DoPostajeID INT,VoziloID INT,Rezervacija INT,StatusZK INT,KmLinijeVR INT,KmDomaci INT,KmIno INT,BRPutnika INT,BRKarata INT,MobStrojID INT,GUID VARCHAR(40) ,PRIMARY KEY (ID))");
 		con2.commit();
 		System.out.println(String.format("%-20s -> %7d","PTKTProdaja",i));
+	}
+
+	private static void doPTKTPopusti(Connection con1, Connection con2) throws SQLException {
+		int i = 0;
+		con2.createStatement().executeUpdate("drop table if exists PTKTPopusti;");
+		con2.createStatement()
+				.executeUpdate(
+						"CREATE TABLE PTKTPopusti(ID INT NOT NULL , PrevoznikID INT NOT NULL,TipKarteID INT NOT NULL, Opis VARCHAR(40), StupacID INT, VeljaOd DATETIME NOT NULL, VrstaPopustaID INT NOT NULL, NacinIzracuna INT,Popust FLOAT(53),PRIMARY KEY (ID))");
+		PreparedStatement ps = con2.prepareStatement("INSERT INTO PTKTPopusti VALUES (?,?,?,?,?,?,?,?,?)");
+		ResultSet rs = con1.createStatement().executeQuery("SELECT * FROM PTKTPopusti");
+		while (rs.next()) {
+			ps.setInt(1, rs.getInt(1));
+			ps.setInt(2, rs.getInt(2));
+			ps.setInt(3, rs.getInt(3));
+			ps.setString(4, rs.getString(4));
+			ps.setInt(5, rs.getInt(5));
+			ps.setString(6, rs.getString(6));
+			ps.setInt(7, rs.getInt(7));
+			ps.setInt(8, rs.getInt(8));
+			ps.setDouble(9, rs.getDouble(9));
+			ps.addBatch();
+			i++;
+		}
+		ps.executeBatch();
+		con2.commit();
+		System.out.println(String.format("%-20s -> %7d","PTKTPopusti",i));
+	}
+
+	private static void doPTKTTipiKarti(Connection con1, Connection con2) throws SQLException {
+		int i = 0;
+		con2.createStatement().executeUpdate("drop table if exists PTKTTipiKarti;");
+		con2.createStatement()
+				.executeUpdate(
+						"CREATE TABLE PTKTTipiKarti(ID INT NOT NULL,PGRID INT NOT NULL,Sifra INT NOT NULL,Oznaka VARCHAR(10) NOT NULL, Povratna INT,Opis VARCHAR(50) , SkupinaKarte INT,KategorijaKarte INT,PRIMARY KEY (ID))");
+		PreparedStatement ps = con2.prepareStatement("INSERT INTO PTKTTipiKarti VALUES (?,?,?,?,?,?,?,?)");
+		ResultSet rs = con1.createStatement().executeQuery("SELECT * FROM PTKTTipiKarti");
+		while (rs.next()) {
+			ps.setInt(1, rs.getInt(1));
+			ps.setInt(2, rs.getInt(2));
+			ps.setInt(3, rs.getInt(3));
+			ps.setString(4, rs.getString(4));
+			ps.setInt(5, rs.getInt(5));
+			ps.setString(6, rs.getString(6));
+			ps.setInt(7, rs.getInt(7));
+			ps.setInt(8, rs.getInt(8));
+			ps.addBatch();
+			i++;
+		}
+		ps.executeBatch();
+		con2.commit();
+		System.out.println(String.format("%-20s -> %7d","PTKTTipiKarti",i));
 	}
 
 }

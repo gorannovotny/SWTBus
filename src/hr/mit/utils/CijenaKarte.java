@@ -6,10 +6,11 @@ import hr.mit.beans.Stupac;
 
 import java.math.BigDecimal;
 import java.sql.PreparedStatement;
+import java.sql.ResultSet;
 import java.sql.SQLException;
 
 public class CijenaKarte {
-//	BigDecimal cenaKarte;
+	// BigDecimal cenaKarte;
 	BigDecimal znesekPopusta;
 	// Integer distancaCenika;
 	// Integer distancaLinije;
@@ -37,8 +38,8 @@ public class CijenaKarte {
 		this.karta = karta;
 
 	}
-	
-	public CijenaKarte(Stupac stupac,Karta karta,Postaja odPostaje,Postaja doPostaje){
+
+	public CijenaKarte(Stupac stupac, Karta karta, Postaja odPostaje, Postaja doPostaje) {
 		this.varijantaID = stupac.getVarijantaID();
 		if (odPostaje.getZapSt() > doPostaje.getZapSt()) {
 			this.odZapSt = doPostaje.getZapSt();
@@ -50,7 +51,6 @@ public class CijenaKarte {
 		}
 		this.karta = karta;
 	}
-	
 
 	public Integer getDistancaLinije() throws SQLException {
 		String sql = "SELECT SUM(DistancaM) FROM PTPostajeVarijantVR WHERE VarijantaID = ? AND ZapSt NOT IN (SELECT MIN(ZapSt) FROM PTPostajeVarijantVR WHERE VarijantaID = ?)";
@@ -106,7 +106,7 @@ public class CijenaKarte {
 		return retval;
 	}
 
-	public BigDecimal getCijena()  {
+	public BigDecimal getCijena() {
 		BigDecimal retval = BigDecimal.ZERO;
 		if (karta.getNacinDolocanjaCene() == Karta.FIKSNA_CIJENA)
 			retval = karta.getFiksnaCena();
@@ -118,6 +118,7 @@ public class CijenaKarte {
 				 * (@ZaDan and IC.VozniRedID = @VozniRedID and IC.VarijantaID in
 				 * (0,@VarijantaID) and IC.StupacID in (0,@StupacID) and
 				 * ((IC.Postaja1ID = @OdPostajeID and IC.Postaja2ID =
+				 * 
 				 * @DoPostajeID) or (IC.Postaja1ID = @DoPostajeID and
 				 * IC.Postaja2ID = @OdPostajeID)) order by IC.VeljaOd desc,
 				 * IC.StupacID desc, IC.VarijantaID desc LIMIT 1;
@@ -129,6 +130,7 @@ public class CijenaKarte {
 					ps.setInt(1, karta.getTarifniRazredID());
 					ps.setInt(2, getDistancaCenika() / 1000);
 					retval = new BigDecimal(DbUtil.getSingleResultDouble(ps));
+					retval = retval.multiply(new BigDecimal(karta.getStVoznji()));
 					ps.close();
 				} catch (SQLException e) {
 					// TODO Auto-generated catch block
@@ -137,5 +139,32 @@ public class CijenaKarte {
 			}
 		}
 		return retval;
+	}
+
+	public BigDecimal getPopust() {
+		Integer naciz;
+		BigDecimal vrednost;
+		BigDecimal retval = null;
+		String sql = "SELECT NacinIzracuna,Vrednost FROM PTKTVrstePopustov WHERE ID = ?";
+		try {
+			PreparedStatement ps = DbUtil.getConnection().prepareStatement(sql);
+			ps.setInt(1, karta.getPopustID());
+			ResultSet rs = ps.executeQuery();
+			if (rs.next()) {
+				naciz = rs.getInt("NacinIzracuna");
+				vrednost = new BigDecimal(rs.getDouble("Vrednost"));
+				if (naciz.equals(0))
+					retval = getCijena().multiply(vrednost).divide(new BigDecimal(100));
+				else
+					retval = vrednost;
+			}
+		} catch (SQLException e) {
+			e.printStackTrace();
+		}
+		return retval;
+	}
+
+	public BigDecimal getUkupnaCijena() {
+		return getCijena().subtract(getPopust());
 	}
 }
