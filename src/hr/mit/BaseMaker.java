@@ -268,7 +268,7 @@ public class BaseMaker {
 				.executeUpdate(
 						"CREATE TABLE PTKTVozneKarte(ID INT NOT NULL , Firma INT NOT NULL,Sifra VARCHAR(10) NOT NULL,Oznaka VARCHAR(16) ,TipKarteID INT NOT NULL,TarifniRazredID INT,Opis VARCHAR(50) ,StVoznji INT,SmerVoznje INT,VeljaOdDatuma DATETIME,VeljaDoDatuma DATETIME,VeljaDniOdProdaje INT,Status INT,PrevoznikID INT,NacinDolocanjaCene INT,KMPogoja INT,FiksnaCena FLOAT(53),PopustID INT,PopustProcent FLOAT(53),SifraValute INT,MobilnaProdaja INT,PRIMARY KEY (ID))");
 		PreparedStatement ps = con2.prepareStatement("INSERT INTO PTKTVozneKarte VALUES (?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)");
-		ResultSet rs = con1.createStatement().executeQuery("SELECT * FROM PTKTVozneKarte");
+		ResultSet rs = con1.createStatement().executeQuery("SELECT * FROM PTKTVozneKarte WHERE MobilnaProdaja = 1");
 		while (rs.next()) {
 			ps.setInt(1, rs.getInt(1));
 			ps.setInt(2, rs.getInt(2));
@@ -331,7 +331,7 @@ public class BaseMaker {
 		con2.createStatement().executeUpdate(
 				"CREATE TABLE PTKTTarifniRazrediCenik(ID INT NOT NULL ,IDRazreda INT NOT NULL,VeljaOd DATETIME NOT NULL,OdKM INT NOT NULL,Cena FLOAT(53),DOSID INT,PRIMARY KEY (ID))");
 		PreparedStatement ps = con2.prepareStatement("INSERT INTO PTKTTarifniRazrediCenik VALUES (?,?,?,?,?,?)");
-		ResultSet rs = con1.createStatement().executeQuery("SELECT * FROM PTKTTarifniRazrediCenik");
+		ResultSet rs = con1.createStatement().executeQuery("SELECT * FROM PTKTTarifniRazrediCenik a WHERE IDRazreda IN ( SELECT DISTINCT TarifniRazredID FROM PTKTVozneKarte WHERE MobilnaProdaja = 1) AND VeljaOD = (SELECT MAX(VeljaOd) FROM PTKTTarifniRazrediCenik b WHERE b.IDRazreda = a.IDRazreda AND b.OdKM = a.OdKM AND b.VeljaOd <= GETDATE())");
 		while (rs.next()) {
 			ps.setInt(1, rs.getInt(1));
 			ps.setInt(2, rs.getInt(2));
