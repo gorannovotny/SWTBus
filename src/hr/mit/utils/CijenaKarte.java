@@ -165,6 +165,6 @@ public class CijenaKarte {
 	}
 
 	public BigDecimal getUkupnaCijena() {
-		return getCijena().subtract(getPopust());
+		return getCijena().multiply(BigDecimal.ONE.subtract(karta.getPopustProcent().movePointLeft(2)));
 	}
 }
