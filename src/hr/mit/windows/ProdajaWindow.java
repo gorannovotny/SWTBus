@@ -2,6 +2,7 @@ package hr.mit.windows;
 
 import hr.mit.beans.Blagajna;
 import hr.mit.beans.KartaList;
+import hr.mit.beans.PopustList;
 import hr.mit.beans.PostajaList;
 import hr.mit.beans.Stavka;
 import hr.mit.beans.StavkaList;
@@ -25,6 +26,7 @@ import org.eclipse.swt.widgets.Display;
 import org.eclipse.swt.widgets.List;
 import org.eclipse.swt.widgets.Shell;
 import org.eclipse.wb.swt.SWTResourceManager;
+import org.eclipse.swt.widgets.Label;
 
 public class ProdajaWindow implements SelectionListener {
 
@@ -39,7 +41,7 @@ public class ProdajaWindow implements SelectionListener {
 	private List list;
 	private Button bAdd;
 	private Button bBarKod;
-	private Combo combo;
+	private Combo cPopust;
 	private Button bVanjska;
 	private Button btnPrint;
 	private CLabel lBlagajna;
@@ -50,6 +52,8 @@ public class ProdajaWindow implements SelectionListener {
 	private Stupac stupac;
 	private StavkaList stavke;
 	private Blagajna blagajna;
+	private PopustList popusti;
+	private Label lRelacija;
 
 	public ProdajaWindow(Integer vozacID, Integer stupacID) {
 		vozac = new Vozac(vozacID);
@@ -58,6 +62,7 @@ public class ProdajaWindow implements SelectionListener {
 		karte = new KartaList();
 		stavke = new StavkaList();
 		blagajna = new Blagajna();
+		popusti = new PopustList(stupac, karte.get(0));
 	}
 
 	/**
@@ -128,11 +133,11 @@ public class ProdajaWindow implements SelectionListener {
 		cKarta.setItems(karte.getList());
 		cKarta.select(0);
 
-		combo = new Combo(shell, SWT.READ_ONLY);
-		combo.setItems(new String[] { "10%", "20%", "50%" });
-		combo.setFont(SWTResourceManager.getFont("Liberation Sans", 19, SWT.NORMAL));
-		combo.setBounds(330, 150, 310, 80);
-		combo.select(1);
+		cPopust = new Combo(shell, SWT.READ_ONLY);
+		cPopust.setItems(popusti.getList());
+		cPopust.setFont(SWTResourceManager.getFont("Liberation Sans", 19, SWT.NORMAL));
+		cPopust.setBounds(330, 150, 310, 80);
+		cPopust.select(1);
 
 		bVanjska = new Button(shell, SWT.NONE);
 		bVanjska.setText("Vanjska karta");
@@ -144,16 +149,22 @@ public class ProdajaWindow implements SelectionListener {
 		bAdd.setBounds(10, 240, 630, 40);
 		bAdd.setText("+");
 
+		lRelacija = new Label(shell, SWT.BORDER);
+		lRelacija.setBackground(SWTResourceManager.getColor(SWT.COLOR_WHITE));
+		lRelacija.setFont(SWTResourceManager.getFont("Liberation Sans", 14, SWT.BOLD));
+		lRelacija.setBounds(10, 300, 630, 30);
+		lRelacija.setText("");
+
+		list = new List(shell, SWT.BORDER);
+		list.addMouseListener(new ListMouseListener());
+		list.setFont(SWTResourceManager.getFont("Liberation Mono", 14, SWT.NORMAL));
+		list.setBounds(10, 335, 630, 175);
+
 		lCijena = new CLabel(shell, SWT.NONE);
 		lCijena.setFont(SWTResourceManager.getFont("Liberation Sans", 27, SWT.BOLD));
 		lCijena.setAlignment(SWT.RIGHT);
 		lCijena.setBounds(650, 350, 130, 70);
 		lCijena.setText("");
-
-		list = new List(shell, SWT.BORDER);
-		list.addMouseListener(new ListMouseListener());
-		list.setFont(SWTResourceManager.getFont("Liberation Mono", 14, SWT.NORMAL));
-		list.setBounds(10, 290, 630, 220);
 
 		btnPrint = new Button(shell, SWT.NONE);
 		btnPrint.addSelectionListener(new BtnPrintSelectionListener());
@@ -183,14 +194,22 @@ public class ProdajaWindow implements SelectionListener {
 	public void widgetDefaultSelected(SelectionEvent e) {
 		// lblCijena.setText((new
 		// DecimalFormat("#0.00")).format(stavka.getCijena()));
+		popusti = new PopustList(stupac, karte.get(cKarta.getSelectionIndex()));
+		cPopust.setItems(popusti.getList());
 	}
 
 	private class ButtonSelectionListener extends SelectionAdapter {
 		public void widgetSelected(SelectionEvent e) {
-			Stavka stavka = new Stavka(stupac, postaje.get(cOdPostaje.getSelectionIndex()), postaje.get(cDoPostaje.getSelectionIndex()), karte.get(cKarta.getSelectionIndex()), 0);
+			Stavka stavka = new Stavka(stupac, postaje.get(cOdPostaje.getSelectionIndex()), postaje.get(cDoPostaje.getSelectionIndex()), karte.get(cKarta.getSelectionIndex()), popusti.get(cPopust
+					.getSelectionIndex()));
 			stavke.add(stavka);
 			list.setItems(stavke.getList());
 			lCijena.setText(new DecimalFormat("#0.00").format(stavke.getUkupno()));
+			if (stavke.getCount().compareTo(0) > 0) {
+				cOdPostaje.setEnabled(false);
+				cDoPostaje.setEnabled(false);
+				lRelacija.setText(stavka.getRelacija());
+			}
 		}
 	}
 
@@ -201,6 +220,9 @@ public class ProdajaWindow implements SelectionListener {
 			stavke.remove(l.getSelectionIndex());
 			list.setItems(stavke.getList());
 			lCijena.setText(new DecimalFormat("#0.00").format(stavke.getUkupno()));
+			cOdPostaje.setEnabled(true);
+			cDoPostaje.setEnabled(true);
+
 		}
 	}
 
@@ -212,6 +234,9 @@ public class ProdajaWindow implements SelectionListener {
 			stavke.clear();
 			list.setItems(stavke.getList());
 			lCijena.setText("0,00");
+			cOdPostaje.setEnabled(true);
+			cDoPostaje.setEnabled(true);
+
 		}
 	}
 }

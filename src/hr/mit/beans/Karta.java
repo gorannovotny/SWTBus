@@ -12,6 +12,7 @@ public class Karta {
 	private Integer popustID;
 	private Integer kmPogoja;
 	private BigDecimal popustProcent;
+	private Integer tipKarteID;
 
 	public static Integer TARIFNI_DALJINAR = 1;
 	public static Integer FIKSNA_CIJENA = 2;
@@ -19,7 +20,7 @@ public class Karta {
 
 
 
-	public Karta(int id, String naziv,int stVoznji, int nacinDolocanjaCene, int tarifniRazredID, BigDecimal FiksnaCena, int popustID, int kmPogoja,double popustProcent) {
+	public Karta(int id, String naziv,int stVoznji, int nacinDolocanjaCene, int tarifniRazredID, BigDecimal FiksnaCena, int popustID, int kmPogoja,double popustProcent,int tip) {
 		this.id = id;
 		this.naziv = naziv;
 		this.stVoznji = stVoznji;
@@ -29,6 +30,7 @@ public class Karta {
 		this.popustID = popustID;
 		this.kmPogoja = kmPogoja;
 		this.popustProcent = new BigDecimal(popustProcent);
+		this.tipKarteID = tip;
 	}
 
 	public Integer getId() {
@@ -67,5 +69,7 @@ public class Karta {
 		return popustProcent;
 	}
 
-
+	public Integer getTipKarteID(){
+		return tipKarteID;
+	}
 }

@@ -9,6 +9,7 @@ import java.sql.SQLException;
 
 public class Stupac {
 
+	private Integer ID;
 	private String longDesc;
 	private Integer varijantaID;
 
@@ -22,6 +23,7 @@ public class Stupac {
 			if (rs.next()) {
 				longDesc = rs.getString("Opis1") + " Polazak:" + DbUtil.getHHMM(rs.getDouble("VremeOdhoda"));
 				varijantaID = rs.getInt("VarijantaVRID");
+				ID = stupacID;
 			}
 		} catch (SQLException e) {
 			e.printStackTrace();
@@ -34,6 +36,10 @@ public class Stupac {
 
 	public Integer getVarijantaID() {
 		return varijantaID;
+	}
+
+	public Integer getID() {
+		return ID;
 	}
 
 }

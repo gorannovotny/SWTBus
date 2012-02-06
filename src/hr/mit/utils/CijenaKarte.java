@@ -90,7 +90,7 @@ public class CijenaKarte {
 
 	public Integer getDistancaCenika() throws SQLException {
 		Integer retval;
-		if (karta.getNacinDolocanjaCene() == Karta.FIKSNI_KILOMETRI)
+		if (karta.getNacinDolocanjaCene().equals(Karta.FIKSNI_KILOMETRI))
 			retval = karta.getKmPogoja() * 1000;
 		else {
 			String sql1 = "SELECT SUM(a.DistancaM) FROM PTPostajeVarijantVR a WHERE a.VarijantaID = ? AND a.ZapSt > ? AND a.ZapSt <= ? AND a.Vozel IN  (SELECT Vozel  FROM PTPostajeVarijantVR b WHERE b.VarijantaID = a.VarijantaID AND (b.ZapSt = ? OR b.ZapSt = ?))";
@@ -108,7 +108,7 @@ public class CijenaKarte {
 
 	public BigDecimal getCijena() {
 		BigDecimal retval = BigDecimal.ZERO;
-		if (karta.getNacinDolocanjaCene() == Karta.FIKSNA_CIJENA)
+		if (karta.getNacinDolocanjaCene().equals(Karta.FIKSNA_CIJENA))
 			retval = karta.getFiksnaCena();
 		else {
 			if (false) {

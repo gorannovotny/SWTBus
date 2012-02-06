@@ -8,25 +8,31 @@ public class Stavka {
 	private Postaja odPostaje;
 	private Postaja doPostaje;
 	private Karta karta;
-	private Integer popust;
+	private Popust popust;
 	private BigDecimal cijena = BigDecimal.ZERO;
 
-	public Stavka(Stupac stupac,Postaja odPostaje, Postaja doPostaje, Karta karta, Integer popust) {
+	public Stavka(Stupac stupac,Postaja odPostaje, Postaja doPostaje, Karta karta, Popust popust) {
 		this.odPostaje = odPostaje;
 		this.doPostaje = doPostaje;
 		this.karta = karta;
 		this.popust = popust;
 		CijenaKarte c = new CijenaKarte(stupac, karta, odPostaje, doPostaje);
 		cijena = c.getUkupnaCijena();
+		cijena = cijena.subtract(cijena.multiply(popust.getPopust().movePointLeft(2)));
 	}
 
 	public String getDescription() {
-		String oddo = odPostaje.getNaziv() + "-" + doPostaje.getNaziv();
-		if (oddo.length()>35) oddo = oddo.substring(0, 35);
 		String k = karta.getNaziv();
-		if (k.length()>15) k = k.substring(0, 15);
-		String out = String.format("%-35s:%-15s %5.2f",oddo,k,getCijena().doubleValue());
+		if (k.length()>20) k = k.substring(0, 20);
+		String p = popust.getNaziv();
+		if (p.length()>15) p = p.substring(0, 15);
+		
+		String out = String.format("%-20s:%-15s %5.2f",k,popust.getNaziv(),getCijena().doubleValue());
 		return out;
+	}
+	
+	public String getRelacija() {
+		return odPostaje.getNaziv() + " - " + doPostaje.getNaziv();
 	}
 
 	public BigDecimal getCijena() {

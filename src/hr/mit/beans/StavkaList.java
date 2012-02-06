@@ -40,5 +40,9 @@ public class StavkaList {
 		}
 		return x;
 	}
+	
+	public Integer getCount() {
+		return stavke.size();
+	}
 
 }

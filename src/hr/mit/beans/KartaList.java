@@ -20,12 +20,12 @@ public class KartaList {
 	public KartaList() {
 		this.con = DbUtil.getConnection();
 		try {
-			String sql = "Select a.id,b.Opis,stVoznji,NacinDolocanjaCene,TarifniRazredID,FiksnaCena,PopustID,KMPogoja,PopustProcent from PTKTVozneKarte a,PTKTTipiKarti b WHERE a.MobilnaProdaja = 1 AND a.TipKarteID = b.ID";
+			String sql = "Select a.id,b.Opis,stVoznji,NacinDolocanjaCene,TarifniRazredID,FiksnaCena,PopustID,KMPogoja,PopustProcent,TipKarteID from PTKTVozneKarte a,PTKTTipiKarti b WHERE a.MobilnaProdaja = 1 AND a.TipKarteID = b.ID";
 			ps = con.prepareStatement(sql);
 			ResultSet rs = ps.executeQuery();
 			while (rs.next()) {
 				Karta k = new Karta(rs.getInt("id"), rs.getString("Opis"),rs.getInt("stVoznji"), rs.getInt("NacinDolocanjaCene"), rs.getInt("TarifniRazredID"), new BigDecimal(rs.getDouble("FiksnaCena")),
-			 			rs.getInt("PopustID"), rs.getInt("KMPogoja"),rs.getDouble("PopustProcent"));
+			 			rs.getInt("PopustID"), rs.getInt("KMPogoja"),rs.getDouble("PopustProcent"),rs.getInt("TipKarteID"));
 				karte.add(k);
 			}
 			rs.close();
