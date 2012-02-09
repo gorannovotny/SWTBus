@@ -27,6 +27,9 @@ import org.eclipse.swt.widgets.List;
 import org.eclipse.swt.widgets.Shell;
 import org.eclipse.wb.swt.SWTResourceManager;
 import org.eclipse.swt.widgets.Label;
+import org.eclipse.swt.widgets.Text;
+import org.eclipse.swt.events.FocusAdapter;
+import org.eclipse.swt.events.FocusEvent;
 
 public class ProdajaWindow implements SelectionListener {
 
@@ -53,7 +56,7 @@ public class ProdajaWindow implements SelectionListener {
 	private StavkaList stavke;
 	private Blagajna blagajna;
 	private PopustList popusti;
-	private Label lRelacija;
+	private Text lRelacija;
 
 	public ProdajaWindow(Integer vozacID, Integer stupacID) {
 		vozac = new Vozac(vozacID);
@@ -149,7 +152,9 @@ public class ProdajaWindow implements SelectionListener {
 		bAdd.setBounds(10, 240, 630, 40);
 		bAdd.setText("+");
 
-		lRelacija = new Label(shell, SWT.BORDER);
+		lRelacija = new Text(shell, SWT.BORDER);
+		lRelacija.addMouseListener(new LRelacijaMouseListener());
+		lRelacija.addSelectionListener(new LRelacijaSelectionListener());
 		lRelacija.setBackground(SWTResourceManager.getColor(SWT.COLOR_WHITE));
 		lRelacija.setFont(SWTResourceManager.getFont("Liberation Sans", 14, SWT.BOLD));
 		lRelacija.setBounds(10, 300, 630, 30);
@@ -237,6 +242,28 @@ public class ProdajaWindow implements SelectionListener {
 			cOdPostaje.setEnabled(true);
 			cDoPostaje.setEnabled(true);
 
+		}
+	}
+
+	private class LRelacijaSelectionListener extends SelectionAdapter {
+		@Override
+		public void widgetSelected(SelectionEvent e) {
+			// NumKeypad keypad = new NumKeypad(e.display.getActiveShell(),
+			// SWT.APPLICATION_MODAL);
+			// keypad.open((Text) e.widget);
+		}
+
+		@Override
+		public void widgetDefaultSelected(SelectionEvent e) {
+			widgetSelected(e);
+		}
+	}
+
+	private class LRelacijaMouseListener extends MouseAdapter {
+		@Override
+		public void mouseDown(MouseEvent e) {
+			VirtualKeyboard keypad = new VirtualKeyboard(e.display.getActiveShell(), SWT.APPLICATION_MODAL);
+			keypad.open((Text) e.widget);
 		}
 	}
 }
