@@ -14,7 +14,13 @@ public class MyButton extends Button {
 
 	public MyButton(Composite parent, String tipka, Integer red, Integer kolona,SelectionListener listener) {
 		super(parent, SWT.NONE);
-		setBounds(10 + (kolona - 1) * VISINA, 10 + (red - 1) * SIRINA, VISINA, SIRINA);
+		if (tipka.equals(" ")) {
+			setBounds(10 + (kolona - 1) * SIRINA, 10 + (red - 1) * VISINA, (SIRINA-2)*10, VISINA-2);
+		} else if (tipka.equals("BS")||tipka.equals("OK")) {
+			setBounds(10 + (kolona - 1) * SIRINA, 10 + (red - 1) * VISINA, (SIRINA-2)*2, VISINA-2);
+		} else {
+			setBounds(10 + (kolona - 1) * SIRINA, 10 + (red - 1) * VISINA, SIRINA-2, VISINA-2);
+		}
 		setFont(SWTResourceManager.getFont("Liberation Sans", 15, SWT.NORMAL));
 		setText(tipka);
 		addSelectionListener(listener);

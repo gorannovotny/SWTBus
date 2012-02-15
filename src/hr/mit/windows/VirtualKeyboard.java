@@ -1,5 +1,6 @@
 package hr.mit.windows;
 
+import org.eclipse.core.databinding.SetBinding;
 import org.eclipse.swt.widgets.Dialog;
 import org.eclipse.swt.widgets.Display;
 import org.eclipse.swt.widgets.Shell;
@@ -9,6 +10,8 @@ import org.eclipse.swt.SWT;
 import org.eclipse.swt.events.SelectionAdapter;
 import org.eclipse.swt.events.SelectionEvent;
 import org.eclipse.swt.events.SelectionListener;
+import org.eclipse.swt.graphics.Color;
+import org.eclipse.wb.swt.SWTResourceManager;
 
 public class VirtualKeyboard extends Dialog {
 
@@ -26,6 +29,7 @@ public class VirtualKeyboard extends Dialog {
 	public VirtualKeyboard(Shell parent, int style) {
 		super(parent, style);
 		setText("SWT Dialog");
+
 	}
 
 	/**
@@ -52,9 +56,10 @@ public class VirtualKeyboard extends Dialog {
 	 */
 	private void createContents() {
 		shell = new Shell(getParent(), getStyle());
-		shell.setSize(700, 250);
-		shell.setLocation(polje.toDisplay(0, 25));
+		shell.setSize(620, 270);
+		shell.setLocation(getParent().getLocation().x, getParent().getLocation().y + 330);
 		shell.setText(getText());
+		shell.setBackground(SWTResourceManager.getColor(SWT.COLOR_DARK_GRAY));
 		SelectionListener listener = new MyButtonSelectionListener();
 
 		MyButton b1 = new MyButton(shell, "1", 1, 1, listener);
@@ -67,9 +72,9 @@ public class VirtualKeyboard extends Dialog {
 		MyButton b8 = new MyButton(shell, "8", 1, 8, listener);
 		MyButton b9 = new MyButton(shell, "9", 1, 9, listener);
 		MyButton b0 = new MyButton(shell, "0", 1, 10, listener);
-		MyButton apos = new MyButton(shell, "'", 1, 11, listener);
-		MyButton plus = new MyButton(shell, "+", 1, 12, listener);
-		MyButton bs = new MyButton(shell, "<=", 1, 13, listener);
+		// MyButton apos = new MyButton(shell, "'", 1, 11, listener);
+		// MyButton plus = new MyButton(shell, "+", 1, 12, listener);
+		MyButton bs = new MyButton(shell, "BS", 1, 11, listener);
 
 		MyButton q = new MyButton(shell, "Q", 2, 1, listener);
 		MyButton w = new MyButton(shell, "W", 2, 2, listener);
@@ -95,17 +100,21 @@ public class VirtualKeyboard extends Dialog {
 		MyButton č = new MyButton(shell, "Č", 3, 10, listener);
 		MyButton ć = new MyButton(shell, "Ć", 3, 11, listener);
 		MyButton ž = new MyButton(shell, "Ž", 3, 12, listener);
-		MyButton y = new MyButton(shell, "Y", 4, 2, listener);
-		MyButton x = new MyButton(shell, "X", 4, 3, listener);
-		MyButton c = new MyButton(shell, "C", 4, 4, listener);
-		MyButton v = new MyButton(shell, "V", 4, 5, listener);
-		MyButton b = new MyButton(shell, "B", 4, 6, listener);
-		MyButton n = new MyButton(shell, "N", 4, 7, listener);
-		MyButton m = new MyButton(shell, "M", 4, 8, listener);
-		MyButton zarez = new MyButton(shell, ",", 4, 9, listener);
-		MyButton tocka = new MyButton(shell, ".", 4, 10, listener);
-		MyButton minus = new MyButton(shell, "-", 4, 11, listener);
-		MyButton ok = new MyButton(shell, "OK", 4, 12, listener);
+		MyButton y = new MyButton(shell, "Y", 4, 1, listener);
+		MyButton x = new MyButton(shell, "X", 4, 2, listener);
+		MyButton c = new MyButton(shell, "C", 4, 3, listener);
+		MyButton v = new MyButton(shell, "V", 4, 4, listener);
+		MyButton b = new MyButton(shell, "B", 4, 5, listener);
+		MyButton n = new MyButton(shell, "N", 4, 6, listener);
+		MyButton m = new MyButton(shell, "M", 4, 7, listener);
+		MyButton zarez = new MyButton(shell, ",", 4, 8, listener);
+		MyButton tocka = new MyButton(shell, ".", 4, 9, listener);
+		MyButton minus = new MyButton(shell, "-", 4, 10, listener);
+		MyButton plus = new MyButton(shell, "+", 4, 11, listener);
+		MyButton slash = new MyButton(shell, "/", 4, 12, listener);
+
+		MyButton ok = new MyButton(shell, "OK", 5, 11, listener);
+		MyButton space = new MyButton(shell, " ", 5, 1, listener);
 
 	}
 
@@ -118,7 +127,7 @@ public class VirtualKeyboard extends Dialog {
 			Button b = (Button) e.widget;
 			if (b.getText().equals("OK")) {
 				shell.dispose();
-			} else if (b.getText().equals("<=")) {
+			} else if (b.getText().equals("BS")) {
 				polje.setText(polje.getText(0, polje.getCharCount() - 2));
 			} else
 				polje.append(b.getText());

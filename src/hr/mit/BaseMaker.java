@@ -19,21 +19,22 @@ public class BaseMaker {
 			con2 = DriverManager.getConnection("jdbc:sqlite:test.db");
 			con2.setAutoCommit(false);
 
-			doPTVozniRedi(con1, con2);
-			doPTVarijanteVR(con1, con2);
-			doPTStupciVR(con1, con2);
-			doPTPostaje(con1, con2);
-			doPTPostajeVR(con1, con2);
-			doPTPostajeVarijantVR(con1, con2);
-			doPTCasiVoznjeVR(con1, con2);
-			doPTKTVozneKarte(con1, con2);
-			doPTVozaci(con1, con2);
-			doPTKTTarifniRazrediCenik(con1, con2);
-			doPTKTVrstePopustov(con1, con2);
-			doPTIzjemeCenikaVR(con1, con2);
-			doPTKTProdaja(con1, con2);
-			doPTKTTipiKarti(con1, con2);
-			doPTKTPopusti(con1, con2);
+//			doPTVozniRedi(con1, con2);
+//			doPTVarijanteVR(con1, con2);
+//			doPTStupciVR(con1, con2);
+//			doPTPostaje(con1, con2);
+//			doPTPostajeVR(con1, con2);
+//			doPTPostajeVarijantVR(con1, con2);
+//			doPTCasiVoznjeVR(con1, con2);
+//			doPTKTVozneKarte(con1, con2);
+//			doPTVozaci(con1, con2);
+//			doPTKTTarifniRazrediCenik(con1, con2);
+//			doPTKTVrstePopustov(con1, con2);
+//			doPTIzjemeCenikaVR(con1, con2);
+//			doPTKTProdaja(con1, con2);
+//			doPTKTTipiKarti(con1, con2);
+//			doPTKTPopusti(con1, con2);
+			doPromVozila(con1, con2);
 		} catch (Exception e) {
 			e.printStackTrace();
 		} finally {
@@ -463,6 +464,30 @@ public class BaseMaker {
 		ps.executeBatch();
 		con2.commit();
 		System.out.println(String.format("%-20s -> %7d","PTKTTipiKarti",i));
+	}
+
+	private static void doPromVozila(Connection con1, Connection con2) throws SQLException {
+		int i = 0;
+		con2.createStatement().executeUpdate("drop table if exists PromVozila;");
+		con2.createStatement().executeUpdate("CREATE TABLE PromVozila(ID INT NOT NULL,Firma INT NOT NULL,Sifra INT NOT NULL,PGRID INT,Status INT,GUID VARCHAR(40),Naziv VARCHAR(40),RegSt VARCHAR(12),LastnikVA VARCHAR(3),LastnikAnalitika INT,VrstaID INT,ZnamkaID INT,TipID INT,ModelID INT,OblikaKaroserije INT,Namena INT,Barva VARCHAR(20),StSasije VARCHAR(30),DrzavaIzdelave INT,LetoIzdelave DATETIME,PrvaRegistracija DATETIME,StSedezev INT,StStojisc INT,StLezisc INT,TezaPraznega INT,MaxTeza INT,MaxHitrost INT,StOsovin INT,VrstaMotorja INT,EuroStandard INT,MocKW INT,Vrtljaji INT,ZapremninaMotorja INT,DimDolzina INT,DimSirina INT,DimVisina INT,DimVolumen INT,StKoles INT,DimezijeGumPrednje VARCHAR(20),DimenzijeGumZadnje VARCHAR(20),VrstaZavor INT,Vleka INT,Vitlo INT,Opomba VARCHAR, PRIMARY KEY (ID))");
+		PreparedStatement ps = con2.prepareStatement("INSERT INTO PromVozila (ID,Firma,Sifra,PGRID,Status,GUID,Naziv,RegSt,LastnikVA) VALUES (?,?,?,?,?,?,?,?,?)");
+		ResultSet rs = con1.createStatement().executeQuery("SELECT * FROM PromVozila");
+		while (rs.next()) {
+			ps.setInt(1, rs.getInt(1));
+			ps.setInt(2, rs.getInt(2));
+			ps.setInt(3, rs.getInt(3));
+			ps.setInt(4, rs.getInt(4));
+			ps.setInt(5, rs.getInt(5));
+			ps.setString(6, rs.getString(6));
+			ps.setString(7, rs.getString(7));
+			ps.setString(8, rs.getString(8));
+			ps.setString(9, rs.getString(9));
+			ps.addBatch();
+			i++;
+		}
+		ps.executeBatch();
+		con2.commit();
+		System.out.println(String.format("%-20s -> %7d","PromVozila",i));
 	}
 
 }

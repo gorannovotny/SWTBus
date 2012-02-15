@@ -59,7 +59,7 @@ public class ProdajaWindow implements SelectionListener {
 	private Text lRelacija;
 
 	public ProdajaWindow(Integer vozacID, Integer stupacID) {
-		vozac = new Vozac(vozacID);
+		// vozac = new Vozac(vozacID);
 		stupac = new Stupac(stupacID);
 		postaje = new PostajaList(stupacID);
 		karte = new KartaList();
@@ -180,7 +180,7 @@ public class ProdajaWindow implements SelectionListener {
 		lVozac = new CLabel(shell, SWT.NONE);
 		lVozac.setBackground(SWTResourceManager.getColor(0, 0, 0));
 		lVozac.setForeground(SWTResourceManager.getColor(192, 192, 192));
-		lVozac.setText(vozac.getNaziv());
+		// lVozac.setText(vozac.getNaziv());
 		lVozac.setFont(SWTResourceManager.getFont("Liberation Sans", 20, SWT.NORMAL));
 		lVozac.setBounds(0, 520, 640, 54);
 
