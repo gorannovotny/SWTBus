@@ -1,7 +1,5 @@
 package hr.mit.windows;
 
-import java.sql.SQLException;
-
 import hr.mit.Starter;
 import hr.mit.beans.StupacList;
 import hr.mit.beans.Vozac;
@@ -10,6 +8,10 @@ import hr.mit.beans.VozniRed;
 import hr.mit.utils.DbUtil;
 
 import org.eclipse.swt.SWT;
+import org.eclipse.swt.events.ModifyEvent;
+import org.eclipse.swt.events.ModifyListener;
+import org.eclipse.swt.events.MouseAdapter;
+import org.eclipse.swt.events.MouseEvent;
 import org.eclipse.swt.events.SelectionAdapter;
 import org.eclipse.swt.events.SelectionEvent;
 import org.eclipse.swt.widgets.Button;
@@ -17,16 +19,8 @@ import org.eclipse.swt.widgets.Combo;
 import org.eclipse.swt.widgets.Display;
 import org.eclipse.swt.widgets.Label;
 import org.eclipse.swt.widgets.Shell;
-import org.eclipse.wb.swt.SWTResourceManager;
-import org.eclipse.swt.events.ModifyListener;
-import org.eclipse.swt.events.ModifyEvent;
-import org.eclipse.swt.custom.CCombo;
 import org.eclipse.swt.widgets.Text;
-import org.eclipse.swt.events.MouseAdapter;
-import org.eclipse.swt.events.MouseEvent;
-import org.eclipse.swt.graphics.Point;
-import org.eclipse.swt.events.FocusAdapter;
-import org.eclipse.swt.events.FocusEvent;
+import org.eclipse.wb.swt.SWTResourceManager;
 
 public class LoginWindow {
 
@@ -38,17 +32,16 @@ public class LoginWindow {
 	private Label lblPolazak;
 	private Text tVozac;
 	private Text tVozilo;
-	private Text comboLinija;
+	private Text tLinija;
 	private Combo comboPolazak;
 	private Button button;
 
-	private VozniRed vozniRed;
 	private StupacList polazak;
 	private Label lOpisVozilo;
 	private Label lOpisVozac;
+	private Label lOpisLinije;
 
 	public LoginWindow() {
-		vozniRed = new VozniRed();
 		polazak = new StupacList(DbUtil.getConnection());
 	}
 
@@ -74,31 +67,31 @@ public class LoginWindow {
 
 		lblPrijava = new Label(shlPrijava, SWT.NONE);
 		lblPrijava.setFont(SWTResourceManager.getFont("Liberation Sans", 45, SWT.NORMAL));
-		lblPrijava.setBounds(290, 40, 183, 67);
+		lblPrijava.setBounds(290, 10, 183, 67);
 		lblPrijava.setText("Prijava");
 
 		lblVozac = new Label(shlPrijava, SWT.NONE);
 		lblVozac.setAlignment(SWT.RIGHT);
 		lblVozac.setFont(SWTResourceManager.getFont("Liberation Sans", 30, SWT.NORMAL));
-		lblVozac.setBounds(0, 178, 220, 50);
+		lblVozac.setBounds(0, 150, 220, 50);
 		lblVozac.setText("Šifra vozača");
 
 		tVozac = new Text(shlPrijava, SWT.BORDER | SWT.RIGHT);
 		tVozac.addModifyListener(new TVozacModifyListener());
 		tVozac.addMouseListener(new textMouseListener());
 		tVozac.setFont(SWTResourceManager.getFont("Liberation Sans", 30, SWT.NORMAL));
-		tVozac.setBounds(225, 174, 100, 50);
+		tVozac.setBounds(225, 150, 100, 50);
 		tVozac.setText("");
 
 		lOpisVozac = new Label(shlPrijava, SWT.NONE);
 		lOpisVozac.setText("");
 		lOpisVozac.setFont(SWTResourceManager.getFont("Liberation Sans", 20, SWT.NORMAL));
-		lOpisVozac.setBounds(330, 188, 425, 30);
+		lOpisVozac.setBounds(330, 160, 425, 30);
 
 		lblVozilo = new Label(shlPrijava, SWT.NONE);
 		lblVozilo.setAlignment(SWT.RIGHT);
 		lblVozilo.setFont(SWTResourceManager.getFont("Liberation Sans", 30, SWT.NORMAL));
-		lblVozilo.setBounds(20, 233, 200, 50);
+		lblVozilo.setBounds(20, 205, 200, 50);
 		lblVozilo.setText("Šifra vozila");
 
 		tVozilo = new Text(shlPrijava, SWT.BORDER | SWT.RIGHT);
@@ -106,32 +99,40 @@ public class LoginWindow {
 		tVozilo.setText("");
 		tVozilo.addMouseListener(new textMouseListener());
 		tVozilo.setFont(SWTResourceManager.getFont("Liberation Sans", 30, SWT.NORMAL));
-		tVozilo.setBounds(225, 233, 100, 50);
+		tVozilo.setBounds(225, 205, 100, 50);
 
 		lOpisVozilo = new Label(shlPrijava, SWT.NONE);
-		lOpisVozilo.setBounds(330, 246, 425, 30);
+		lOpisVozilo.setBounds(330, 215, 425, 30);
 		lOpisVozilo.setFont(SWTResourceManager.getFont("Liberation Sans", 20, SWT.NORMAL));
 		lOpisVozilo.setText("");
 
 		lblLinija = new Label(shlPrijava, SWT.NONE);
 		lblLinija.setAlignment(SWT.RIGHT);
 		lblLinija.setFont(SWTResourceManager.getFont("Liberation Sans", 30, SWT.NORMAL));
-		lblLinija.setBounds(40, 289, 180, 50);
-		lblLinija.setText("Linija");
+		lblLinija.setBounds(40, 260, 180, 50);
+		lblLinija.setText("Šifra linije");
 
-		comboLinija = new Text(shlPrijava, SWT.BORDER);
-		comboLinija.setFont(SWTResourceManager.getFont("Liberation Sans", 20, SWT.NORMAL));
-		comboLinija.setBounds(225, 289, 530, 50);
+		tLinija = new Text(shlPrijava, SWT.BORDER);
+		tLinija.addModifyListener(new TLinijaModifyListener());
+		tLinija.addMouseListener(new textMouseListener());
+		tLinija.setFont(SWTResourceManager.getFont("Liberation Sans", 20, SWT.NORMAL));
+		tLinija.setBounds(225, 260, 130, 50);
+
+		lOpisLinije = new Label(shlPrijava, SWT.NONE);
+		lOpisLinije.setText("");
+		lOpisLinije.setFont(SWTResourceManager.getFont("Liberation Sans", 20, SWT.NORMAL));
+		lOpisLinije.setBounds(360, 270, 425, 30);
 
 		lblPolazak = new Label(shlPrijava, SWT.NONE);
 		lblPolazak.setAlignment(SWT.RIGHT);
 		lblPolazak.setFont(SWTResourceManager.getFont("Liberation Sans", 30, SWT.NORMAL));
-		lblPolazak.setBounds(40, 348, 180, 50);
+		lblPolazak.setBounds(40, 315, 180, 50);
 		lblPolazak.setText("Polazak");
 
 		comboPolazak = new Combo(shlPrijava, SWT.READ_ONLY);
 		comboPolazak.setFont(SWTResourceManager.getFont("Liberation Sans", 30, SWT.NORMAL));
-		comboPolazak.setBounds(225, 344, 150, 54);
+		comboPolazak.setBounds(225, 315, 150, 54);
+
 		button = new Button(shlPrijava, SWT.ARROW | SWT.RIGHT);
 		button.addSelectionListener(new ButtonSelectionListener());
 		button.setFont(SWTResourceManager.getFont("Liberation Sans", 30, SWT.NORMAL));
@@ -170,6 +171,15 @@ public class LoginWindow {
 			Text t = (Text) e.widget;
 			if (t.getText().matches("\\d+"))
 				lOpisVozac.setText(Vozac.getNaziv(Integer.parseInt(t.getText())));
+		}
+	}
+
+	private class TLinijaModifyListener implements ModifyListener {
+		public void modifyText(ModifyEvent e) {
+			Text t = (Text) e.widget;
+			lOpisLinije.setText(VozniRed.getNaziv(t.getText()));
+			comboPolazak.setItems(polazak.getList(t.getText()));
+			comboPolazak.select(0);
 		}
 	}
 }

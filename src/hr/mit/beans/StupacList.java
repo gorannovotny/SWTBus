@@ -17,23 +17,27 @@ public class StupacList {
 	public StupacList(Connection con) {
 		this.con = con;
 		try {
-			String sql = "SELECT id,vremeOdhoda FROM PTStupciVR WHERE VozniRedID = ? ORDER BY 2";
+			String sql = "SELECT a.id,a.vremeOdhoda FROM PTStupciVR a,PTVozniRedi b WHERE b.Sifra = ? AND a.VozniRedID = b.ID AND b.VrstaVR = 1 ORDER BY 2";
 			ps = con.prepareStatement(sql);
 		} catch (SQLException e) {
 			e.printStackTrace();
 		}
 	}
 
-	public String[] getList(Integer vozniRedID) throws SQLException {
+	public String[] getList(String SifraVR) {
 		nazivList.clear();
 		idList.clear();
-		ps.setInt(1, vozniRedID);
-		ResultSet rs = ps.executeQuery();
-		while (rs.next()) {
-			nazivList.add(DbUtil.getHHMM(rs.getDouble(2)));
-			idList.add(rs.getInt(1));
+		try {
+			ps.setString(1, SifraVR);
+			ResultSet rs = ps.executeQuery();
+			while (rs.next()) {
+				nazivList.add(DbUtil.getHHMM(rs.getDouble(2)));
+				idList.add(rs.getInt(1));
+			}
+			rs.close();
+		} catch (SQLException e) {
+			e.printStackTrace();
 		}
-		rs.close();
 		return nazivList.toArray(new String[0]);
 	}
 

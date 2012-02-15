@@ -96,18 +96,18 @@ public class ProdajaWindow implements SelectionListener {
 		shell.setSize(800, 600);
 		shell.setText("SWT Application");
 
-		lPolazak = new CLabel(shell, SWT.HORIZONTAL | SWT.SHADOW_NONE);
-		lPolazak.setBackground(SWTResourceManager.getColor(0, 0, 0));
-		lPolazak.setForeground(SWTResourceManager.getColor(192, 192, 192));
+		lPolazak = new CLabel(shell, SWT.SHADOW_OUT);
+		lPolazak.setBackground(SWTResourceManager.getColor(SWT.COLOR_DARK_GRAY));
+		lPolazak.setForeground(SWTResourceManager.getColor(SWT.COLOR_WHITE));
 		lPolazak.setFont(SWTResourceManager.getFont("Liberation Sans", 20, SWT.NORMAL));
-		lPolazak.setBounds(0, 0, 670, 50);
+		lPolazak.setBounds(0, 0, 680, 50);
 		lPolazak.setText(stupac.getLongDesc());
 
-		lClock = new CLabel(shell, SWT.RIGHT);
-		lClock.setForeground(SWTResourceManager.getColor(192, 192, 192));
-		lClock.setBackground(SWTResourceManager.getColor(0, 0, 0));
+		lClock = new CLabel(shell, SWT.SHADOW_OUT | SWT.RIGHT);
+		lClock.setForeground(SWTResourceManager.getColor(SWT.COLOR_WHITE));
+		lClock.setBackground(SWTResourceManager.getColor(SWT.COLOR_DARK_GRAY));
 		lClock.setFont(SWTResourceManager.getFont("Liberation Sans", 20, SWT.NORMAL));
-		lClock.setBounds(670, 0, 124, 50);
+		lClock.setBounds(680, 0, 114, 50);
 		lClock.setText(new SimpleDateFormat("HH:mm:ss").format(new Date()));
 
 		cOdPostaje = new Combo(shell, SWT.READ_ONLY);
