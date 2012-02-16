@@ -40,6 +40,7 @@ public class LoginWindow {
 	protected Label lOpisVozilo;
 	protected Label lOpisVozac;
 	protected Label lOpisLinije;
+	private Combo combo;
 
 	public LoginWindow() {
 		polazak = new StupacList(DbUtil.getConnection());
@@ -130,6 +131,9 @@ public class LoginWindow {
 		button = new Button(shlPrijava, SWT.ARROW | SWT.RIGHT);
 		button.setFont(SWTResourceManager.getFont("Liberation Sans", 30, SWT.NORMAL));
 		button.setBounds(700, 480, 60, 56);
+		combo = new Combo(shlPrijava, SWT.NONE);
+		combo.setBounds(40, 400, 184, 26);
+		combo.setItems(Vozac.getList());
 
 		tVozac.addModifyListener(new TVozacModifyListener());
 		tVozac.addMouseListener(new textMouseListener());

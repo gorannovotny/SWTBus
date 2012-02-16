@@ -51,4 +51,14 @@ public class Vozac {
 	public String getNaziv() {
 		return naziv;
 	}
+	
+	public static String[] getList() {
+		String[] l = new String[vozacList.size()];
+		int x= 0;
+		for (Vozac v : vozacList) {
+			l[x] = v.getNaziv();
+			x++;
+		}
+		return l;
+	}
 }
