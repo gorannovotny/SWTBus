@@ -33,13 +33,13 @@ public class LoginWindow {
 	private Text tVozac;
 	private Text tVozilo;
 	private Text tLinija;
-	private Combo comboPolazak;
+	protected Combo comboPolazak;
 	private Button button;
 
-	private StupacList polazak;
-	private Label lOpisVozilo;
-	private Label lOpisVozac;
-	private Label lOpisLinije;
+	protected StupacList polazak;
+	protected Label lOpisVozilo;
+	protected Label lOpisVozac;
+	protected Label lOpisLinije;
 
 	public LoginWindow() {
 		polazak = new StupacList(DbUtil.getConnection());
@@ -50,6 +50,7 @@ public class LoginWindow {
 	 */
 	public void open() {
 		Display display = Display.getDefault();
+		shlPrijava = new Shell(SWT.SHELL_TRIM);
 		createContents();
 		shlPrijava.open();
 		while (!shlPrijava.isDisposed()) {
@@ -60,7 +61,6 @@ public class LoginWindow {
 	}
 
 	protected void createContents() {
-		shlPrijava = new Shell(SWT.SHELL_TRIM);
 		shlPrijava.setMaximized(true);
 		shlPrijava.setSize(800, 600);
 		shlPrijava.setText("Prijava");
@@ -77,8 +77,6 @@ public class LoginWindow {
 		lblVozac.setText("Šifra vozača");
 
 		tVozac = new Text(shlPrijava, SWT.BORDER | SWT.RIGHT);
-		tVozac.addModifyListener(new TVozacModifyListener());
-		tVozac.addMouseListener(new textMouseListener());
 		tVozac.setFont(SWTResourceManager.getFont("Liberation Sans", 30, SWT.NORMAL));
 		tVozac.setBounds(225, 150, 100, 50);
 		tVozac.setText("");
@@ -95,9 +93,7 @@ public class LoginWindow {
 		lblVozilo.setText("Šifra vozila");
 
 		tVozilo = new Text(shlPrijava, SWT.BORDER | SWT.RIGHT);
-		tVozilo.addModifyListener(new TVoziloModifyListener());
 		tVozilo.setText("");
-		tVozilo.addMouseListener(new textMouseListener());
 		tVozilo.setFont(SWTResourceManager.getFont("Liberation Sans", 30, SWT.NORMAL));
 		tVozilo.setBounds(225, 205, 100, 50);
 
@@ -113,8 +109,6 @@ public class LoginWindow {
 		lblLinija.setText("Šifra linije");
 
 		tLinija = new Text(shlPrijava, SWT.BORDER);
-		tLinija.addModifyListener(new TLinijaModifyListener());
-		tLinija.addMouseListener(new textMouseListener());
 		tLinija.setFont(SWTResourceManager.getFont("Liberation Sans", 20, SWT.NORMAL));
 		tLinija.setBounds(225, 260, 130, 50);
 
@@ -134,21 +128,28 @@ public class LoginWindow {
 		comboPolazak.setBounds(225, 315, 150, 54);
 
 		button = new Button(shlPrijava, SWT.ARROW | SWT.RIGHT);
-		button.addSelectionListener(new ButtonSelectionListener());
 		button.setFont(SWTResourceManager.getFont("Liberation Sans", 30, SWT.NORMAL));
 		button.setBounds(700, 480, 60, 56);
 
+		tVozac.addModifyListener(new TVozacModifyListener());
+		tVozac.addMouseListener(new textMouseListener());
+		tVozilo.addModifyListener(new TVoziloModifyListener());
+		tVozilo.addMouseListener(new textMouseListener());
+		tLinija.addModifyListener(new TLinijaModifyListener());
+		tLinija.addMouseListener(new textMouseListener());
+		button.addSelectionListener(new ButtonSelectionListener());
+
 	}
 
-	private class ButtonSelectionListener extends SelectionAdapter {
+	protected class ButtonSelectionListener extends SelectionAdapter {
 		public void widgetSelected(SelectionEvent e) {
-			// Starter.vozacID = Vozac.getVozacID(tVozac.getSelectionIndex());
+			Starter.vozac = Vozac.getBySifra(Integer.parseInt(tVozac.getText()));
 			Starter.stupacID = polazak.getPolazakID(comboPolazak.getSelectionIndex());
 			shlPrijava.dispose();
 		}
 	}
 
-	private class textMouseListener extends MouseAdapter {
+	protected class textMouseListener extends MouseAdapter {
 		@Override
 		public void mouseDown(MouseEvent e) {
 			Text t = (Text) e.widget;
@@ -158,7 +159,7 @@ public class LoginWindow {
 		}
 	}
 
-	private class TVoziloModifyListener implements ModifyListener {
+	protected class TVoziloModifyListener implements ModifyListener {
 		public void modifyText(ModifyEvent e) {
 			Text t = (Text) e.widget;
 			if (t.getText().matches("\\d+"))
@@ -166,15 +167,20 @@ public class LoginWindow {
 		}
 	}
 
-	private class TVozacModifyListener implements ModifyListener {
+	protected class TVozacModifyListener implements ModifyListener {
 		public void modifyText(ModifyEvent e) {
+			Vozac v = null;
 			Text t = (Text) e.widget;
 			if (t.getText().matches("\\d+"))
-				lOpisVozac.setText(Vozac.getNaziv(Integer.parseInt(t.getText())));
+				v = Vozac.getBySifra(Integer.parseInt(t.getText()));
+			if (v == null)
+				lOpisVozac.setText("");
+			else
+				lOpisVozac.setText(v.getNaziv());
 		}
 	}
 
-	private class TLinijaModifyListener implements ModifyListener {
+	protected class TLinijaModifyListener implements ModifyListener {
 		public void modifyText(ModifyEvent e) {
 			Text t = (Text) e.widget;
 			lOpisLinije.setText(VozniRed.getNaziv(t.getText()));

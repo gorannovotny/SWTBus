@@ -58,8 +58,8 @@ public class ProdajaWindow implements SelectionListener {
 	private PopustList popusti;
 	private Text lRelacija;
 
-	public ProdajaWindow(Integer vozacID, Integer stupacID) {
-		// vozac = new Vozac(vozacID);
+	public ProdajaWindow(Vozac vozac, Integer stupacID) {
+		this.vozac = vozac;
 		stupac = new Stupac(stupacID);
 		postaje = new PostajaList(stupacID);
 		karte = new KartaList();
@@ -110,7 +110,7 @@ public class ProdajaWindow implements SelectionListener {
 		lClock.setBounds(680, 0, 114, 50);
 		lClock.setText(new SimpleDateFormat("HH:mm:ss").format(new Date()));
 
-		cOdPostaje = new Combo(shell, SWT.READ_ONLY);
+		cOdPostaje = new Combo(shell, SWT.DROP_DOWN|SWT.READ_ONLY);
 		cOdPostaje.addSelectionListener(this);
 		cOdPostaje.setFont(SWTResourceManager.getFont("Liberation Sans", 19, SWT.NORMAL));
 		cOdPostaje.setItems(postaje.getNewList());
@@ -140,7 +140,7 @@ public class ProdajaWindow implements SelectionListener {
 		cPopust.setItems(popusti.getList());
 		cPopust.setFont(SWTResourceManager.getFont("Liberation Sans", 19, SWT.NORMAL));
 		cPopust.setBounds(330, 150, 310, 80);
-		cPopust.select(1);
+		cPopust.select(0);
 
 		bVanjska = new Button(shell, SWT.NONE);
 		bVanjska.setText("Vanjska karta");
@@ -180,7 +180,7 @@ public class ProdajaWindow implements SelectionListener {
 		lVozac = new CLabel(shell, SWT.NONE);
 		lVozac.setBackground(SWTResourceManager.getColor(0, 0, 0));
 		lVozac.setForeground(SWTResourceManager.getColor(192, 192, 192));
-		// lVozac.setText(vozac.getNaziv());
+		lVozac.setText(vozac.getNaziv());
 		lVozac.setFont(SWTResourceManager.getFont("Liberation Sans", 20, SWT.NORMAL));
 		lVozac.setBounds(0, 520, 640, 54);
 
@@ -201,6 +201,7 @@ public class ProdajaWindow implements SelectionListener {
 		// DecimalFormat("#0.00")).format(stavka.getCijena()));
 		popusti = new PopustList(stupac, karte.get(cKarta.getSelectionIndex()));
 		cPopust.setItems(popusti.getList());
+		cPopust.select(0);
 	}
 
 	private class ButtonSelectionListener extends SelectionAdapter {

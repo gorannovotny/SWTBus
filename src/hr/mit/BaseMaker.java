@@ -19,21 +19,21 @@ public class BaseMaker {
 			con2 = DriverManager.getConnection("jdbc:sqlite:test.db");
 			con2.setAutoCommit(false);
 
-//			doPTVozniRedi(con1, con2);
-//			doPTVarijanteVR(con1, con2);
-//			doPTStupciVR(con1, con2);
-//			doPTPostaje(con1, con2);
-//			doPTPostajeVR(con1, con2);
-//			doPTPostajeVarijantVR(con1, con2);
-//			doPTCasiVoznjeVR(con1, con2);
-//			doPTKTVozneKarte(con1, con2);
-//			doPTVozaci(con1, con2);
-//			doPTKTTarifniRazrediCenik(con1, con2);
-//			doPTKTVrstePopustov(con1, con2);
-//			doPTIzjemeCenikaVR(con1, con2);
-//			doPTKTProdaja(con1, con2);
-//			doPTKTTipiKarti(con1, con2);
-//			doPTKTPopusti(con1, con2);
+			doPTVozniRedi(con1, con2);
+			doPTVarijanteVR(con1, con2);
+			doPTStupciVR(con1, con2);
+			doPTPostaje(con1, con2);
+			doPTPostajeVR(con1, con2);
+			doPTPostajeVarijantVR(con1, con2);
+			doPTCasiVoznjeVR(con1, con2);
+			doPTKTVozneKarte(con1, con2);
+			doPTVozaci(con1, con2);
+			doPTKTTarifniRazrediCenik(con1, con2);
+			doPTKTVrstePopustov(con1, con2);
+			doPTIzjemeCenikaVR(con1, con2);
+			doPTKTProdaja(con1, con2);
+			doPTKTTipiKarti(con1, con2);
+			doPTKTPopusti(con1, con2);
 			doPromVozila(con1, con2);
 		} catch (Exception e) {
 			e.printStackTrace();

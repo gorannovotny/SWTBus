@@ -7,42 +7,48 @@ import java.sql.SQLException;
 import java.util.ArrayList;
 
 public class Vozac {
-	static ArrayList<String> nazivList = new ArrayList<String>();
-	static ArrayList<Integer> idList = new ArrayList<Integer>();
+	static ArrayList<Vozac> vozacList = new ArrayList<Vozac>();
 
+	private Integer id;
+	private Integer sifra;
+	private String naziv;
 
 	static {
 		try {
-			String sql = "SELECT Sifra,Naziv FROM PTVozaci ORDER BY Naziv";
+			String sql = "SELECT id,Sifra,Naziv FROM PTVozaci ORDER BY Naziv";
 			ResultSet rs = DbUtil.getConnection().createStatement().executeQuery(sql);
 			while (rs.next()) {
-				nazivList.add(rs.getString(2));
-				idList.add(rs.getInt(1));
+				vozacList.add(new Vozac(rs.getInt(1),rs.getInt(2),rs.getString(3)));
 			}
 		} catch (SQLException e) {
 			e.printStackTrace();
 		}
-
+	}
+	
+	public Vozac(Integer id, Integer sifra, String naziv) {
+		super();
+		this.id = id;
+		this.sifra = sifra;
+		this.naziv = naziv;
 	}
 
-
-	public static String[] getList() {
-		return nazivList.toArray(new String[0]);
+	
+	public static Vozac getBySifra(Integer sifra) {
+		for (Vozac v : vozacList) {
+			if (v.getSifra().equals(sifra)) return v;
+		}
+		return null;
 	}
 
-	public static Integer getID(int selectionIndex) {
-		if (selectionIndex >= 0)
-			return idList.get(selectionIndex);
-		else
-			return new Integer(-1);
+	public Integer getId() {
+		return id;
 	}
 
-	public static String getNaziv(Integer sifra) {
-		int i = idList.indexOf(sifra);
-		if (i != -1)
-			return nazivList.get(i);
-		else
-			return "";
+	public Integer getSifra() {
+		return sifra;
 	}
 
+	public String getNaziv() {
+		return naziv;
+	}
 }
