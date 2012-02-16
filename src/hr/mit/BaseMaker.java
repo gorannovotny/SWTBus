@@ -19,22 +19,23 @@ public class BaseMaker {
 			con2 = DriverManager.getConnection("jdbc:sqlite:test.db");
 			con2.setAutoCommit(false);
 
-			doPTVozniRedi(con1, con2);
-			doPTVarijanteVR(con1, con2);
-			doPTStupciVR(con1, con2);
-			doPTPostaje(con1, con2);
-			doPTPostajeVR(con1, con2);
-			doPTPostajeVarijantVR(con1, con2);
-			doPTCasiVoznjeVR(con1, con2);
-			doPTKTVozneKarte(con1, con2);
-			doPTVozaci(con1, con2);
-			doPTKTTarifniRazrediCenik(con1, con2);
-			doPTKTVrstePopustov(con1, con2);
-			doPTIzjemeCenikaVR(con1, con2);
-			doPTKTProdaja(con1, con2);
-			doPTKTTipiKarti(con1, con2);
-			doPTKTPopusti(con1, con2);
-			doPromVozila(con1, con2);
+//			doPTVozniRedi(con1, con2);
+//			doPTVarijanteVR(con1, con2);
+//			doPTStupciVR(con1, con2);
+//			doPTPostaje(con1, con2);
+//			doPTPostajeVR(con1, con2);
+//			doPTPostajeVarijantVR(con1, con2);
+//			doPTCasiVoznjeVR(con1, con2);
+//			doPTKTVozneKarte(con1, con2);
+//			doPTVozaci(con1, con2);
+//			doPTKTTarifniRazrediCenik(con1, con2);
+//			doPTKTVrstePopustov(con1, con2);
+//			doPTIzjemeCenikaVR(con1, con2);
+//			doPTKTProdaja(con1, con2);
+//			doPTKTTipiKarti(con1, con2);
+//			doPTKTPopusti(con1, con2);
+//			doPromVozila(con1, con2);
+			doPTProdajnaMesta(con1, con2);
 		} catch (Exception e) {
 			e.printStackTrace();
 		} finally {
@@ -488,6 +489,30 @@ public class BaseMaker {
 		ps.executeBatch();
 		con2.commit();
 		System.out.println(String.format("%-20s -> %7d","PromVozila",i));
+	}
+
+	private static void doPTProdajnaMesta(Connection con1, Connection con2) throws SQLException {
+		int i = 0;
+		con2.createStatement().executeUpdate("drop table if exists PTProdajnaMesta;");
+		con2.createStatement().executeUpdate("CREATE TABLE PTProdajnaMesta(ID INT NOT NULL ,Firma INT NOT NULL,Sifra INT NOT NULL, Oznaka VARCHAR(10),Naziv VARCHAR(50),Partner INT,Strm INT,OE INT,PostajaID INT,PRIMARY KEY (ID))");
+		PreparedStatement ps = con2.prepareStatement("INSERT INTO PTProdajnaMesta VALUES (?,?,?,?,?,?,?,?,?)");
+		ResultSet rs = con1.createStatement().executeQuery("SELECT * FROM PTProdajnaMesta");
+		while (rs.next()) {
+			ps.setInt(1, rs.getInt(1));
+			ps.setInt(2, rs.getInt(2));
+			ps.setInt(3, rs.getInt(3));
+			ps.setString(4, rs.getString(4));
+			ps.setString(5, rs.getString(5));
+			ps.setInt(6, rs.getInt(6));
+			ps.setInt(7, rs.getInt(7));
+			ps.setInt(8, rs.getInt(8));
+			ps.setInt(9, rs.getInt(9));
+			ps.addBatch();
+			i++;
+		}
+		ps.executeBatch();
+		con2.commit();
+		System.out.println(String.format("%-20s -> %7d","PTProdajnaMesta",i));
 	}
 
 }

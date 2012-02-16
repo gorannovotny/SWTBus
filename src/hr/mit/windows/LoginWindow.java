@@ -80,7 +80,7 @@ public class LoginWindow {
 		tVozac = new Text(shlPrijava, SWT.BORDER | SWT.RIGHT);
 		tVozac.setFont(SWTResourceManager.getFont("Liberation Sans", 30, SWT.NORMAL));
 		tVozac.setBounds(225, 150, 100, 50);
-		tVozac.setText("");
+		tVozac.setText("117");
 
 		lOpisVozac = new Label(shlPrijava, SWT.NONE);
 		lOpisVozac.setText("");
@@ -94,7 +94,7 @@ public class LoginWindow {
 		lblVozilo.setText("Šifra vozila");
 
 		tVozilo = new Text(shlPrijava, SWT.BORDER | SWT.RIGHT);
-		tVozilo.setText("");
+		tVozilo.setText("557");
 		tVozilo.setFont(SWTResourceManager.getFont("Liberation Sans", 30, SWT.NORMAL));
 		tVozilo.setBounds(225, 205, 100, 50);
 
@@ -110,6 +110,7 @@ public class LoginWindow {
 		lblLinija.setText("Šifra linije");
 
 		tLinija = new Text(shlPrijava, SWT.BORDER);
+		tLinija.setText("ŽL/0125");
 		tLinija.setFont(SWTResourceManager.getFont("Liberation Sans", 20, SWT.NORMAL));
 		tLinija.setBounds(225, 260, 130, 50);
 

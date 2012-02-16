@@ -4,6 +4,7 @@ import hr.mit.beans.Blagajna;
 import hr.mit.beans.KartaList;
 import hr.mit.beans.PopustList;
 import hr.mit.beans.PostajaList;
+import hr.mit.beans.ProdajnoMjesto;
 import hr.mit.beans.Stavka;
 import hr.mit.beans.StavkaList;
 import hr.mit.beans.Stupac;
@@ -56,7 +57,7 @@ public class ProdajaWindow implements SelectionListener {
 	private StavkaList stavke;
 	private Blagajna blagajna;
 	private PopustList popusti;
-	private Text lRelacija;
+	private Combo cProdMjesto;
 
 	public ProdajaWindow(Vozac vozac, Integer stupacID) {
 		this.vozac = vozac;
@@ -96,21 +97,21 @@ public class ProdajaWindow implements SelectionListener {
 		shell.setSize(800, 600);
 		shell.setText("SWT Application");
 
-		lPolazak = new CLabel(shell, SWT.SHADOW_OUT);
-		lPolazak.setBackground(SWTResourceManager.getColor(SWT.COLOR_DARK_GRAY));
+		lPolazak = new CLabel(shell, SWT.NONE);
+		lPolazak.setBackground(SWTResourceManager.getColor(SWT.COLOR_BLACK));
 		lPolazak.setForeground(SWTResourceManager.getColor(SWT.COLOR_WHITE));
 		lPolazak.setFont(SWTResourceManager.getFont("Liberation Sans", 20, SWT.NORMAL));
 		lPolazak.setBounds(0, 0, 680, 50);
 		lPolazak.setText(stupac.getLongDesc());
 
-		lClock = new CLabel(shell, SWT.SHADOW_OUT | SWT.RIGHT);
+		lClock = new CLabel(shell, SWT.RIGHT);
 		lClock.setForeground(SWTResourceManager.getColor(SWT.COLOR_WHITE));
-		lClock.setBackground(SWTResourceManager.getColor(SWT.COLOR_DARK_GRAY));
+		lClock.setBackground(SWTResourceManager.getColor(SWT.COLOR_BLACK));
 		lClock.setFont(SWTResourceManager.getFont("Liberation Sans", 20, SWT.NORMAL));
 		lClock.setBounds(680, 0, 114, 50);
 		lClock.setText(new SimpleDateFormat("HH:mm:ss").format(new Date()));
 
-		cOdPostaje = new Combo(shell, SWT.DROP_DOWN|SWT.READ_ONLY);
+		cOdPostaje = new Combo(shell, SWT.DROP_DOWN | SWT.READ_ONLY);
 		cOdPostaje.addSelectionListener(this);
 		cOdPostaje.setFont(SWTResourceManager.getFont("Liberation Sans", 19, SWT.NORMAL));
 		cOdPostaje.setItems(postaje.getNewList());
@@ -147,23 +148,21 @@ public class ProdajaWindow implements SelectionListener {
 		bVanjska.setFont(SWTResourceManager.getFont("Liberation Sans", 15, SWT.NORMAL));
 		bVanjska.setBounds(650, 150, 130, 80);
 
+		cProdMjesto = new Combo(shell, SWT.READ_ONLY);
+		cProdMjesto.setItems(ProdajnoMjesto.getList());
+		cProdMjesto.setFont(SWTResourceManager.getFont("Liberation Sans", 19, SWT.NORMAL));
+		cProdMjesto.setBounds(10, 238, 310, 67);
+		cProdMjesto.select(0);
+
 		bAdd = new Button(shell, SWT.NONE);
 		bAdd.addSelectionListener(new ButtonSelectionListener());
-		bAdd.setBounds(10, 240, 630, 40);
+		bAdd.setBounds(10, 315, 630, 40);
 		bAdd.setText("+");
-
-		lRelacija = new Text(shell, SWT.BORDER);
-		lRelacija.addMouseListener(new LRelacijaMouseListener());
-		lRelacija.addSelectionListener(new LRelacijaSelectionListener());
-		lRelacija.setBackground(SWTResourceManager.getColor(SWT.COLOR_WHITE));
-		lRelacija.setFont(SWTResourceManager.getFont("Liberation Sans", 14, SWT.BOLD));
-		lRelacija.setBounds(10, 300, 630, 30);
-		lRelacija.setText("");
 
 		list = new List(shell, SWT.BORDER);
 		list.addMouseListener(new ListMouseListener());
 		list.setFont(SWTResourceManager.getFont("Liberation Mono", 14, SWT.NORMAL));
-		list.setBounds(10, 335, 630, 175);
+		list.setBounds(10, 360, 630, 150);
 
 		lCijena = new CLabel(shell, SWT.NONE);
 		lCijena.setFont(SWTResourceManager.getFont("Liberation Sans", 27, SWT.BOLD));
@@ -192,10 +191,6 @@ public class ProdajaWindow implements SelectionListener {
 		lBlagajna.setBounds(640, 520, 155, 54);
 	}
 
-	public void widgetSelected(SelectionEvent e) {
-		widgetDefaultSelected(e);
-	}
-
 	public void widgetDefaultSelected(SelectionEvent e) {
 		// lblCijena.setText((new
 		// DecimalFormat("#0.00")).format(stavka.getCijena()));
@@ -214,7 +209,6 @@ public class ProdajaWindow implements SelectionListener {
 			if (stavke.getCount().compareTo(0) > 0) {
 				cOdPostaje.setEnabled(false);
 				cDoPostaje.setEnabled(false);
-				lRelacija.setText(stavka.getRelacija());
 			}
 		}
 	}
@@ -246,25 +240,9 @@ public class ProdajaWindow implements SelectionListener {
 		}
 	}
 
-	private class LRelacijaSelectionListener extends SelectionAdapter {
-		@Override
-		public void widgetSelected(SelectionEvent e) {
-			// NumKeypad keypad = new NumKeypad(e.display.getActiveShell(),
-			// SWT.APPLICATION_MODAL);
-			// keypad.open((Text) e.widget);
-		}
+	@Override
+	public void widgetSelected(SelectionEvent arg0) {
+		// TODO Auto-generated method stub
 
-		@Override
-		public void widgetDefaultSelected(SelectionEvent e) {
-			widgetSelected(e);
-		}
-	}
-
-	private class LRelacijaMouseListener extends MouseAdapter {
-		@Override
-		public void mouseDown(MouseEvent e) {
-			VirtualKeyboard keypad = new VirtualKeyboard(e.display.getActiveShell(), SWT.APPLICATION_MODAL);
-			keypad.open((Text) e.widget);
-		}
 	}
 }
