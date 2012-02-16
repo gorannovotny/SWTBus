@@ -41,12 +41,10 @@ public class ProdajaWindow implements SelectionListener {
 	private CLabel lPolazak;
 	private Combo cKarta;
 	private CLabel lVozac;
-	private CLabel lCijena;
+	private Text lCijena;
 	private List list;
 	private Button bAdd;
-	private Button bBarKod;
 	private Combo cPopust;
-	private Button bVanjska;
 	private Button btnPrint;
 	private CLabel lBlagajna;
 
@@ -58,6 +56,11 @@ public class ProdajaWindow implements SelectionListener {
 	private Blagajna blagajna;
 	private PopustList popusti;
 	private Combo cProdMjesto;
+	private Label lblOdPostaje;
+	private Label lblDoPostaje;
+	private Label lblVrstaKarte;
+	private Label lblPopust;
+	private Label lblProdajnoMjesto;
 
 	public ProdajaWindow(Vozac vozac, Integer stupacID) {
 		this.vozac = vozac;
@@ -110,48 +113,68 @@ public class ProdajaWindow implements SelectionListener {
 		lClock.setFont(SWTResourceManager.getFont("Liberation Sans", 20, SWT.NORMAL));
 		lClock.setBounds(680, 0, 114, 50);
 		lClock.setText(new SimpleDateFormat("HH:mm:ss").format(new Date()));
+		{
+			lblOdPostaje = new Label(shell, SWT.NONE);
+			lblOdPostaje.setFont(SWTResourceManager.getFont("Liberation Sans", 10, SWT.NORMAL));
+			lblOdPostaje.setBounds(5, 55, 63, 15);
+			lblOdPostaje.setText("Od postaje");
+		}
+		{
+			lblDoPostaje = new Label(shell, SWT.NONE);
+			lblDoPostaje.setText("Do postaje");
+			lblDoPostaje.setFont(SWTResourceManager.getFont("Liberation Sans", 10, SWT.NORMAL));
+			lblDoPostaje.setBounds(400, 55, 63, 15);
+		}
 
 		cOdPostaje = new Combo(shell, SWT.DROP_DOWN | SWT.READ_ONLY);
 		cOdPostaje.addSelectionListener(this);
 		cOdPostaje.setFont(SWTResourceManager.getFont("Liberation Sans", 19, SWT.NORMAL));
 		cOdPostaje.setItems(postaje.getNewList());
-		cOdPostaje.setBounds(10, 60, 310, 80);
+		cOdPostaje.setBounds(5, 70, 390, 70);
 		cOdPostaje.select(0);
 
 		cDoPostaje = new Combo(shell, SWT.READ_ONLY);
 		cDoPostaje.addSelectionListener(this);
 		cDoPostaje.setFont(SWTResourceManager.getFont("Liberation Sans", 19, SWT.NORMAL));
-		cDoPostaje.setBounds(330, 60, 310, 80);
+		cDoPostaje.setBounds(400, 70, 390, 70);
 		cDoPostaje.setItems(postaje.getNewList());
 		cDoPostaje.select(1);
-
-		bBarKod = new Button(shell, SWT.NONE);
-		bBarKod.setFont(SWTResourceManager.getFont("Liberation Sans", 20, SWT.NORMAL));
-		bBarKod.setBounds(650, 60, 130, 80);
-		bBarKod.setText("Bar kod");
+		{
+			lblVrstaKarte = new Label(shell, SWT.NONE);
+			lblVrstaKarte.setText("Vrsta karte");
+			lblVrstaKarte.setFont(SWTResourceManager.getFont("Liberation Sans", 10, SWT.NORMAL));
+			lblVrstaKarte.setBounds(5, 145, 64, 15);
+		}
+		{
+			lblPopust = new Label(shell, SWT.NONE);
+			lblPopust.setText("Popust");
+			lblPopust.setFont(SWTResourceManager.getFont("Liberation Sans", 10, SWT.NORMAL));
+			lblPopust.setBounds(400, 145, 41, 15);
+		}
 
 		cKarta = new Combo(shell, SWT.READ_ONLY);
 		cKarta.addSelectionListener(this);
 		cKarta.setFont(SWTResourceManager.getFont("Liberation Sans", 19, SWT.NORMAL));
-		cKarta.setBounds(10, 150, 310, 80);
+		cKarta.setBounds(5, 160, 390, 70);
 		cKarta.setItems(karte.getList());
 		cKarta.select(0);
 
 		cPopust = new Combo(shell, SWT.READ_ONLY);
 		cPopust.setItems(popusti.getList());
 		cPopust.setFont(SWTResourceManager.getFont("Liberation Sans", 19, SWT.NORMAL));
-		cPopust.setBounds(330, 150, 310, 80);
+		cPopust.setBounds(400, 160, 390, 70);
 		cPopust.select(0);
-
-		bVanjska = new Button(shell, SWT.NONE);
-		bVanjska.setText("Vanjska karta");
-		bVanjska.setFont(SWTResourceManager.getFont("Liberation Sans", 15, SWT.NORMAL));
-		bVanjska.setBounds(650, 150, 130, 80);
+		{
+			lblProdajnoMjesto = new Label(shell, SWT.NONE);
+			lblProdajnoMjesto.setText("Prodajno mjesto");
+			lblProdajnoMjesto.setFont(SWTResourceManager.getFont("Liberation Sans", 10, SWT.NORMAL));
+			lblProdajnoMjesto.setBounds(5, 235, 94, 15);
+		}
 
 		cProdMjesto = new Combo(shell, SWT.READ_ONLY);
 		cProdMjesto.setItems(ProdajnoMjesto.getList());
 		cProdMjesto.setFont(SWTResourceManager.getFont("Liberation Sans", 19, SWT.NORMAL));
-		cProdMjesto.setBounds(10, 238, 310, 67);
+		cProdMjesto.setBounds(5, 250, 310, 70);
 		cProdMjesto.select(0);
 
 		bAdd = new Button(shell, SWT.NONE);
@@ -164,9 +187,8 @@ public class ProdajaWindow implements SelectionListener {
 		list.setFont(SWTResourceManager.getFont("Liberation Mono", 14, SWT.NORMAL));
 		list.setBounds(10, 360, 630, 150);
 
-		lCijena = new CLabel(shell, SWT.NONE);
+		lCijena = new Text(shell, SWT.BORDER);
 		lCijena.setFont(SWTResourceManager.getFont("Liberation Sans", 27, SWT.BOLD));
-		lCijena.setAlignment(SWT.RIGHT);
 		lCijena.setBounds(650, 350, 130, 70);
 		lCijena.setText("");
 
