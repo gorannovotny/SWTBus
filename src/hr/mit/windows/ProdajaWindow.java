@@ -177,17 +177,17 @@ public class ProdajaWindow {
 		cProdMjesto = new Combo(shell, SWT.READ_ONLY);
 		cProdMjesto.setItems(ProdajnoMjesto.getList());
 		cProdMjesto.setFont(SWTResourceManager.getFont("Liberation Sans", 19, SWT.NORMAL));
-		cProdMjesto.setBounds(5, 250, 330, 70);
+		cProdMjesto.setBounds(5, 250, 325, 70);
 		cProdMjesto.select(0);
 
 		textBrKarte = new Text(shell, SWT.BORDER | SWT.RIGHT);
 		textBrKarte.setText("1234567890123");
 		textBrKarte.setFont(SWTResourceManager.getFont("Liberation Sans", 30, SWT.NORMAL));
-		textBrKarte.setBounds(340, 250, 296, 70);
+		textBrKarte.setBounds(335, 250, 295, 70);
 
 		textCijena = new Text(shell, SWT.BORDER | SWT.RIGHT);
 		textCijena.setFont(SWTResourceManager.getFont("Liberation Sans", 30, SWT.NORMAL));
-		textCijena.setBounds(640, 250, 150, 70);
+		textCijena.setBounds(635, 250, 155, 70);
 		textCijena.setText("3334,12");
 
 		bAdd = new Button(shell, SWT.NONE);

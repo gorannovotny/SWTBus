@@ -2,7 +2,6 @@ package hr.mit.beans;
 
 import hr.mit.utils.DbUtil;
 
-import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
@@ -20,10 +19,11 @@ public class Stupac {
 
 	public static void setVozniRed(String sifraVR) {
 		try {
-			String sql = "select a.ID,a.VozniRedID,a.VarijantaVRID,a.SmerVoznje,b.Opis1,b.Opis2,a.VremeOdhoda from PTStupciVR a,PTVozniRedi b WHERE a.VozniRedID = b.id AND b.Sifra = ?";
+			String sql = "select a.ID,a.VozniRedID,a.VarijantaVRID,a.SmerVoznje,b.Opis1,b.Opis2,a.VremeOdhoda from PTStupciVR a,PTVozniRedi b WHERE a.VozniRedID = b.id AND b.Sifra = ? ORDER BY a.VremeOdhoda";
 			PreparedStatement ps = DbUtil.getConnection().prepareStatement(sql);
 			ps.setString(1, sifraVR);
 			ResultSet rs = ps.executeQuery();
+			stupacList.clear();
 			while (rs.next()) {
 				stupacList.add(new Stupac(rs.getInt("ID"), rs.getInt("VozniRedID"), rs.getString("SmerVoznje"), rs.getInt("VarijantaVRID"), rs.getString("Opis1"), rs.getString("Opis2"), rs
 						.getDouble("VremeOdhoda")));
