@@ -23,7 +23,7 @@ public class PopustList {
 			String sql = "select * from PTKTPopusti a WHERE a.TipKarteID = ? AND (a.StupacID = ? OR a.stupacID = 0 ) AND VeljaOd = (SELECT MAX(VeljaOd) FROM PTKTPopusti b WHERE b.TipKarteID = a.TipKarteID AND   b.VrstaPopustaID = a.VrstaPopustaID AND   b.StupacID = a.StupacID AND   b.VeljaOd <= DATETIME('now')) ";
 			ps = con.prepareStatement(sql);
 			ps.setInt(1, karta.getTipKarteID());
-			ps.setInt(2, stupac.getID());
+			ps.setInt(2, stupac.getId());
 			ResultSet rs = ps.executeQuery();
 			
 			while (rs.next()) {

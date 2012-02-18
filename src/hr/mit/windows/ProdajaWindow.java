@@ -20,19 +20,16 @@ import org.eclipse.swt.events.MouseAdapter;
 import org.eclipse.swt.events.MouseEvent;
 import org.eclipse.swt.events.SelectionAdapter;
 import org.eclipse.swt.events.SelectionEvent;
-import org.eclipse.swt.events.SelectionListener;
 import org.eclipse.swt.widgets.Button;
 import org.eclipse.swt.widgets.Combo;
 import org.eclipse.swt.widgets.Display;
+import org.eclipse.swt.widgets.Label;
 import org.eclipse.swt.widgets.List;
 import org.eclipse.swt.widgets.Shell;
-import org.eclipse.wb.swt.SWTResourceManager;
-import org.eclipse.swt.widgets.Label;
 import org.eclipse.swt.widgets.Text;
-import org.eclipse.swt.events.FocusAdapter;
-import org.eclipse.swt.events.FocusEvent;
+import org.eclipse.wb.swt.SWTResourceManager;
 
-public class ProdajaWindow implements SelectionListener {
+public class ProdajaWindow {
 
 	protected Shell shell;
 	private Combo cOdPostaje;
@@ -41,7 +38,7 @@ public class ProdajaWindow implements SelectionListener {
 	private CLabel lPolazak;
 	private Combo cKarta;
 	private CLabel lVozac;
-	private Text lCijena;
+	private Text textCijena;
 	private List list;
 	private Button bAdd;
 	private Combo cPopust;
@@ -61,11 +58,15 @@ public class ProdajaWindow implements SelectionListener {
 	private Label lblVrstaKarte;
 	private Label lblPopust;
 	private Label lblProdajnoMjesto;
+	private Text textBrKarte;
+	private Label lblBrojKarte;
+	private Label lblCijena;
+	private Label text;
 
-	public ProdajaWindow(Vozac vozac, Integer stupacID) {
+	public ProdajaWindow(Vozac vozac, Stupac stupac) {
 		this.vozac = vozac;
-		stupac = new Stupac(stupacID);
-		postaje = new PostajaList(stupacID);
+		this.stupac = stupac;
+		postaje = new PostajaList(stupac.getId());
 		karte = new KartaList();
 		stavke = new StavkaList();
 		blagajna = new Blagajna();
@@ -80,12 +81,12 @@ public class ProdajaWindow implements SelectionListener {
 		createContents();
 		shell.open();
 		shell.layout();
-		display.timerExec(1000, new Runnable() {
-			public void run() {
-				lClock.setText(new SimpleDateFormat("HH:mm:ss").format(new Date()));
-				display.timerExec(1000, this);
-			}
-		});
+		// display.timerExec(1000, new Runnable() {
+		// public void run() {
+		// lClock.setText(new SimpleDateFormat("HH:mm:ss").format(new Date()));
+		// display.timerExec(1000, this);
+		// }
+		// });
 
 		while (!shell.isDisposed()) {
 			if (!display.readAndDispatch()) {
@@ -105,7 +106,7 @@ public class ProdajaWindow implements SelectionListener {
 		lPolazak.setForeground(SWTResourceManager.getColor(SWT.COLOR_WHITE));
 		lPolazak.setFont(SWTResourceManager.getFont("Liberation Sans", 20, SWT.NORMAL));
 		lPolazak.setBounds(0, 0, 680, 50);
-		lPolazak.setText(stupac.getLongDesc());
+		lPolazak.setText(stupac.getOpis() + " " + stupac.getVremeOdhoda());
 
 		lClock = new CLabel(shell, SWT.RIGHT);
 		lClock.setForeground(SWTResourceManager.getColor(SWT.COLOR_WHITE));
@@ -113,47 +114,40 @@ public class ProdajaWindow implements SelectionListener {
 		lClock.setFont(SWTResourceManager.getFont("Liberation Sans", 20, SWT.NORMAL));
 		lClock.setBounds(680, 0, 114, 50);
 		lClock.setText(new SimpleDateFormat("HH:mm:ss").format(new Date()));
-		{
-			lblOdPostaje = new Label(shell, SWT.NONE);
-			lblOdPostaje.setFont(SWTResourceManager.getFont("Liberation Sans", 10, SWT.NORMAL));
-			lblOdPostaje.setBounds(5, 55, 63, 15);
-			lblOdPostaje.setText("Od postaje");
-		}
-		{
-			lblDoPostaje = new Label(shell, SWT.NONE);
-			lblDoPostaje.setText("Do postaje");
-			lblDoPostaje.setFont(SWTResourceManager.getFont("Liberation Sans", 10, SWT.NORMAL));
-			lblDoPostaje.setBounds(400, 55, 63, 15);
-		}
+
+		lblOdPostaje = new Label(shell, SWT.NONE);
+		lblOdPostaje.setFont(SWTResourceManager.getFont("Liberation Sans", 10, SWT.NORMAL));
+		lblOdPostaje.setBounds(5, 55, 63, 15);
+		lblOdPostaje.setText("Od postaje");
+
+		lblDoPostaje = new Label(shell, SWT.NONE);
+		lblDoPostaje.setText("Do postaje");
+		lblDoPostaje.setFont(SWTResourceManager.getFont("Liberation Sans", 10, SWT.NORMAL));
+		lblDoPostaje.setBounds(400, 55, 63, 15);
 
 		cOdPostaje = new Combo(shell, SWT.DROP_DOWN | SWT.READ_ONLY);
-		cOdPostaje.addSelectionListener(this);
 		cOdPostaje.setFont(SWTResourceManager.getFont("Liberation Sans", 19, SWT.NORMAL));
 		cOdPostaje.setItems(postaje.getNewList());
 		cOdPostaje.setBounds(5, 70, 390, 70);
 		cOdPostaje.select(0);
 
 		cDoPostaje = new Combo(shell, SWT.READ_ONLY);
-		cDoPostaje.addSelectionListener(this);
 		cDoPostaje.setFont(SWTResourceManager.getFont("Liberation Sans", 19, SWT.NORMAL));
 		cDoPostaje.setBounds(400, 70, 390, 70);
 		cDoPostaje.setItems(postaje.getNewList());
 		cDoPostaje.select(1);
-		{
-			lblVrstaKarte = new Label(shell, SWT.NONE);
-			lblVrstaKarte.setText("Vrsta karte");
-			lblVrstaKarte.setFont(SWTResourceManager.getFont("Liberation Sans", 10, SWT.NORMAL));
-			lblVrstaKarte.setBounds(5, 145, 64, 15);
-		}
-		{
-			lblPopust = new Label(shell, SWT.NONE);
-			lblPopust.setText("Popust");
-			lblPopust.setFont(SWTResourceManager.getFont("Liberation Sans", 10, SWT.NORMAL));
-			lblPopust.setBounds(400, 145, 41, 15);
-		}
+
+		lblVrstaKarte = new Label(shell, SWT.NONE);
+		lblVrstaKarte.setText("Vrsta karte");
+		lblVrstaKarte.setFont(SWTResourceManager.getFont("Liberation Sans", 10, SWT.NORMAL));
+		lblVrstaKarte.setBounds(5, 145, 64, 15);
+
+		lblPopust = new Label(shell, SWT.NONE);
+		lblPopust.setText("Popust");
+		lblPopust.setFont(SWTResourceManager.getFont("Liberation Sans", 10, SWT.NORMAL));
+		lblPopust.setBounds(400, 145, 41, 15);
 
 		cKarta = new Combo(shell, SWT.READ_ONLY);
-		cKarta.addSelectionListener(this);
 		cKarta.setFont(SWTResourceManager.getFont("Liberation Sans", 19, SWT.NORMAL));
 		cKarta.setBounds(5, 160, 390, 70);
 		cKarta.setItems(karte.getList());
@@ -164,39 +158,58 @@ public class ProdajaWindow implements SelectionListener {
 		cPopust.setFont(SWTResourceManager.getFont("Liberation Sans", 19, SWT.NORMAL));
 		cPopust.setBounds(400, 160, 390, 70);
 		cPopust.select(0);
-		{
-			lblProdajnoMjesto = new Label(shell, SWT.NONE);
-			lblProdajnoMjesto.setText("Prodajno mjesto");
-			lblProdajnoMjesto.setFont(SWTResourceManager.getFont("Liberation Sans", 10, SWT.NORMAL));
-			lblProdajnoMjesto.setBounds(5, 235, 94, 15);
-		}
+
+		lblProdajnoMjesto = new Label(shell, SWT.NONE);
+		lblProdajnoMjesto.setText("Prodajno mjesto");
+		lblProdajnoMjesto.setFont(SWTResourceManager.getFont("Liberation Sans", 10, SWT.NORMAL));
+		lblProdajnoMjesto.setBounds(5, 235, 94, 15);
+
+		lblBrojKarte = new Label(shell, SWT.NONE);
+		lblBrojKarte.setText("Broj karte");
+		lblBrojKarte.setFont(SWTResourceManager.getFont("Liberation Sans", 10, SWT.NORMAL));
+		lblBrojKarte.setBounds(340, 235, 94, 15);
+
+		lblCijena = new Label(shell, SWT.NONE);
+		lblCijena.setText("Cijena");
+		lblCijena.setFont(SWTResourceManager.getFont("Liberation Sans", 10, SWT.NORMAL));
+		lblCijena.setBounds(640, 235, 94, 15);
 
 		cProdMjesto = new Combo(shell, SWT.READ_ONLY);
 		cProdMjesto.setItems(ProdajnoMjesto.getList());
 		cProdMjesto.setFont(SWTResourceManager.getFont("Liberation Sans", 19, SWT.NORMAL));
-		cProdMjesto.setBounds(5, 250, 310, 70);
+		cProdMjesto.setBounds(5, 250, 330, 70);
 		cProdMjesto.select(0);
+
+		textBrKarte = new Text(shell, SWT.BORDER | SWT.RIGHT);
+		textBrKarte.setText("1234567890123");
+		textBrKarte.setFont(SWTResourceManager.getFont("Liberation Sans", 30, SWT.NORMAL));
+		textBrKarte.setBounds(340, 250, 296, 70);
+
+		textCijena = new Text(shell, SWT.BORDER | SWT.RIGHT);
+		textCijena.setFont(SWTResourceManager.getFont("Liberation Sans", 30, SWT.NORMAL));
+		textCijena.setBounds(640, 250, 150, 70);
+		textCijena.setText("3334,12");
 
 		bAdd = new Button(shell, SWT.NONE);
 		bAdd.addSelectionListener(new ButtonSelectionListener());
-		bAdd.setBounds(10, 315, 630, 40);
+		bAdd.setBounds(5, 325, 785, 40);
 		bAdd.setText("+");
+
+		text = new Label(shell, SWT.RIGHT);
+		text.setText("3334,12");
+		text.setFont(SWTResourceManager.getFont("Liberation Sans", 30, SWT.BOLD));
+		text.setBounds(640, 380, 145, 50);
 
 		list = new List(shell, SWT.BORDER);
 		list.addMouseListener(new ListMouseListener());
 		list.setFont(SWTResourceManager.getFont("Liberation Mono", 14, SWT.NORMAL));
-		list.setBounds(10, 360, 630, 150);
-
-		lCijena = new Text(shell, SWT.BORDER);
-		lCijena.setFont(SWTResourceManager.getFont("Liberation Sans", 27, SWT.BOLD));
-		lCijena.setBounds(650, 350, 130, 70);
-		lCijena.setText("");
+		list.setBounds(5, 370, 630, 145);
 
 		btnPrint = new Button(shell, SWT.NONE);
 		btnPrint.addSelectionListener(new BtnPrintSelectionListener());
 		btnPrint.setText("Print");
 		btnPrint.setFont(SWTResourceManager.getFont("Liberation Sans", 25, SWT.NORMAL));
-		btnPrint.setBounds(650, 430, 130, 80);
+		btnPrint.setBounds(640, 430, 145, 85);
 
 		lVozac = new CLabel(shell, SWT.NONE);
 		lVozac.setBackground(SWTResourceManager.getColor(0, 0, 0));
@@ -227,7 +240,7 @@ public class ProdajaWindow implements SelectionListener {
 					.getSelectionIndex()));
 			stavke.add(stavka);
 			list.setItems(stavke.getList());
-			lCijena.setText(new DecimalFormat("#0.00").format(stavke.getUkupno()));
+			textCijena.setText(new DecimalFormat("#0.00").format(stavke.getUkupno()));
 			if (stavke.getCount().compareTo(0) > 0) {
 				cOdPostaje.setEnabled(false);
 				cDoPostaje.setEnabled(false);
@@ -241,7 +254,7 @@ public class ProdajaWindow implements SelectionListener {
 			List l = (List) e.widget;
 			stavke.remove(l.getSelectionIndex());
 			list.setItems(stavke.getList());
-			lCijena.setText(new DecimalFormat("#0.00").format(stavke.getUkupno()));
+			textCijena.setText(new DecimalFormat("#0.00").format(stavke.getUkupno()));
 			cOdPostaje.setEnabled(true);
 			cDoPostaje.setEnabled(true);
 
@@ -255,16 +268,11 @@ public class ProdajaWindow implements SelectionListener {
 			lBlagajna.setText(new DecimalFormat("#0.00").format(blagajna.getSaldo()));
 			stavke.clear();
 			list.setItems(stavke.getList());
-			lCijena.setText("0,00");
+			textCijena.setText("0,00");
 			cOdPostaje.setEnabled(true);
 			cDoPostaje.setEnabled(true);
 
 		}
 	}
 
-	@Override
-	public void widgetSelected(SelectionEvent arg0) {
-		// TODO Auto-generated method stub
-
-	}
 }

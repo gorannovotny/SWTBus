@@ -6,40 +6,74 @@ import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.util.ArrayList;
 
 public class Stupac {
+	static ArrayList<Stupac> stupacList = new ArrayList<Stupac>();
 
-	private Integer ID;
-	private String longDesc;
+	private Integer id;
+	private Integer vozniRedID;
+	private String smjer;
 	private Integer varijantaID;
+	private String opis;
+	private String vremeOdhoda;
 
-	public Stupac(Integer stupacID) {
-		Connection con = DbUtil.getConnection();
+	public static void setVozniRed(String sifraVR) {
 		try {
-			String sql = "select b.Opis1, a.VremeOdhoda,a.VarijantaVRID from PTStupciVR a,PTVozniRedi b where b.ID = a.VozniRedID and a.id = ? ";
-			PreparedStatement ps = con.prepareStatement(sql);
-			ps.setInt(1, stupacID);
+			String sql = "select a.ID,a.VozniRedID,a.VarijantaVRID,a.SmerVoznje,b.Opis1,b.Opis2,a.VremeOdhoda from PTStupciVR a,PTVozniRedi b WHERE a.VozniRedID = b.id AND b.Sifra = ?";
+			PreparedStatement ps = DbUtil.getConnection().prepareStatement(sql);
+			ps.setString(1, sifraVR);
 			ResultSet rs = ps.executeQuery();
-			if (rs.next()) {
-				longDesc = rs.getString("Opis1") + " Polazak:" + DbUtil.getHHMM(rs.getDouble("VremeOdhoda"));
-				varijantaID = rs.getInt("VarijantaVRID");
-				ID = stupacID;
+			while (rs.next()) {
+				stupacList.add(new Stupac(rs.getInt("ID"), rs.getInt("VozniRedID"), rs.getString("SmerVoznje"), rs.getInt("VarijantaVRID"), rs.getString("Opis1"), rs.getString("Opis2"), rs
+						.getDouble("VremeOdhoda")));
 			}
 		} catch (SQLException e) {
 			e.printStackTrace();
 		}
 	}
 
-	public String getLongDesc() {
-		return longDesc;
+	public Stupac(Integer id, Integer vozniRedID, String smjer, Integer varijantaID, String opis1, String opis2, double vremeOdhoda) {
+		super();
+		this.id = id;
+		this.vozniRedID = vozniRedID;
+		this.smjer = smjer;
+		this.varijantaID = varijantaID;
+		if (smjer.equals("+"))
+			this.opis = opis1;
+		else
+			this.opis = opis2;
+		this.vremeOdhoda = DbUtil.getHHMM(vremeOdhoda);
+	}
+
+	public static String[] getList() {
+		String[] l = new String[stupacList.size()];
+		int x = 0;
+		for (Stupac v : stupacList) {
+			l[x] = v.getVremeOdhoda();
+			x++;
+		}
+		return l;
+	}
+
+	public String getVremeOdhoda() {
+		return vremeOdhoda;
+	}
+
+	public static Stupac get(int index) {
+		return stupacList.get(index);
 	}
 
 	public Integer getVarijantaID() {
 		return varijantaID;
 	}
 
-	public Integer getID() {
-		return ID;
+	public Integer getId() {
+		return id;
+	}
+
+	public String getOpis() {
+		return opis;
 	}
 
 }

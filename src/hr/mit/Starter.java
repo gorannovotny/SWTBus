@@ -11,7 +11,8 @@ public class Starter {
 	public static void main(String[] args) {
 		LoginWindow loginWindow = new LoginWindow();
 		loginWindow.open();
-		ProdajaWindow prodajaWindow = new ProdajaWindow(vozac, stupacID);
+		
+		ProdajaWindow prodajaWindow = new ProdajaWindow(loginWindow.getVozac(), loginWindow.getStupac());
 		prodajaWindow.open();
 	}
 

@@ -1,11 +1,9 @@
 package hr.mit.windows;
 
-import hr.mit.Starter;
-import hr.mit.beans.StupacList;
+import hr.mit.beans.Stupac;
 import hr.mit.beans.Vozac;
 import hr.mit.beans.Vozilo;
 import hr.mit.beans.VozniRed;
-import hr.mit.utils.DbUtil;
 
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.events.ModifyEvent;
@@ -36,15 +34,12 @@ public class LoginWindow {
 	protected Combo comboPolazak;
 	private Button button;
 
-	protected StupacList polazak;
 	protected Label lOpisVozilo;
 	protected Label lOpisVozac;
 	protected Label lOpisLinije;
-	private Combo combo;
 
-	public LoginWindow() {
-		polazak = new StupacList(DbUtil.getConnection());
-	}
+	private Vozac vozac;
+	private Stupac stupac;
 
 	/**
 	 * @wbp.parser.entryPoint
@@ -80,7 +75,6 @@ public class LoginWindow {
 		tVozac = new Text(shlPrijava, SWT.BORDER | SWT.RIGHT);
 		tVozac.setFont(SWTResourceManager.getFont("Liberation Sans", 30, SWT.NORMAL));
 		tVozac.setBounds(225, 150, 100, 50);
-		tVozac.setText("117");
 
 		lOpisVozac = new Label(shlPrijava, SWT.NONE);
 		lOpisVozac.setText("");
@@ -94,7 +88,6 @@ public class LoginWindow {
 		lblVozilo.setText("Šifra vozila");
 
 		tVozilo = new Text(shlPrijava, SWT.BORDER | SWT.RIGHT);
-		tVozilo.setText("557");
 		tVozilo.setFont(SWTResourceManager.getFont("Liberation Sans", 30, SWT.NORMAL));
 		tVozilo.setBounds(225, 205, 100, 50);
 
@@ -110,7 +103,6 @@ public class LoginWindow {
 		lblLinija.setText("Šifra linije");
 
 		tLinija = new Text(shlPrijava, SWT.BORDER);
-		tLinija.setText("ŽL/0125");
 		tLinija.setFont(SWTResourceManager.getFont("Liberation Sans", 20, SWT.NORMAL));
 		tLinija.setBounds(225, 260, 130, 50);
 
@@ -132,15 +124,15 @@ public class LoginWindow {
 		button = new Button(shlPrijava, SWT.ARROW | SWT.RIGHT);
 		button.setFont(SWTResourceManager.getFont("Liberation Sans", 30, SWT.NORMAL));
 		button.setBounds(700, 480, 60, 56);
-		combo = new Combo(shlPrijava, SWT.NONE);
-		combo.setBounds(40, 400, 184, 26);
-		combo.setItems(Vozac.getList());
 
 		tVozac.addModifyListener(new TVozacModifyListener());
+		tVozac.setText("117");
 		tVozac.addMouseListener(new textMouseListener());
 		tVozilo.addModifyListener(new TVoziloModifyListener());
+		tVozilo.setText("557");
 		tVozilo.addMouseListener(new textMouseListener());
 		tLinija.addModifyListener(new TLinijaModifyListener());
+		tLinija.setText("ŽL/0125");
 		tLinija.addMouseListener(new textMouseListener());
 		button.addSelectionListener(new ButtonSelectionListener());
 
@@ -148,8 +140,8 @@ public class LoginWindow {
 
 	protected class ButtonSelectionListener extends SelectionAdapter {
 		public void widgetSelected(SelectionEvent e) {
-			Starter.vozac = Vozac.getBySifra(Integer.parseInt(tVozac.getText()));
-			Starter.stupacID = polazak.getPolazakID(comboPolazak.getSelectionIndex());
+			setVozac(Vozac.getBySifra(Integer.parseInt(tVozac.getText())));
+			setStupac(Stupac.get(comboPolazak.getSelectionIndex()));
 			shlPrijava.dispose();
 		}
 	}
@@ -189,8 +181,25 @@ public class LoginWindow {
 		public void modifyText(ModifyEvent e) {
 			Text t = (Text) e.widget;
 			lOpisLinije.setText(VozniRed.getNaziv(t.getText()));
-			comboPolazak.setItems(polazak.getList(t.getText()));
+			Stupac.setVozniRed(t.getText());
+			comboPolazak.setItems(Stupac.getList());
 			comboPolazak.select(0);
 		}
+	}
+
+	public Vozac getVozac() {
+		return vozac;
+	}
+
+	public Stupac getStupac() {
+		return stupac;
+	}
+
+	public void setVozac(Vozac vozac) {
+		this.vozac = vozac;
+	}
+
+	public void setStupac(Stupac stupac) {
+		this.stupac = stupac;
 	}
 }

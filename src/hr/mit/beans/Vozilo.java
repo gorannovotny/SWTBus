@@ -5,13 +5,11 @@ import hr.mit.utils.DbUtil;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.ArrayList;
-import java.util.Iterator;
 
 public class Vozilo {
 	static ArrayList<String> nazivList = new ArrayList<String>();
 	static ArrayList<Integer> idList = new ArrayList<Integer>();
 	
-	private Integer id;
 	
 	static {
 		try {
@@ -28,8 +26,7 @@ public class Vozilo {
 	}
 	
 	public Vozilo(Integer id) {
-		this.id = id;
-		
+
 	}
 
 	public static String[] getList() {
