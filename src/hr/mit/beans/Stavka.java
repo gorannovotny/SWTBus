@@ -31,11 +31,9 @@ public class Stavka {
 
 	public String getDescription() {
 		String k = karta.getNaziv();
-		if (k.length()>20) k = k.substring(0, 20);
-		String p = popust.getNaziv();
-		if (p.length()>15) p = p.substring(0, 15);
+		if (k.length()>25) k = k.substring(0, 25);
 		
-		String out = String.format("%-20s:%-15s %5.2f",k,popust.getNaziv(),getCijena().doubleValue());
+		String out = String.format("%-25s %15.2f%% %8.2f",k,popust.getPopust().doubleValue(),getCijena().doubleValue());
 		return out;
 	}
 	

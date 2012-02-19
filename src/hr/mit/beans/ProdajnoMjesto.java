@@ -14,6 +14,7 @@ public class ProdajnoMjesto {
 	private String naziv;
 
 	static {
+		pmList.add(new ProdajnoMjesto(0, 0, "U autobusu"));
 		try {
 			String sql = "SELECT id,Sifra,Naziv FROM PTProdajnaMesta ORDER BY 1";
 			ResultSet rs = DbUtil.getConnection().createStatement().executeQuery(sql);

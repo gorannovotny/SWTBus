@@ -58,7 +58,7 @@ public class ProdajaWindow {
 	private Text textBrKarte;
 	private Label lblBrojKarte;
 	private Label lblCijena;
-	private Label text;
+	private Label lblUkupno;
 
 	public ProdajaWindow(Vozac vozac, Stupac stupac) {
 		this.vozac = vozac;
@@ -75,6 +75,7 @@ public class ProdajaWindow {
 	public void open() {
 		final Display display = Display.getDefault();
 		createContents();
+		attachListeners();
 		shell.open();
 		shell.layout();
 		display.timerExec(1000, new Runnable() {
@@ -91,6 +92,12 @@ public class ProdajaWindow {
 		}
 	}
 
+	private void attachListeners() {
+		cKarta.addSelectionListener(new CKartaSelectionListener());
+		bAdd.addSelectionListener(new ButtonSelectionListener());
+		list.addMouseListener(new ListMouseListener());
+	}
+	
 	protected void createContents() {
 		shell = new Shell(SWT.SHELL_TRIM);
 
@@ -144,7 +151,6 @@ public class ProdajaWindow {
 		lblPopust.setBounds(400, 145, 41, 15);
 
 		cKarta = new Combo(shell, SWT.READ_ONLY);
-		cKarta.addSelectionListener(new CKartaSelectionListener());
 		cKarta.setFont(SWTResourceManager.getFont("Liberation Sans", 19, SWT.NORMAL));
 		cKarta.setBounds(5, 160, 390, 70);
 		cKarta.setItems(Karta.getList());
@@ -182,24 +188,23 @@ public class ProdajaWindow {
 		textBrKarte.setText("1234567890123");
 		textBrKarte.setFont(SWTResourceManager.getFont("Liberation Sans", 30, SWT.NORMAL));
 		textBrKarte.setBounds(335, 250, 295, 70);
-
+		textBrKarte.setEnabled(false);
+		
 		textCijena = new Text(shell, SWT.BORDER | SWT.RIGHT);
 		textCijena.setFont(SWTResourceManager.getFont("Liberation Sans", 30, SWT.NORMAL));
 		textCijena.setBounds(635, 250, 155, 70);
 		textCijena.setText("3334,12");
 
 		bAdd = new Button(shell, SWT.NONE);
-		bAdd.addSelectionListener(new ButtonSelectionListener());
 		bAdd.setBounds(5, 325, 785, 40);
 		bAdd.setText("+");
 
-		text = new Label(shell, SWT.RIGHT);
-		text.setText("3334,12");
-		text.setFont(SWTResourceManager.getFont("Liberation Sans", 30, SWT.BOLD));
-		text.setBounds(640, 380, 145, 50);
+		lblUkupno = new Label(shell, SWT.RIGHT);
+		lblUkupno.setText("3334,12");
+		lblUkupno.setFont(SWTResourceManager.getFont("Liberation Sans", 30, SWT.BOLD));
+		lblUkupno.setBounds(640, 380, 145, 50);
 
 		list = new List(shell, SWT.BORDER);
-		list.addMouseListener(new ListMouseListener());
 		list.setFont(SWTResourceManager.getFont("Liberation Mono", 14, SWT.NORMAL));
 		list.setBounds(5, 370, 630, 145);
 
