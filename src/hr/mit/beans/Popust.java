@@ -45,7 +45,7 @@ public class Popust {
 		String[] l = new String[popustList.size()];
 		int x = 0;
 		for (Popust v : popustList) {
-			l[x] = v.getNaziv();
+			l[x] = v.getPopust().toString() + "% " + v.getNaziv();
 			x++;
 		}
 		return l;

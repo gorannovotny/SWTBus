@@ -3,7 +3,7 @@ package hr.mit.windows;
 import hr.mit.beans.Blagajna;
 import hr.mit.beans.KartaList;
 import hr.mit.beans.Popust;
-import hr.mit.beans.PostajaList;
+import hr.mit.beans.Postaja;
 import hr.mit.beans.ProdajnoMjesto;
 import hr.mit.beans.Stavka;
 import hr.mit.beans.StavkaList;
@@ -45,7 +45,6 @@ public class ProdajaWindow {
 	private Button btnPrint;
 	private CLabel lBlagajna;
 
-	private PostajaList postaje;
 	private KartaList karte;
 	private Vozac vozac;
 	private Stupac stupac;
@@ -65,7 +64,8 @@ public class ProdajaWindow {
 	public ProdajaWindow(Vozac vozac, Stupac stupac) {
 		this.vozac = vozac;
 		this.stupac = stupac;
-		postaje = new PostajaList(stupac.getId());
+		Postaja.setStupac(stupac);
+
 		karte = new KartaList();
 		stavke = new StavkaList();
 		blagajna = new Blagajna();
@@ -79,12 +79,12 @@ public class ProdajaWindow {
 		createContents();
 		shell.open();
 		shell.layout();
-		// display.timerExec(1000, new Runnable() {
-		// public void run() {
-		// lClock.setText(new SimpleDateFormat("HH:mm:ss").format(new Date()));
-		// display.timerExec(1000, this);
-		// }
-		// });
+		display.timerExec(1000, new Runnable() {
+			public void run() {
+				lClock.setText(new SimpleDateFormat("HH:mm:ss").format(new Date()));
+				display.timerExec(1000, this);
+			}
+		});
 
 		while (!shell.isDisposed()) {
 			if (!display.readAndDispatch()) {
@@ -125,14 +125,14 @@ public class ProdajaWindow {
 
 		cOdPostaje = new Combo(shell, SWT.DROP_DOWN | SWT.READ_ONLY);
 		cOdPostaje.setFont(SWTResourceManager.getFont("Liberation Sans", 19, SWT.NORMAL));
-		cOdPostaje.setItems(postaje.getNewList());
+		cOdPostaje.setItems(Postaja.getList());
 		cOdPostaje.setBounds(5, 70, 390, 70);
 		cOdPostaje.select(0);
 
 		cDoPostaje = new Combo(shell, SWT.READ_ONLY);
 		cDoPostaje.setFont(SWTResourceManager.getFont("Liberation Sans", 19, SWT.NORMAL));
 		cDoPostaje.setBounds(400, 70, 390, 70);
-		cDoPostaje.setItems(postaje.getNewList());
+		cDoPostaje.setItems(Postaja.getList());
 		cDoPostaje.select(1);
 
 		lblVrstaKarte = new Label(shell, SWT.NONE);
@@ -151,6 +151,7 @@ public class ProdajaWindow {
 		cKarta.setBounds(5, 160, 390, 70);
 		cKarta.setItems(karte.getList());
 		cKarta.select(0);
+		Popust.setKartaStupac(karte.get(0), stupac);
 
 		cPopust = new Combo(shell, SWT.READ_ONLY);
 		cPopust.setItems(Popust.getList());
@@ -227,7 +228,7 @@ public class ProdajaWindow {
 
 	private class ButtonSelectionListener extends SelectionAdapter {
 		public void widgetSelected(SelectionEvent e) {
-			Stavka stavka = new Stavka(stupac, postaje.get(cOdPostaje.getSelectionIndex()), postaje.get(cDoPostaje.getSelectionIndex()), karte.get(cKarta.getSelectionIndex()), Popust.get(cPopust
+			Stavka stavka = new Stavka(stupac, Postaja.get(cOdPostaje.getSelectionIndex()), Postaja.get(cDoPostaje.getSelectionIndex()), karte.get(cKarta.getSelectionIndex()), Popust.get(cPopust
 					.getSelectionIndex()));
 			stavke.add(stavka);
 			list.setItems(stavke.getList());

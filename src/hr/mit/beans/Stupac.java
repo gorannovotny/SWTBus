@@ -28,6 +28,8 @@ public class Stupac {
 				stupacList.add(new Stupac(rs.getInt("ID"), rs.getInt("VozniRedID"), rs.getString("SmerVoznje"), rs.getInt("VarijantaVRID"), rs.getString("Opis1"), rs.getString("Opis2"), rs
 						.getDouble("VremeOdhoda")));
 			}
+			rs.close();
+			ps.close();
 		} catch (SQLException e) {
 			e.printStackTrace();
 		}
@@ -39,7 +41,7 @@ public class Stupac {
 		this.vozniRedID = vozniRedID;
 		this.smjer = smjer;
 		this.varijantaID = varijantaID;
-		if (smjer.equals("+"))
+		if (smjer.equals("-"))
 			this.opis = opis1;
 		else
 			this.opis = opis2;
@@ -74,6 +76,10 @@ public class Stupac {
 
 	public String getOpis() {
 		return opis;
+	}
+
+	public String getSmjer() {
+		return smjer;
 	}
 
 }
