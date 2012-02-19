@@ -1,7 +1,7 @@
 package hr.mit.windows;
 
 import hr.mit.beans.Blagajna;
-import hr.mit.beans.KartaList;
+import hr.mit.beans.Karta;
 import hr.mit.beans.Popust;
 import hr.mit.beans.Postaja;
 import hr.mit.beans.ProdajnoMjesto;
@@ -45,7 +45,6 @@ public class ProdajaWindow {
 	private Button btnPrint;
 	private CLabel lBlagajna;
 
-	private KartaList karte;
 	private Vozac vozac;
 	private Stupac stupac;
 	private StavkaList stavke;
@@ -66,7 +65,6 @@ public class ProdajaWindow {
 		this.stupac = stupac;
 		Postaja.setStupac(stupac);
 
-		karte = new KartaList();
 		stavke = new StavkaList();
 		blagajna = new Blagajna();
 	}
@@ -149,9 +147,9 @@ public class ProdajaWindow {
 		cKarta.addSelectionListener(new CKartaSelectionListener());
 		cKarta.setFont(SWTResourceManager.getFont("Liberation Sans", 19, SWT.NORMAL));
 		cKarta.setBounds(5, 160, 390, 70);
-		cKarta.setItems(karte.getList());
+		cKarta.setItems(Karta.getList());
 		cKarta.select(0);
-		Popust.setKartaStupac(karte.get(0), stupac);
+		Popust.setKartaStupac(Karta.get(0), stupac);
 
 		cPopust = new Combo(shell, SWT.READ_ONLY);
 		cPopust.setItems(Popust.getList());
@@ -228,7 +226,7 @@ public class ProdajaWindow {
 
 	private class ButtonSelectionListener extends SelectionAdapter {
 		public void widgetSelected(SelectionEvent e) {
-			Stavka stavka = new Stavka(stupac, Postaja.get(cOdPostaje.getSelectionIndex()), Postaja.get(cDoPostaje.getSelectionIndex()), karte.get(cKarta.getSelectionIndex()), Popust.get(cPopust
+			Stavka stavka = new Stavka(stupac, Postaja.get(cOdPostaje.getSelectionIndex()), Postaja.get(cDoPostaje.getSelectionIndex()), Karta.get(cKarta.getSelectionIndex()), Popust.get(cPopust
 					.getSelectionIndex()));
 			stavke.add(stavka);
 			list.setItems(stavke.getList());
@@ -270,7 +268,7 @@ public class ProdajaWindow {
 	private class CKartaSelectionListener extends SelectionAdapter {
 		public void widgetDefaultSelected(SelectionEvent e) {
 			Combo c = (Combo) e.widget;
-			Popust.setKartaStupac(karte.get(cKarta.getSelectionIndex()), stupac);
+			Popust.setKartaStupac(Karta.get(cKarta.getSelectionIndex()), stupac);
 			cPopust.setItems(Popust.getList());
 			cPopust.select(0);
 		}

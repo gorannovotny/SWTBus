@@ -3,14 +3,22 @@ package hr.mit.beans;
 import hr.mit.utils.CijenaKarte;
 
 import java.math.BigDecimal;
+import java.util.ArrayList;
 
 public class Stavka {
+	
+	private static ArrayList<Stavka> stavkaList = new ArrayList<Stavka>();
+
 	private Postaja odPostaje;
 	private Postaja doPostaje;
 	private Karta karta;
 	private Popust popust;
+	private ProdajnoMjesto prodajnoMjesto;
+	private String brojKarte;
 	private BigDecimal cijena = BigDecimal.ZERO;
 
+	private Stupac stupac;
+	
 	public Stavka(Stupac stupac,Postaja odPostaje, Postaja doPostaje, Karta karta, Popust popust) {
 		this.odPostaje = odPostaje;
 		this.doPostaje = doPostaje;
