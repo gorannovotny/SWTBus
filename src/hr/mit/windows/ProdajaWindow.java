@@ -2,7 +2,7 @@ package hr.mit.windows;
 
 import hr.mit.beans.Blagajna;
 import hr.mit.beans.KartaList;
-import hr.mit.beans.PopustList;
+import hr.mit.beans.Popust;
 import hr.mit.beans.PostajaList;
 import hr.mit.beans.ProdajnoMjesto;
 import hr.mit.beans.Stavka;
@@ -51,7 +51,6 @@ public class ProdajaWindow {
 	private Stupac stupac;
 	private StavkaList stavke;
 	private Blagajna blagajna;
-	private PopustList popusti;
 	private Combo cProdMjesto;
 	private Label lblOdPostaje;
 	private Label lblDoPostaje;
@@ -70,7 +69,6 @@ public class ProdajaWindow {
 		karte = new KartaList();
 		stavke = new StavkaList();
 		blagajna = new Blagajna();
-		popusti = new PopustList(stupac, karte.get(0));
 	}
 
 	/**
@@ -148,13 +146,14 @@ public class ProdajaWindow {
 		lblPopust.setBounds(400, 145, 41, 15);
 
 		cKarta = new Combo(shell, SWT.READ_ONLY);
+		cKarta.addSelectionListener(new CKartaSelectionListener());
 		cKarta.setFont(SWTResourceManager.getFont("Liberation Sans", 19, SWT.NORMAL));
 		cKarta.setBounds(5, 160, 390, 70);
 		cKarta.setItems(karte.getList());
 		cKarta.select(0);
 
 		cPopust = new Combo(shell, SWT.READ_ONLY);
-		cPopust.setItems(popusti.getList());
+		cPopust.setItems(Popust.getList());
 		cPopust.setFont(SWTResourceManager.getFont("Liberation Sans", 19, SWT.NORMAL));
 		cPopust.setBounds(400, 160, 390, 70);
 		cPopust.select(0);
@@ -226,17 +225,9 @@ public class ProdajaWindow {
 		lBlagajna.setBounds(640, 520, 155, 54);
 	}
 
-	public void widgetDefaultSelected(SelectionEvent e) {
-		// lblCijena.setText((new
-		// DecimalFormat("#0.00")).format(stavka.getCijena()));
-		popusti = new PopustList(stupac, karte.get(cKarta.getSelectionIndex()));
-		cPopust.setItems(popusti.getList());
-		cPopust.select(0);
-	}
-
 	private class ButtonSelectionListener extends SelectionAdapter {
 		public void widgetSelected(SelectionEvent e) {
-			Stavka stavka = new Stavka(stupac, postaje.get(cOdPostaje.getSelectionIndex()), postaje.get(cDoPostaje.getSelectionIndex()), karte.get(cKarta.getSelectionIndex()), popusti.get(cPopust
+			Stavka stavka = new Stavka(stupac, postaje.get(cOdPostaje.getSelectionIndex()), postaje.get(cDoPostaje.getSelectionIndex()), karte.get(cKarta.getSelectionIndex()), Popust.get(cPopust
 					.getSelectionIndex()));
 			stavke.add(stavka);
 			list.setItems(stavke.getList());
@@ -272,6 +263,19 @@ public class ProdajaWindow {
 			cOdPostaje.setEnabled(true);
 			cDoPostaje.setEnabled(true);
 
+		}
+	}
+
+	private class CKartaSelectionListener extends SelectionAdapter {
+		public void widgetDefaultSelected(SelectionEvent e) {
+			Combo c = (Combo) e.widget;
+			Popust.setKartaStupac(karte.get(cKarta.getSelectionIndex()), stupac);
+			cPopust.setItems(Popust.getList());
+			cPopust.select(0);
+		}
+
+		public void widgetSelected(SelectionEvent e) {
+			widgetDefaultSelected(e);
 		}
 	}
 

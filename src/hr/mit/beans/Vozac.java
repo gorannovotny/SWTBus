@@ -7,7 +7,7 @@ import java.sql.SQLException;
 import java.util.ArrayList;
 
 public class Vozac {
-	static ArrayList<Vozac> vozacList = new ArrayList<Vozac>();
+	private static ArrayList<Vozac> vozacList = new ArrayList<Vozac>();
 
 	private Integer id;
 	private Integer sifra;

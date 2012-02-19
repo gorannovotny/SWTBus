@@ -8,7 +8,7 @@ import java.sql.SQLException;
 import java.util.ArrayList;
 
 public class Stupac {
-	static ArrayList<Stupac> stupacList = new ArrayList<Stupac>();
+	private static ArrayList<Stupac> stupacList = new ArrayList<Stupac>();
 
 	private Integer id;
 	private Integer vozniRedID;
