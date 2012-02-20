@@ -75,6 +75,9 @@ public class Karta {
 	}
 
 	public Integer getNacinDolocanjaCene() {
+		if (nacinDolocanjaCene == null)
+			return Karta.TARIFNI_DALJINAR;
+		else
 		return nacinDolocanjaCene;
 	}
 

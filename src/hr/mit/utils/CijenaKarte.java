@@ -25,7 +25,7 @@ public class CijenaKarte {
 	private Integer doZapSt;
 	private Karta karta;
 
-	public CijenaKarte(Karta karta, Integer varijantaID, Integer odZapSt, Integer doZapSt) throws SQLException {
+	public CijenaKarte(Karta karta, Integer varijantaID, Integer odZapSt, Integer doZapSt)  {
 		this.varijantaID = varijantaID;
 		if (odZapSt > doZapSt) {
 			this.odZapSt = doZapSt;

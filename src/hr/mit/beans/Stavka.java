@@ -16,9 +16,14 @@ public class Stavka {
 	private ProdajnoMjesto prodajnoMjesto;
 	private String brojKarte;
 	private BigDecimal cijena = BigDecimal.ZERO;
-
 	private Stupac stupac;
 	
+	public static void clear() {
+		stavkaList.clear();
+	}
+	public Stavka(Stupac stupac) {
+		this.stupac = stupac;
+	}
 	public Stavka(Stupac stupac,Postaja odPostaje, Postaja doPostaje, Karta karta, Popust popust) {
 		this.odPostaje = odPostaje;
 		this.doPostaje = doPostaje;
@@ -42,7 +47,50 @@ public class Stavka {
 	}
 
 	public BigDecimal getCijena() {
-		return cijena;
+		CijenaKarte c = new CijenaKarte(karta, stupac.getVarijantaID(), odPostaje.getZapSt(), doPostaje.getZapSt());
+		return c.getUkupnaCijena().multiply(BigDecimal.ONE.subtract(popust.getPopust().movePointLeft(2))).setScale(2);
+	}
+	public Postaja getOdPostaje() {
+		return odPostaje;
+	}
+	public void setOdPostaje(Postaja odPostaje) {
+		this.odPostaje = odPostaje;
+	}
+	public Postaja getDoPostaje() {
+		return doPostaje;
+	}
+	public void setDoPostaje(Postaja doPostaje) {
+		this.doPostaje = doPostaje;
+	}
+	public Karta getKarta() {
+		return karta;
+	}
+	public void setKarta(Karta karta) {
+		this.karta = karta;
+	}
+	public Popust getPopust() {
+		return popust;
+	}
+	public void setPopust(Popust popust) {
+		this.popust = popust;
+	}
+	public ProdajnoMjesto getProdajnoMjesto() {
+		return prodajnoMjesto;
+	}
+	public void setProdajnoMjesto(ProdajnoMjesto prodajnoMjesto) {
+		this.prodajnoMjesto = prodajnoMjesto;
+	}
+	public String getBrojKarte() {
+		return brojKarte;
+	}
+	public void setBrojKarte(String brojKarte) {
+		this.brojKarte = brojKarte;
+	}
+	public Stupac getStupac() {
+		return stupac;
+	}
+	public void setCijena(BigDecimal cijena) {
+		this.cijena = cijena;
 	}
 	
 }
