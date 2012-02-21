@@ -202,7 +202,6 @@ public class ProdajaWindow {
 		textBrKarte.setEnabled(false);
 
 		textCijena = new Text(shell, SWT.BORDER | SWT.RIGHT);
-		textCijena.addModifyListener(new TextCijenaModifyListener());
 		textCijena.setFont(SWTResourceManager.getFont("Liberation Sans", 30, SWT.NORMAL));
 		textCijena.setBounds(635, 250, 155, 70);
 		textCijena.setText("3334,12");
@@ -211,14 +210,14 @@ public class ProdajaWindow {
 		bAdd.setBounds(5, 325, 785, 40);
 		bAdd.setText("+");
 
+		list = new Text(shell, SWT.BORDER | SWT.MULTI);
+		list.setFont(SWTResourceManager.getFont("Liberation Mono", 14, SWT.NORMAL));
+		list.setBounds(5, 370, 455, 145);
+
 		lblUkupno = new Label(shell, SWT.RIGHT);
 		lblUkupno.setText("");
 		lblUkupno.setFont(SWTResourceManager.getFont("Liberation Sans", 30, SWT.BOLD));
 		lblUkupno.setBounds(640, 380, 145, 50);
-
-		list = new Text(shell, SWT.BORDER | SWT.MULTI);
-		list.setFont(SWTResourceManager.getFont("Liberation Mono", 14, SWT.NORMAL));
-		list.setBounds(5, 370, 630, 145);
 
 		btnPrint = new Button(shell, SWT.NONE);
 		btnPrint.addSelectionListener(new BtnPrintSelectionListener());
@@ -287,18 +286,11 @@ public class ProdajaWindow {
 		public void widgetDefaultSelected(SelectionEvent e) {
 			stavka.setOdPostaje(Postaja.get(cOdPostaje.getSelectionIndex()));
 			stavka.setDoPostaje(Postaja.get(cDoPostaje.getSelectionIndex()));
-			if (stavka.getKarta() == null) {
+			if (!Karta.get(cKarta.getSelectionIndex()).equals(stavka.getKarta())) {
 				stavka.setKarta(Karta.get(cKarta.getSelectionIndex()));
 				Popust.setKartaStupac(Karta.get(cKarta.getSelectionIndex()), stupac);
 				cPopust.setItems(Popust.getList());
 				cPopust.select(0);
-			} else {
-				if (!stavka.getKarta().equals(Karta.get(cKarta.getSelectionIndex()))) {
-					stavka.setKarta(Karta.get(cKarta.getSelectionIndex()));
-					Popust.setKartaStupac(Karta.get(cKarta.getSelectionIndex()), stupac);
-					cPopust.setItems(Popust.getList());
-					cPopust.select(0);
-				}
 			}
 			stavka.setPopust(Popust.get(cPopust.getSelectionIndex()));
 			if (stavka.getKarta().getId().equals(Karta.ZAMJENSKA_KARTA)) {
@@ -308,6 +300,7 @@ public class ProdajaWindow {
 				cPopust.select(0);
 				cPopust.setEnabled(false);
 				cProdMjesto.select(2);
+				textCijena.addModifyListener(new TextCijenaModifyListener());
 			} else {
 				CijenaKarte c = new CijenaKarte(stavka);
 				stavka.setCijena(c.getUkupnaCijena().multiply(BigDecimal.ONE.subtract(stavka.getPopust().getPopust().movePointLeft(2))).setScale(2));
@@ -329,11 +322,13 @@ public class ProdajaWindow {
 	private class TextCijenaModifyListener implements ModifyListener {
 		public void modifyText(ModifyEvent arg0) {
 			Text t = (Text) arg0.widget;
+			BigDecimal broj = BigDecimal.ZERO;
 			try {
-				BigDecimal broj = new BigDecimal(t.getText());
-				stavka.setCijena(broj);
+				broj = new BigDecimal(t.getText());
 			} catch (Exception e) {
-				stavka.setCijena(BigDecimal.ZERO);
+				broj = BigDecimal.ZERO;
+			} finally {
+				stavka.setCijena(broj.setScale(2));
 			}
 		}
 	}
