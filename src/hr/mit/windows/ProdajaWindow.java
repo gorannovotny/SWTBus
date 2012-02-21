@@ -6,16 +6,15 @@ import hr.mit.beans.Popust;
 import hr.mit.beans.Postaja;
 import hr.mit.beans.ProdajnoMjesto;
 import hr.mit.beans.Stavka;
-import hr.mit.beans.StavkaList;
 import hr.mit.beans.Stupac;
 import hr.mit.beans.Vozac;
+import hr.mit.utils.CijenaKarte;
 
-import java.text.DecimalFormat;
+import java.math.BigDecimal;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 
 import org.eclipse.swt.SWT;
-import org.eclipse.swt.custom.CLabel;
 import org.eclipse.swt.events.MouseAdapter;
 import org.eclipse.swt.events.MouseEvent;
 import org.eclipse.swt.events.SelectionAdapter;
@@ -28,6 +27,8 @@ import org.eclipse.swt.widgets.List;
 import org.eclipse.swt.widgets.Shell;
 import org.eclipse.swt.widgets.Text;
 import org.eclipse.wb.swt.SWTResourceManager;
+import org.eclipse.swt.events.ModifyListener;
+import org.eclipse.swt.events.ModifyEvent;
 
 public class ProdajaWindow {
 
@@ -42,7 +43,7 @@ public class ProdajaWindow {
 	private Text textCijena;
 	private Text textBrKarte;
 
-	private List list;
+	private Text list;
 	private Button bAdd;
 	private Button btnPrint;
 
@@ -103,9 +104,9 @@ public class ProdajaWindow {
 		cDoPostaje.addSelectionListener(c);
 		cKarta.addSelectionListener(c);
 		cPopust.addSelectionListener(c);
+		c.widgetDefaultSelected(null);
 
 		bAdd.addSelectionListener(new ButtonSelectionListener());
-		list.addMouseListener(new ListMouseListener());
 	}
 
 	protected void createContents() {
@@ -201,6 +202,7 @@ public class ProdajaWindow {
 		textBrKarte.setEnabled(false);
 
 		textCijena = new Text(shell, SWT.BORDER | SWT.RIGHT);
+		textCijena.addModifyListener(new TextCijenaModifyListener());
 		textCijena.setFont(SWTResourceManager.getFont("Liberation Sans", 30, SWT.NORMAL));
 		textCijena.setBounds(635, 250, 155, 70);
 		textCijena.setText("3334,12");
@@ -210,11 +212,11 @@ public class ProdajaWindow {
 		bAdd.setText("+");
 
 		lblUkupno = new Label(shell, SWT.RIGHT);
-		lblUkupno.setText("3334,12");
+		lblUkupno.setText("");
 		lblUkupno.setFont(SWTResourceManager.getFont("Liberation Sans", 30, SWT.BOLD));
 		lblUkupno.setBounds(640, 380, 145, 50);
 
-		list = new List(shell, SWT.BORDER);
+		list = new Text(shell, SWT.BORDER | SWT.MULTI);
 		list.setFont(SWTResourceManager.getFont("Liberation Mono", 14, SWT.NORMAL));
 		list.setBounds(5, 370, 630, 145);
 
@@ -241,19 +243,14 @@ public class ProdajaWindow {
 
 	private class ButtonSelectionListener extends SelectionAdapter {
 		public void widgetSelected(SelectionEvent e) {
-			// Stavka stavka = new Stavka(stupac,
-			// Postaja.get(cOdPostaje.getSelectionIndex()),
-			// Postaja.get(cDoPostaje.getSelectionIndex()),
-			// Karta.get(cKarta.getSelectionIndex()), Popust.get(cPopust
-			// .getSelectionIndex()));
-			// stavke.add(stavka);
-			// list.setItems(stavke.getList());
-			// textCijena.setText(new
-			// DecimalFormat("#0.00").format(stavke.getUkupno()));
-			// if (stavke.getCount().compareTo(0) > 0) {
-			// cOdPostaje.setEnabled(false);
-			// cDoPostaje.setEnabled(false);
-			// }
+			Stavka.add(stavka);
+			stavka = new Stavka(stupac);
+			list.setText(Stavka.getDescription());
+			lblUkupno.setText(Stavka.getUkupno().toString());
+			if (Stavka.getCount().compareTo(0) > 0) {
+				cOdPostaje.setEnabled(false);
+				cDoPostaje.setEnabled(false);
+			}
 		}
 	}
 
@@ -290,9 +287,12 @@ public class ProdajaWindow {
 		public void widgetDefaultSelected(SelectionEvent e) {
 			stavka.setOdPostaje(Postaja.get(cOdPostaje.getSelectionIndex()));
 			stavka.setDoPostaje(Postaja.get(cDoPostaje.getSelectionIndex()));
-			if (stavka.getKarta() == null)
+			if (stavka.getKarta() == null) {
 				stavka.setKarta(Karta.get(cKarta.getSelectionIndex()));
-			else {
+				Popust.setKartaStupac(Karta.get(cKarta.getSelectionIndex()), stupac);
+				cPopust.setItems(Popust.getList());
+				cPopust.select(0);
+			} else {
 				if (!stavka.getKarta().equals(Karta.get(cKarta.getSelectionIndex()))) {
 					stavka.setKarta(Karta.get(cKarta.getSelectionIndex()));
 					Popust.setKartaStupac(Karta.get(cKarta.getSelectionIndex()), stupac);
@@ -301,11 +301,40 @@ public class ProdajaWindow {
 				}
 			}
 			stavka.setPopust(Popust.get(cPopust.getSelectionIndex()));
+			if (stavka.getKarta().getId().equals(Karta.ZAMJENSKA_KARTA)) {
+				cProdMjesto.setEnabled(true);
+				textBrKarte.setEnabled(true);
+				textCijena.setEnabled(true);
+				cPopust.select(0);
+				cPopust.setEnabled(false);
+				cProdMjesto.select(2);
+			} else {
+				CijenaKarte c = new CijenaKarte(stavka);
+				stavka.setCijena(c.getUkupnaCijena().multiply(BigDecimal.ONE.subtract(stavka.getPopust().getPopust().movePointLeft(2))).setScale(2));
+				cProdMjesto.select(0);
+				cProdMjesto.setEnabled(false);
+				textBrKarte.setEnabled(false);
+				textCijena.setEnabled(false);
+				cPopust.setEnabled(true);
+				cProdMjesto.select(0);
+			}
 			textCijena.setText(stavka.getCijena().toString());
 		}
 
 		public void widgetSelected(SelectionEvent e) {
 			widgetDefaultSelected(e);
+		}
+	}
+
+	private class TextCijenaModifyListener implements ModifyListener {
+		public void modifyText(ModifyEvent arg0) {
+			Text t = (Text) arg0.widget;
+			try {
+				BigDecimal broj = new BigDecimal(t.getText());
+				stavka.setCijena(broj);
+			} catch (Exception e) {
+				stavka.setCijena(BigDecimal.ZERO);
+			}
 		}
 	}
 

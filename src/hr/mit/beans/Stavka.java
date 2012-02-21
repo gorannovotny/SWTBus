@@ -21,9 +21,36 @@ public class Stavka {
 	public static void clear() {
 		stavkaList.clear();
 	}
+	
+	public static void add(Stavka stavka) {
+		stavkaList.add(stavka);
+	}
+	
+	public static String getDescription() {
+		StringBuffer sb = new StringBuffer();
+		sb.append(stavkaList.get(0).getRelacija());sb.append("\n");
+		sb.append("----------------------------------------");sb.append("\n");
+		for (Stavka s : stavkaList) {
+			sb.append(s.getDesc());sb.append("\n");
+		}
+		return sb.toString();
+	}
+	public static Integer getCount() {
+		return stavkaList.size();
+	}
+	
+	public static BigDecimal getUkupno(){
+		BigDecimal retval = BigDecimal.ZERO;
+		for (Stavka s : stavkaList) {
+			retval = retval.add(s.getCijena());
+		}
+		return retval;
+	}
+	
 	public Stavka(Stupac stupac) {
 		this.stupac = stupac;
 	}
+	
 	public Stavka(Stupac stupac,Postaja odPostaje, Postaja doPostaje, Karta karta, Popust popust) {
 		this.odPostaje = odPostaje;
 		this.doPostaje = doPostaje;
@@ -34,11 +61,11 @@ public class Stavka {
 		cijena = cijena.subtract(cijena.multiply(popust.getPopust().movePointLeft(2)));
 	}
 
-	public String getDescription() {
+	public String getDesc() {
 		String k = karta.getNaziv();
 		if (k.length()>25) k = k.substring(0, 25);
 		
-		String out = String.format("%-25s %15.2f%% %8.2f",k,popust.getPopust().doubleValue(),getCijena().doubleValue());
+		String out = String.format("%-25s %5.2f%% %7.2f",k,popust.getPopust().doubleValue(),getCijena().doubleValue());
 		return out;
 	}
 	
@@ -47,8 +74,7 @@ public class Stavka {
 	}
 
 	public BigDecimal getCijena() {
-		CijenaKarte c = new CijenaKarte(karta, stupac.getVarijantaID(), odPostaje.getZapSt(), doPostaje.getZapSt());
-		return c.getUkupnaCijena().multiply(BigDecimal.ONE.subtract(popust.getPopust().movePointLeft(2))).setScale(2);
+		return cijena;
 	}
 	public Postaja getOdPostaje() {
 		return odPostaje;
