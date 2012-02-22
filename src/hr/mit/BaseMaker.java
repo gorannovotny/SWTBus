@@ -19,22 +19,22 @@ public class BaseMaker {
 			con2 = DriverManager.getConnection("jdbc:sqlite:test.db");
 			con2.setAutoCommit(false);
 
-//			doPTVozniRedi(con1, con2);
-//			doPTVarijanteVR(con1, con2);
-//			doPTStupciVR(con1, con2);
-//			doPTPostaje(con1, con2);
-//			doPTPostajeVR(con1, con2);
-//			doPTPostajeVarijantVR(con1, con2);
-//			doPTCasiVoznjeVR(con1, con2);
-//			doPTKTVozneKarte(con1, con2);
-//			doPTVozaci(con1, con2);
-//			doPTKTTarifniRazrediCenik(con1, con2);
-//			doPTKTVrstePopustov(con1, con2);
-//			doPTIzjemeCenikaVR(con1, con2);
-//			doPTKTProdaja(con1, con2);
-//			doPTKTTipiKarti(con1, con2);
-//			doPTKTPopusti(con1, con2);
-//			doPromVozila(con1, con2);
+			doPTVozniRedi(con1, con2);
+			doPTVarijanteVR(con1, con2);
+			doPTStupciVR(con1, con2);
+			doPTPostaje(con1, con2);
+			doPTPostajeVR(con1, con2);
+			doPTPostajeVarijantVR(con1, con2);
+			doPTCasiVoznjeVR(con1, con2);
+			doPTKTVozneKarte(con1, con2);
+			doPTVozaci(con1, con2);
+			doPTKTTarifniRazrediCenik(con1, con2);
+			doPTKTVrstePopustov(con1, con2);
+			doPTIzjemeCenikaVR(con1, con2);
+			doPTKTProdaja(con1, con2);
+			doPTKTTipiKarti(con1, con2);
+			doPTKTPopusti(con1, con2);
+			doPromVozila(con1, con2);
 			doPTProdajnaMesta(con1, con2);
 		} catch (Exception e) {
 			e.printStackTrace();
@@ -119,10 +119,10 @@ public class BaseMaker {
 		con2.createStatement().executeUpdate("drop table if exists PTStupciVR;");
 		con2.createStatement()
 				.executeUpdate(
-						"CREATE TABLE PTStupciVR (ID INT NOT NULL,Firma INT NOT NULL,VozniRedID INT NOT NULL,VarijantaVRID INT NOT NULL,ZapSt VARCHAR NOT NULL,SmerVoznje VARCHAR,DneviVoznjeID INT,PrevoznikID INT,VrstaPrevoza INT,VrstaBusa INT,NacinPrevoza INT,VrstaPosadeID INT,VremeOdhoda FLOAT,OE INT,VeljaOd DATETIME,VeljaDo DATETIME,StatusERR INT,DOSID INT,PRIMARY KEY (ID),FOREIGN KEY (VarijantaVRID) REFERENCES PTVarijanteVR (ID))");
-		PreparedStatement ps = con2.prepareStatement("INSERT INTO PTStupciVR VALUES (?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)");
+						"CREATE TABLE PTStupciVR (ID INT NOT NULL,Firma INT NOT NULL,VozniRedID INT NOT NULL,VarijantaVRID INT NOT NULL,ZapSt VARCHAR NOT NULL,SmerVoznje VARCHAR,DneviVoznjeID INT,PrevoznikID INT,VrstaPrevoza INT,VrstaBusa INT,StBusov INT,NacinPrevoza INT,VrstaPosadeID INT,VremeOdhoda FLOAT,OE INT,VeljaOd DATETIME,VeljaDo DATETIME,StatusERR INT,DOSID INT,PRIMARY KEY (ID),FOREIGN KEY (VarijantaVRID) REFERENCES PTVarijanteVR (ID))");
+		PreparedStatement ps = con2.prepareStatement("INSERT INTO PTStupciVR VALUES (?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)");
 		ResultSet rs = con1.createStatement().executeQuery(
-				"SELECT * FROM PTStupciVR WHERE VarijantaVRID IN (select ID from PTVarijanteVR where VozniRedID IN (SELECT ID FROM PTVozniRedi WHERE VeljaOd< GETDATE() and veljaDo > GETDATE()))");
+				"SELECT * FROM PTStupciVR WHERE VarijantaVRID IN (select ID from PTVarijanteVR where VozniRedID IN (SELECT ID FROM PTVozniRedi WHERE VeljaOd< GETDATE() and veljaDo > GETDATE())) AND ID NOT IN (select StupacID from dbo.PTStupciVRMirovanja WHERE GETDATE() BETWEEN PTStupciVRMirovanja.OdDatuma AND PTStupciVRMirovanja.DoDatuma)");
 		while (rs.next()) {
 			ps.setInt(1, rs.getInt(1));
 			ps.setInt(2, rs.getInt(2));
@@ -136,12 +136,13 @@ public class BaseMaker {
 			ps.setInt(10, rs.getInt(10));
 			ps.setInt(11, rs.getInt(11));
 			ps.setInt(12, rs.getInt(12));
-			ps.setDouble(13, rs.getDouble(13));
-			ps.setInt(14, rs.getInt(14));
-			ps.setString(15, rs.getString(15));
+			ps.setInt(13, rs.getInt(13));
+			ps.setDouble(14, rs.getDouble(14));
+			ps.setInt(15, rs.getInt(15));
 			ps.setString(16, rs.getString(16));
-			ps.setInt(17, rs.getInt(17));
+			ps.setString(17, rs.getString(17));
 			ps.setInt(18, rs.getInt(18));
+			ps.setInt(19, rs.getInt(19));
 			ps.addBatch();
 			i++;
 		}
