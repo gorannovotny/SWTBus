@@ -2,6 +2,7 @@ package hr.mit.utils;
 
 import hr.mit.beans.Karta;
 import hr.mit.beans.Postaja;
+import hr.mit.beans.Stavka;
 import hr.mit.beans.Stupac;
 
 import java.math.BigDecimal;
@@ -25,17 +26,18 @@ public class CijenaKarte {
 	private Integer doZapSt;
 	private Karta karta;
 
-	public CijenaKarte(Karta karta, Integer varijantaID, Integer odZapSt, Integer doZapSt) throws SQLException {
-		this.varijantaID = varijantaID;
-		if (odZapSt > doZapSt) {
-			this.odZapSt = doZapSt;
-			this.doZapSt = odZapSt;
+	
+	public CijenaKarte(Stavka stavka)  {
+		this.varijantaID = stavka.getStupac().getVarijantaID();
+		if (stavka.getOdPostaje().getZapSt() > stavka.getDoPostaje().getZapSt()) {
+			this.odZapSt = stavka.getDoPostaje().getZapSt();
+			this.doZapSt = stavka.getOdPostaje().getZapSt();
 
 		} else {
-			this.odZapSt = odZapSt;
-			this.doZapSt = doZapSt;
+			this.odZapSt = stavka.getOdPostaje().getZapSt();
+			this.doZapSt = stavka.getDoPostaje().getZapSt();
 		}
-		this.karta = karta;
+		this.karta = stavka.getKarta();
 
 	}
 
@@ -129,9 +131,12 @@ public class CijenaKarte {
 					PreparedStatement ps = DbUtil.getConnection().prepareStatement(sql);
 					ps.setInt(1, karta.getTarifniRazredID());
 					ps.setInt(2, getDistancaCenika() / 1000);
-					retval = new BigDecimal(DbUtil.getSingleResultDouble(ps));
-					retval = retval.multiply(new BigDecimal(karta.getStVoznji()));
+					Double cena = DbUtil.getSingleResultDouble(ps);
 					ps.close();
+					if (cena != null) {
+					retval = new BigDecimal(cena);
+					retval = retval.multiply(new BigDecimal(karta.getStVoznji()));
+					}
 				} catch (SQLException e) {
 					// TODO Auto-generated catch block
 					e.printStackTrace();

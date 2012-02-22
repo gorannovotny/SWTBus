@@ -24,6 +24,7 @@ public class Karta {
 	public static Integer TARIFNI_DALJINAR = 1;
 	public static Integer FIKSNA_CIJENA = 2;
 	public static Integer FIKSNI_KILOMETRI = 3;
+	public static Integer ZAMJENSKA_KARTA = 99;
 
 	static {
 		try {
@@ -36,7 +37,7 @@ public class Karta {
 		} catch (SQLException e) {
 			e.printStackTrace();
 		}
-		
+		kartaList.add(new Karta(Karta.ZAMJENSKA_KARTA,"Zamjenska karta",1,0,0,0,0,0,0.0,0));	
 	}
 
 	public Karta(int id, String naziv,int stVoznji, int nacinDolocanjaCene, int tarifniRazredID, double FiksnaCena, int popustID, int kmPogoja,double popustProcent,int tip) {
@@ -75,6 +76,9 @@ public class Karta {
 	}
 
 	public Integer getNacinDolocanjaCene() {
+		if (nacinDolocanjaCene == null)
+			return Karta.TARIFNI_DALJINAR;
+		else
 		return nacinDolocanjaCene;
 	}
 
