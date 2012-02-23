@@ -40,6 +40,9 @@ public class ProdajnoMjesto {
 		}
 		return null;
 	}
+	public static ProdajnoMjesto get(int index){
+		return pmList.get(index);
+	}
 
 	public Integer getId() {
 		return id;
