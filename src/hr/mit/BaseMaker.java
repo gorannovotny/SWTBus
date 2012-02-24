@@ -269,8 +269,8 @@ public class BaseMaker {
 		con2.createStatement().executeUpdate("drop table if exists PTKTVozneKarte");
 		con2.createStatement()
 				.executeUpdate(
-						"CREATE TABLE PTKTVozneKarte(ID INT NOT NULL , Firma INT NOT NULL,Sifra VARCHAR(10) NOT NULL,Oznaka VARCHAR(16) ,TipKarteID INT NOT NULL,TarifniRazredID INT,Opis VARCHAR(50) ,StVoznji INT,SmerVoznje INT,VeljaOdDatuma DATETIME,VeljaDoDatuma DATETIME,VeljaDniOdProdaje INT,Status INT,PrevoznikID INT,NacinDolocanjaCene INT,KMPogoja INT,FiksnaCena FLOAT(53),PopustID INT,PopustProcent FLOAT(53),SifraValute INT,MobilnaProdaja INT,PRIMARY KEY (ID))");
-		PreparedStatement ps = con2.prepareStatement("INSERT INTO PTKTVozneKarte VALUES (?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)");
+						"CREATE TABLE PTKTVozneKarte(ID INT NOT NULL , Firma INT NOT NULL,Sifra VARCHAR(10) NOT NULL,Oznaka VARCHAR(16) ,TipKarteID INT NOT NULL,TarifniRazredID INT,Opis VARCHAR(50) ,StVoznji INT,SmerVoznje INT,OdDanaM INT,DoDanaM INT,VeljaDniOdProdaje INT,Status INT,PrevoznikID INT,NacinDolocanjaCene INT,KMPogoja INT,FiksnaCena FLOAT(53),PopustProcent FLOAT(53),SifraValute INT,RoundN FLOAT(53),MobilnaProdaja INT,InternetProdaja INT,DOSID INT,CenaRezervacije FLOAT(53),KmRezervacije INT,PRIMARY KEY (ID))");
+		PreparedStatement ps = con2.prepareStatement("INSERT INTO PTKTVozneKarte VALUES (?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)");
 		ResultSet rs = con1.createStatement().executeQuery("SELECT * FROM PTKTVozneKarte WHERE MobilnaProdaja = 1");
 		while (rs.next()) {
 			ps.setInt(1, rs.getInt(1));
@@ -282,18 +282,22 @@ public class BaseMaker {
 			ps.setString(7, rs.getString(7));
 			ps.setInt(8, rs.getInt(8));
 			ps.setInt(9, rs.getInt(9));
-			ps.setString(10, rs.getString(10));
-			ps.setString(11, rs.getString(11));
+			ps.setInt(10, rs.getInt(10));
+			ps.setInt(11, rs.getInt(11));
 			ps.setInt(12, rs.getInt(12));
 			ps.setInt(13, rs.getInt(13));
 			ps.setInt(14, rs.getInt(14));
 			ps.setInt(15, rs.getInt(15));
 			ps.setInt(16, rs.getInt(16));
 			ps.setDouble(17, rs.getDouble(17));
-			ps.setInt(18, rs.getInt(18));
-			ps.setDouble(19, rs.getDouble(19));
-			ps.setInt(20, rs.getInt(20));
+			ps.setDouble(18, rs.getDouble(18));
+			ps.setInt(19, rs.getInt(19));
+			ps.setDouble(20, rs.getDouble(20));
 			ps.setInt(21, rs.getInt(21));
+			ps.setInt(22, rs.getInt(22));
+			ps.setInt(23, rs.getInt(23));
+			ps.setDouble(24, rs.getDouble(24));
+			ps.setInt(25, rs.getInt(25));
 			ps.addBatch();
 			i++;
 		}
