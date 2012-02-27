@@ -15,7 +15,6 @@ public class Karta {
 	private Integer nacinDolocanjaCene;
 	private Integer tarifniRazredID;
 	private BigDecimal fiksnaCena;
-	private Integer popustID;
 	private Integer kmPogoja;
 	private BigDecimal popustProcent;
 	private Integer tipKarteID;
@@ -28,26 +27,25 @@ public class Karta {
 
 	static {
 		try {
-			String sql = "Select a.id,b.Opis,stVoznji,NacinDolocanjaCene,TarifniRazredID,FiksnaCena,PopustID,KMPogoja,PopustProcent,TipKarteID from PTKTVozneKarte a,PTKTTipiKarti b WHERE a.MobilnaProdaja = 1 AND a.TipKarteID = b.ID";
+			String sql = "Select a.id,b.Opis,stVoznji,NacinDolocanjaCene,TarifniRazredID,FiksnaCena,KMPogoja,PopustProcent,TipKarteID from PTKTVozneKarte a,PTKTTipiKarti b WHERE a.MobilnaProdaja = 1 AND a.TipKarteID = b.ID";
 			ResultSet rs = DbUtil.getConnection().createStatement().executeQuery(sql);
 			while (rs.next()) {
-				kartaList.add(new Karta(rs.getInt("ID"),rs.getString("Opis"),rs.getInt("stVoznji"),rs.getInt("NacinDolocanjaCene"),rs.getInt("TarifniRazredID"),rs.getDouble("FiksnaCena"),rs.getInt("PopustID"),rs.getInt("KmPogoja"),rs.getDouble("PopustProcent"),rs.getInt("TipKarteID")));
+				kartaList.add(new Karta(rs.getInt("ID"),rs.getString("Opis"),rs.getInt("stVoznji"),rs.getInt("NacinDolocanjaCene"),rs.getInt("TarifniRazredID"),rs.getDouble("FiksnaCena"),rs.getInt("KmPogoja"),rs.getDouble("PopustProcent"),rs.getInt("TipKarteID")));
 			}
 			rs.close();
 		} catch (SQLException e) {
 			e.printStackTrace();
 		}
-		kartaList.add(new Karta(Karta.ZAMJENSKA_KARTA,"Zamjenska karta",1,0,0,0,0,0,0.0,0));	
+		kartaList.add(new Karta(Karta.ZAMJENSKA_KARTA,"Zamjenska karta",1,0,0,0,0,0.0,0));	
 	}
 
-	public Karta(int id, String naziv,int stVoznji, int nacinDolocanjaCene, int tarifniRazredID, double FiksnaCena, int popustID, int kmPogoja,double popustProcent,int tip) {
+	public Karta(int id, String naziv,int stVoznji, int nacinDolocanjaCene, int tarifniRazredID, double FiksnaCena, int kmPogoja,double popustProcent,int tip) {
 		this.id = id;
 		this.naziv = naziv;
 		this.stVoznji = stVoznji;
 		this.nacinDolocanjaCene = nacinDolocanjaCene;
 		this.tarifniRazredID = tarifniRazredID;
 		this.fiksnaCena = new BigDecimal(FiksnaCena);
-		this.popustID = popustID;
 		this.kmPogoja = kmPogoja;
 		this.popustProcent = new BigDecimal(popustProcent);
 		this.tipKarteID = tip;
@@ -88,10 +86,6 @@ public class Karta {
 
 	public BigDecimal getFiksnaCena() {
 		return fiksnaCena;
-	}
-
-	public Integer getPopustID() {
-		return popustID;
 	}
 
 	public Integer getKmPogoja() {

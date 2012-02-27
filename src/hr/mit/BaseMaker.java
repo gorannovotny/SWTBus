@@ -19,22 +19,22 @@ public class BaseMaker {
 			con2 = DriverManager.getConnection("jdbc:sqlite:test.db");
 			con2.setAutoCommit(false);
 
-//			doPTVozniRedi(con1, con2);
-//			doPTVarijanteVR(con1, con2);
-//			doPTStupciVR(con1, con2);
-//			doPTPostaje(con1, con2);
-//			doPTPostajeVR(con1, con2);
-//			doPTPostajeVarijantVR(con1, con2);
-//			doPTCasiVoznjeVR(con1, con2);
-//			doPTKTVozneKarte(con1, con2);
-//			doPTVozaci(con1, con2);
-//			doPTKTTarifniRazrediCenik(con1, con2);
-//			doPTKTVrstePopustov(con1, con2);
-//			doPTIzjemeCenikaVR(con1, con2);
-//			doPTKTProdaja(con1, con2);
-//			doPTKTTipiKarti(con1, con2);
-//			doPTKTPopusti(con1, con2);
-//			doPromVozila(con1, con2);
+			doPTVozniRedi(con1, con2);
+			doPTVarijanteVR(con1, con2);
+			doPTStupciVR(con1, con2);
+			doPTPostaje(con1, con2);
+			doPTPostajeVR(con1, con2);
+			doPTPostajeVarijantVR(con1, con2);
+			doPTCasiVoznjeVR(con1, con2);
+			doPTKTVozneKarte(con1, con2);
+			doPTVozaci(con1, con2);
+			doPTKTTarifniRazrediCenik(con1, con2);
+			doPTKTVrstePopustov(con1, con2);
+			doPTIzjemeCenikaVR(con1, con2);
+			doPTKTProdaja(con1, con2);
+			doPTKTTipiKarti(con1, con2);
+			doPTKTPopusti(con1, con2);
+			doPromVozila(con1, con2);
 			doPTProdajnaMesta(con1, con2);
 		} catch (Exception e) {
 			e.printStackTrace();
@@ -119,10 +119,10 @@ public class BaseMaker {
 		con2.createStatement().executeUpdate("drop table if exists PTStupciVR;");
 		con2.createStatement()
 				.executeUpdate(
-						"CREATE TABLE PTStupciVR (ID INT NOT NULL,Firma INT NOT NULL,VozniRedID INT NOT NULL,VarijantaVRID INT NOT NULL,ZapSt VARCHAR NOT NULL,SmerVoznje VARCHAR,DneviVoznjeID INT,PrevoznikID INT,VrstaPrevoza INT,VrstaBusa INT,NacinPrevoza INT,VrstaPosadeID INT,VremeOdhoda FLOAT,OE INT,VeljaOd DATETIME,VeljaDo DATETIME,StatusERR INT,DOSID INT,PRIMARY KEY (ID),FOREIGN KEY (VarijantaVRID) REFERENCES PTVarijanteVR (ID))");
-		PreparedStatement ps = con2.prepareStatement("INSERT INTO PTStupciVR VALUES (?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)");
+						"CREATE TABLE PTStupciVR (ID INT NOT NULL,Firma INT NOT NULL,VozniRedID INT NOT NULL,VarijantaVRID INT NOT NULL,ZapSt VARCHAR NOT NULL,SmerVoznje VARCHAR,DneviVoznjeID INT,PrevoznikID INT,VrstaPrevoza INT,VrstaBusa INT,StBusov INT,NacinPrevoza INT,VrstaPosadeID INT,VremeOdhoda FLOAT,OE INT,VeljaOd DATETIME,VeljaDo DATETIME,StatusERR INT,DOSID INT,PRIMARY KEY (ID),FOREIGN KEY (VarijantaVRID) REFERENCES PTVarijanteVR (ID))");
+		PreparedStatement ps = con2.prepareStatement("INSERT INTO PTStupciVR VALUES (?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)");
 		ResultSet rs = con1.createStatement().executeQuery(
-				"SELECT * FROM PTStupciVR WHERE VarijantaVRID IN (select ID from PTVarijanteVR where VozniRedID IN (SELECT ID FROM PTVozniRedi WHERE VeljaOd< GETDATE() and veljaDo > GETDATE()))");
+				"SELECT * FROM PTStupciVR WHERE VarijantaVRID IN (select ID from PTVarijanteVR where VozniRedID IN (SELECT ID FROM PTVozniRedi WHERE VeljaOd< GETDATE() and veljaDo > GETDATE())) AND ID NOT IN (select StupacID from dbo.PTStupciVRMirovanja WHERE GETDATE() BETWEEN PTStupciVRMirovanja.OdDatuma AND PTStupciVRMirovanja.DoDatuma)");
 		while (rs.next()) {
 			ps.setInt(1, rs.getInt(1));
 			ps.setInt(2, rs.getInt(2));
@@ -136,12 +136,13 @@ public class BaseMaker {
 			ps.setInt(10, rs.getInt(10));
 			ps.setInt(11, rs.getInt(11));
 			ps.setInt(12, rs.getInt(12));
-			ps.setDouble(13, rs.getDouble(13));
-			ps.setInt(14, rs.getInt(14));
-			ps.setString(15, rs.getString(15));
+			ps.setInt(13, rs.getInt(13));
+			ps.setDouble(14, rs.getDouble(14));
+			ps.setInt(15, rs.getInt(15));
 			ps.setString(16, rs.getString(16));
-			ps.setInt(17, rs.getInt(17));
+			ps.setString(17, rs.getString(17));
 			ps.setInt(18, rs.getInt(18));
+			ps.setInt(19, rs.getInt(19));
 			ps.addBatch();
 			i++;
 		}
@@ -268,8 +269,8 @@ public class BaseMaker {
 		con2.createStatement().executeUpdate("drop table if exists PTKTVozneKarte");
 		con2.createStatement()
 				.executeUpdate(
-						"CREATE TABLE PTKTVozneKarte(ID INT NOT NULL , Firma INT NOT NULL,Sifra VARCHAR(10) NOT NULL,Oznaka VARCHAR(16) ,TipKarteID INT NOT NULL,TarifniRazredID INT,Opis VARCHAR(50) ,StVoznji INT,SmerVoznje INT,VeljaOdDatuma DATETIME,VeljaDoDatuma DATETIME,VeljaDniOdProdaje INT,Status INT,PrevoznikID INT,NacinDolocanjaCene INT,KMPogoja INT,FiksnaCena FLOAT(53),PopustID INT,PopustProcent FLOAT(53),SifraValute INT,MobilnaProdaja INT,PRIMARY KEY (ID))");
-		PreparedStatement ps = con2.prepareStatement("INSERT INTO PTKTVozneKarte VALUES (?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)");
+						"CREATE TABLE PTKTVozneKarte(ID INT NOT NULL , Firma INT NOT NULL,Sifra VARCHAR(10) NOT NULL,Oznaka VARCHAR(16) ,TipKarteID INT NOT NULL,TarifniRazredID INT,Opis VARCHAR(50) ,StVoznji INT,SmerVoznje INT,OdDanaM INT,DoDanaM INT,VeljaDniOdProdaje INT,Status INT,PrevoznikID INT,NacinDolocanjaCene INT,KMPogoja INT,FiksnaCena FLOAT(53),PopustProcent FLOAT(53),SifraValute INT,RoundN FLOAT(53),MobilnaProdaja INT,InternetProdaja INT,DOSID INT,CenaRezervacije FLOAT(53),KmRezervacije INT,PRIMARY KEY (ID))");
+		PreparedStatement ps = con2.prepareStatement("INSERT INTO PTKTVozneKarte VALUES (?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)");
 		ResultSet rs = con1.createStatement().executeQuery("SELECT * FROM PTKTVozneKarte WHERE MobilnaProdaja = 1");
 		while (rs.next()) {
 			ps.setInt(1, rs.getInt(1));
@@ -281,18 +282,22 @@ public class BaseMaker {
 			ps.setString(7, rs.getString(7));
 			ps.setInt(8, rs.getInt(8));
 			ps.setInt(9, rs.getInt(9));
-			ps.setString(10, rs.getString(10));
-			ps.setString(11, rs.getString(11));
+			ps.setInt(10, rs.getInt(10));
+			ps.setInt(11, rs.getInt(11));
 			ps.setInt(12, rs.getInt(12));
 			ps.setInt(13, rs.getInt(13));
 			ps.setInt(14, rs.getInt(14));
 			ps.setInt(15, rs.getInt(15));
 			ps.setInt(16, rs.getInt(16));
 			ps.setDouble(17, rs.getDouble(17));
-			ps.setInt(18, rs.getInt(18));
-			ps.setDouble(19, rs.getDouble(19));
-			ps.setInt(20, rs.getInt(20));
+			ps.setDouble(18, rs.getDouble(18));
+			ps.setInt(19, rs.getInt(19));
+			ps.setDouble(20, rs.getDouble(20));
 			ps.setInt(21, rs.getInt(21));
+			ps.setInt(22, rs.getInt(22));
+			ps.setInt(23, rs.getInt(23));
+			ps.setDouble(24, rs.getDouble(24));
+			ps.setInt(25, rs.getInt(25));
 			ps.addBatch();
 			i++;
 		}

@@ -146,28 +146,6 @@ public class CijenaKarte {
 		return retval;
 	}
 
-	public BigDecimal getPopust() {
-		Integer naciz;
-		BigDecimal vrednost;
-		BigDecimal retval = null;
-		String sql = "SELECT NacinIzracuna,Vrednost FROM PTKTVrstePopustov WHERE ID = ?";
-		try {
-			PreparedStatement ps = DbUtil.getConnection().prepareStatement(sql);
-			ps.setInt(1, karta.getPopustID());
-			ResultSet rs = ps.executeQuery();
-			if (rs.next()) {
-				naciz = rs.getInt("NacinIzracuna");
-				vrednost = new BigDecimal(rs.getDouble("Vrednost"));
-				if (naciz.equals(0))
-					retval = getCijena().multiply(vrednost).divide(new BigDecimal(100));
-				else
-					retval = vrednost;
-			}
-		} catch (SQLException e) {
-			e.printStackTrace();
-		}
-		return retval;
-	}
 
 	public BigDecimal getUkupnaCijena() {
 		return getCijena().multiply(BigDecimal.ONE.subtract(karta.getPopustProcent().movePointLeft(2)));

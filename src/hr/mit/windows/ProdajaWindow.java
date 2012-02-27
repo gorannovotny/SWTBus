@@ -35,23 +35,23 @@ public class ProdajaWindow {
 
 	protected Shell shell;
 
-	private Combo cOdPostaje;
-	private Combo cDoPostaje;
-	private Combo cKarta;
-	private Combo cPopust;
-	private Combo cProdMjesto;
+	Combo cOdPostaje;
+	 Combo cDoPostaje;
+	 Combo cKarta;
+	 Combo cPopust;
+	 Combo cProdMjesto;
 
-	private Text textCijena;
-	private Text textBrKarte;
+	 Text textCijena;
+	 Text textBrKarte;
 
-	private Text textRacun;
-	private Button bAdd;
-	private Button btnPrint;
+	 Text textRacun;
+	 Button bAdd;
+	 Button btnPrint;
 
 	private Vozac vozac;
 	private Stupac stupac;
 	private Blagajna blagajna;
-	private Stavka stavka;
+	 Stavka stavka;
 
 	private CLabel lClock;
 	private CLabel lStupac;
@@ -348,8 +348,13 @@ public class ProdajaWindow {
 					stavka.setDoPostaje(Postaja.get(cOdPostaje.getSelectionIndex() + 1));
 					cDoPostaje.select(cOdPostaje.getSelectionIndex() + 1);
 				}
-			} else if (e.widget.equals(cDoPostaje))
+			} else if (e.widget.equals(cDoPostaje)){
 				stavka.setDoPostaje(Postaja.get(cDoPostaje.getSelectionIndex()));
+				if ((cOdPostaje.getSelectionIndex() >= cDoPostaje.getSelectionIndex()) && (cDoPostaje.getSelectionIndex() > 0)) {
+					stavka.setOdPostaje(Postaja.get(cDoPostaje.getSelectionIndex() - 1));
+					cOdPostaje.select(cDoPostaje.getSelectionIndex() - 1);
+				}
+			}
 			else if (e.widget.equals(cKarta)) {
 				stavka.setKarta(Karta.get(cKarta.getSelectionIndex()));
 				Popust.setKartaStupac(Karta.get(cKarta.getSelectionIndex()), stupac);
