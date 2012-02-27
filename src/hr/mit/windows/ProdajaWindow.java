@@ -36,22 +36,22 @@ public class ProdajaWindow {
 	protected Shell shell;
 
 	Combo cOdPostaje;
-	 Combo cDoPostaje;
-	 Combo cKarta;
-	 Combo cPopust;
-	 Combo cProdMjesto;
+	Combo cDoPostaje;
+	Combo cKarta;
+	Combo cPopust;
+	Combo cProdMjesto;
 
-	 Text textCijena;
-	 Text textBrKarte;
+	Text textCijena;
+	Text textBrKarte;
 
-	 Text textRacun;
-	 Button bAdd;
-	 Button btnPrint;
+	Text textRacun;
+	Button bAdd;
+	Button btnPrint;
 
 	private Vozac vozac;
 	private Stupac stupac;
 	private Blagajna blagajna;
-	 Stavka stavka;
+	Stavka stavka;
 
 	private CLabel lClock;
 	private CLabel lStupac;
@@ -279,26 +279,26 @@ public class ProdajaWindow {
 		bAdd.setBounds(5, 310, 460, 70);
 		bAdd.setText("+");
 
-		textRacun = new Text(shell, SWT.BORDER | SWT.MULTI);
-		textRacun.setFont(SWTResourceManager.getFont("Liberation Mono", 14, SWT.NORMAL));
-		textRacun.setBounds(5, 385, 460, 155);
-
 		lblUkupno = new Label(shell, SWT.RIGHT);
 		lblUkupno.setText("");
 		lblUkupno.setFont(SWTResourceManager.getFont("Liberation Sans", 50, SWT.NORMAL));
-		lblUkupno.setBounds(580, 320, 185, 80);
+		lblUkupno.setBounds(470, 366, 320, 80);
+
+		textRacun = new Text(shell, SWT.BORDER | SWT.MULTI);
+		textRacun.setFont(SWTResourceManager.getFont("Liberation Mono", 14, SWT.NORMAL));
+		textRacun.setBounds(5, 385, 460, 155);
 
 		btnClear = new Button(shell, SWT.NONE);
 		btnClear.addSelectionListener(new BtnClearSelectionListener());
 		btnClear.setText("Clear");
 		btnClear.setFont(SWTResourceManager.getFont("Liberation Sans", 25, SWT.NORMAL));
-		btnClear.setBounds(465, 430, 145, 85);
+		btnClear.setBounds(470, 455, 145, 85);
 
 		btnPrint = new Button(shell, SWT.NONE);
 		btnPrint.addSelectionListener(new BtnPrintSelectionListener());
 		btnPrint.setText("Print");
 		btnPrint.setFont(SWTResourceManager.getFont("Liberation Sans", 25, SWT.NORMAL));
-		btnPrint.setBounds(640, 430, 145, 85);
+		btnPrint.setBounds(648, 455, 145, 85);
 
 		lVozac = new CLabel(shell, SWT.NONE);
 		lVozac.setBackground(SWTResourceManager.getColor(0, 0, 0));
@@ -348,14 +348,13 @@ public class ProdajaWindow {
 					stavka.setDoPostaje(Postaja.get(cOdPostaje.getSelectionIndex() + 1));
 					cDoPostaje.select(cOdPostaje.getSelectionIndex() + 1);
 				}
-			} else if (e.widget.equals(cDoPostaje)){
+			} else if (e.widget.equals(cDoPostaje)) {
 				stavka.setDoPostaje(Postaja.get(cDoPostaje.getSelectionIndex()));
 				if ((cOdPostaje.getSelectionIndex() >= cDoPostaje.getSelectionIndex()) && (cDoPostaje.getSelectionIndex() > 0)) {
 					stavka.setOdPostaje(Postaja.get(cDoPostaje.getSelectionIndex() - 1));
 					cOdPostaje.select(cDoPostaje.getSelectionIndex() - 1);
 				}
-			}
-			else if (e.widget.equals(cKarta)) {
+			} else if (e.widget.equals(cKarta)) {
 				stavka.setKarta(Karta.get(cKarta.getSelectionIndex()));
 				Popust.setKartaStupac(Karta.get(cKarta.getSelectionIndex()), stupac);
 				cPopust.setItems(Popust.getList());

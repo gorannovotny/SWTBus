@@ -94,11 +94,11 @@ public class VirtualKeyboard extends Dialog {
 		MyButton b = new MyButton(shell, "B", 4, 5, listener);
 		MyButton n = new MyButton(shell, "N", 4, 6, listener);
 		MyButton m = new MyButton(shell, "M", 4, 7, listener);
-		MyButton tocka = new MyButton(shell, ".", 4, 8, listener);
+		MyButton zarez = new MyButton(shell, ",", 4, 8, listener);
 		MyButton č = new MyButton(shell, "Č", 4, 9, listener);
 		MyButton ć = new MyButton(shell, "Ć", 4, 10, listener);
 		MyButton ž = new MyButton(shell, "Ž", 4, 11, listener);
-		MyButton zarez = new MyButton(shell, ",", 5, 14, listener);
+		MyButton tocka = new MyButton(shell, ".", 5, 14, listener);
 		// MyButton minus = new MyButton(shell, "-", 4, 10, listener);
 		// MyButton plus = new MyButton(shell, "+", 4, 11, listener);
 
