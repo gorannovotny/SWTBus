@@ -1,17 +1,13 @@
 package hr.mit.windows;
 
-import org.eclipse.core.databinding.SetBinding;
-import org.eclipse.swt.widgets.Dialog;
-import org.eclipse.swt.widgets.Display;
-import org.eclipse.swt.widgets.Shell;
-import org.eclipse.swt.widgets.Button;
-import org.eclipse.swt.widgets.Text;
-import org.eclipse.swt.SWT;
 import org.eclipse.swt.events.SelectionAdapter;
 import org.eclipse.swt.events.SelectionEvent;
 import org.eclipse.swt.events.SelectionListener;
-import org.eclipse.swt.graphics.Color;
-import org.eclipse.wb.swt.SWTResourceManager;
+import org.eclipse.swt.widgets.Button;
+import org.eclipse.swt.widgets.Dialog;
+import org.eclipse.swt.widgets.Display;
+import org.eclipse.swt.widgets.Shell;
+import org.eclipse.swt.widgets.Text;
 
 public class VirtualKeyboard extends Dialog {
 
@@ -20,15 +16,9 @@ public class VirtualKeyboard extends Dialog {
 
 	private Text polje;
 
-	/**
-	 * Create the dialog.
-	 * 
-	 * @param parent
-	 * @param style
-	 */
 	public VirtualKeyboard(Shell parent, int style) {
 		super(parent, style);
-		setText("SWT Dialog");
+		setText("Virtual Keyboard");
 
 	}
 
@@ -54,27 +44,27 @@ public class VirtualKeyboard extends Dialog {
 	/**
 	 * Create contents of the dialog.
 	 */
+	@SuppressWarnings("unused")
 	private void createContents() {
 		shell = new Shell(getParent(), getStyle());
-		shell.setSize(620, 270);
-		shell.setLocation(getParent().getLocation().x, getParent().getLocation().y + 330);
+		shell.setSize(800, 215);
+		shell.setLocation(getParent().getLocation().x, getParent().getLocation().y + 385);
 		shell.setText(getText());
-		shell.setBackground(SWTResourceManager.getColor(SWT.COLOR_DARK_GRAY));
 		SelectionListener listener = new MyButtonSelectionListener();
 
-		MyButton b1 = new MyButton(shell, "1", 1, 1, listener);
-		MyButton b2 = new MyButton(shell, "2", 1, 2, listener);
-		MyButton b3 = new MyButton(shell, "3", 1, 3, listener);
-		MyButton b4 = new MyButton(shell, "4", 1, 4, listener);
-		MyButton b5 = new MyButton(shell, "5", 1, 5, listener);
-		MyButton b6 = new MyButton(shell, "6", 1, 6, listener);
-		MyButton b7 = new MyButton(shell, "7", 1, 7, listener);
-		MyButton b8 = new MyButton(shell, "8", 1, 8, listener);
-		MyButton b9 = new MyButton(shell, "9", 1, 9, listener);
-		MyButton b0 = new MyButton(shell, "0", 1, 10, listener);
-		// MyButton apos = new MyButton(shell, "'", 1, 11, listener);
-		// MyButton plus = new MyButton(shell, "+", 1, 12, listener);
-		MyButton bs = new MyButton(shell, "BS", 1, 11, listener);
+		MyButton b1 = new MyButton(shell, "1", 4, 13, listener);
+		MyButton b2 = new MyButton(shell, "2", 4, 14, listener);
+		MyButton b3 = new MyButton(shell, "3", 4, 15, listener);
+		MyButton b4 = new MyButton(shell, "4", 3, 13, listener);
+		MyButton b5 = new MyButton(shell, "5", 3, 14, listener);
+		MyButton b6 = new MyButton(shell, "6", 3, 15, listener);
+		MyButton b7 = new MyButton(shell, "7", 2, 13, listener);
+		MyButton b8 = new MyButton(shell, "8", 2, 14, listener);
+		MyButton b9 = new MyButton(shell, "9", 2, 15, listener);
+		MyButton b0 = new MyButton(shell, "0", 5, 13, listener);
+		MyButton plus = new MyButton(shell, "+", 5, 1, listener);
+		MyButton minus = new MyButton(shell, "-", 5, 2, listener);
+		MyButton bs = new MyButton(shell, "\u2b05", 2, 11, listener);
 
 		MyButton q = new MyButton(shell, "Q", 2, 1, listener);
 		MyButton w = new MyButton(shell, "W", 2, 2, listener);
@@ -86,8 +76,6 @@ public class VirtualKeyboard extends Dialog {
 		MyButton i = new MyButton(shell, "I", 2, 8, listener);
 		MyButton o = new MyButton(shell, "O", 2, 9, listener);
 		MyButton p = new MyButton(shell, "P", 2, 10, listener);
-		MyButton š = new MyButton(shell, "Š", 2, 11, listener);
-		MyButton đ = new MyButton(shell, "Đ", 2, 12, listener);
 		MyButton a = new MyButton(shell, "A", 3, 1, listener);
 		MyButton s = new MyButton(shell, "S", 3, 2, listener);
 		MyButton d = new MyButton(shell, "D", 3, 3, listener);
@@ -97,9 +85,8 @@ public class VirtualKeyboard extends Dialog {
 		MyButton j = new MyButton(shell, "J", 3, 7, listener);
 		MyButton k = new MyButton(shell, "K", 3, 8, listener);
 		MyButton l = new MyButton(shell, "L", 3, 9, listener);
-		MyButton č = new MyButton(shell, "Č", 3, 10, listener);
-		MyButton ć = new MyButton(shell, "Ć", 3, 11, listener);
-		MyButton ž = new MyButton(shell, "Ž", 3, 12, listener);
+		MyButton š = new MyButton(shell, "Š", 3, 10, listener);
+		MyButton đ = new MyButton(shell, "Đ", 3, 11, listener);
 		MyButton y = new MyButton(shell, "Y", 4, 1, listener);
 		MyButton x = new MyButton(shell, "X", 4, 2, listener);
 		MyButton c = new MyButton(shell, "C", 4, 3, listener);
@@ -107,14 +94,18 @@ public class VirtualKeyboard extends Dialog {
 		MyButton b = new MyButton(shell, "B", 4, 5, listener);
 		MyButton n = new MyButton(shell, "N", 4, 6, listener);
 		MyButton m = new MyButton(shell, "M", 4, 7, listener);
-		MyButton zarez = new MyButton(shell, ",", 4, 8, listener);
-		MyButton tocka = new MyButton(shell, ".", 4, 9, listener);
-		MyButton minus = new MyButton(shell, "-", 4, 10, listener);
-		MyButton plus = new MyButton(shell, "+", 4, 11, listener);
-		MyButton slash = new MyButton(shell, "/", 4, 12, listener);
+		MyButton tocka = new MyButton(shell, ".", 4, 8, listener);
+		MyButton č = new MyButton(shell, "Č", 4, 9, listener);
+		MyButton ć = new MyButton(shell, "Ć", 4, 10, listener);
+		MyButton ž = new MyButton(shell, "Ž", 4, 11, listener);
+		MyButton zarez = new MyButton(shell, ",", 5, 14, listener);
+		// MyButton minus = new MyButton(shell, "-", 4, 10, listener);
+		// MyButton plus = new MyButton(shell, "+", 4, 11, listener);
 
-		MyButton ok = new MyButton(shell, "OK", 5, 11, listener);
-		MyButton space = new MyButton(shell, " ", 5, 1, listener);
+		MyButton ok = new MyButton(shell, "\u21b5", 5, 11, listener);
+		MyButton ok1 = new MyButton(shell, "\u21b5", 5, 15, listener);
+		MyButton space = new MyButton(shell, " ", 5, 3, listener);
+		MyButton slash = new MyButton(shell, "/", 5, 10, listener);
 
 	}
 
@@ -125,9 +116,9 @@ public class VirtualKeyboard extends Dialog {
 
 		public void widgetDefaultSelected(SelectionEvent e) {
 			Button b = (Button) e.widget;
-			if (b.getText().equals("OK")) {
+			if (b.getText().equals("\u21b5")) {
 				shell.dispose();
-			} else if (b.getText().equals("BS")) {
+			} else if (b.getText().equals("\u2b05")) {
 				polje.setText(polje.getText(0, polje.getCharCount() - 2));
 			} else
 				polje.append(b.getText());

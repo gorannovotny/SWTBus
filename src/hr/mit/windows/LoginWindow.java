@@ -46,7 +46,7 @@ public class LoginWindow {
 	 */
 	public void open() {
 		Display display = Display.getDefault();
-		shlPrijava = new Shell(SWT.SHELL_TRIM);
+		shlPrijava = new Shell(SWT.MODELESS);
 		createContents();
 		shlPrijava.open();
 		while (!shlPrijava.isDisposed()) {
@@ -58,7 +58,7 @@ public class LoginWindow {
 
 	protected void createContents() {
 		shlPrijava.setMaximized(true);
-		shlPrijava.setSize(800, 600);
+		shlPrijava.setBounds(100, 100, 800, 600);
 		shlPrijava.setText("Prijava");
 
 		lblPrijava = new Label(shlPrijava, SWT.NONE);

@@ -50,7 +50,7 @@ public class Stavka {
 		for (Stavka s : stavkaList) {
 			retval = retval.add(s.getCijena());
 		}
-		return retval;
+		return retval.setScale(2);
 	}
 
 	public Stavka(Stupac stupac) {
