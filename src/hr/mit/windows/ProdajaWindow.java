@@ -317,10 +317,15 @@ public class ProdajaWindow {
 
 	private class ButtonSelectionListener extends SelectionAdapter {
 		public void widgetSelected(SelectionEvent e) {
-			Stavka.add(stavka);
-			stavkaToScreen();
-			stavka = new Stavka(stupac);
-			screenToStavka();
+//			Stavka.add(stavka);
+//			stavkaToScreen();
+//			stavka = new Stavka(stupac);
+//			screenToStavka();
+			Button t = (Button) e.widget;
+			Picker picker = new Picker(t,0);
+			t.setText(Postaja.get(picker.open()).getNaziv());
+
+
 		}
 	}
 

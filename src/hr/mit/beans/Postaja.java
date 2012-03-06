@@ -4,6 +4,7 @@ import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.ArrayList;
+import java.util.List;
 
 import hr.mit.utils.DbUtil;
 
@@ -49,6 +50,15 @@ public class Postaja {
 		return postajaList.get(index);
 	}
 
+	public static List<String> getArrayList() {
+		List<String> l = new ArrayList<String>();
+		for (Postaja v : postajaList) {
+			l.add(v.getNaziv() + " " + v.getVremeOdhoda());
+		}
+		return l;
+	}
+
+	
 	public Postaja(Integer zapSt, String naziv, double vOdhoda, double vPrihoda) {
 		this.zapSt = zapSt;
 		this.naziv = naziv;
