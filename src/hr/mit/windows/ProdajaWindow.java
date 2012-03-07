@@ -108,6 +108,7 @@ public class ProdajaWindow {
 	}
 
 	private void screenToStavka() {
+		stavka.setOdPostaje(Postaja.get((Integer)cOdPostaje.getData()));
 		stavka.setDoPostaje(Postaja.get(cDoPostaje.getSelectionIndex()));
 		if (!Karta.get(cKarta.getSelectionIndex()).equals(stavka.getKarta())) {
 			stavka.setKarta(Karta.get(cKarta.getSelectionIndex()));
@@ -167,6 +168,7 @@ public class ProdajaWindow {
 
 	private void attachListeners() {
 		ComboSelectionListener c = new ComboSelectionListener();
+		cOdPostaje.addSelectionListener(c);
 		cDoPostaje.addSelectionListener(c);
 		cKarta.addSelectionListener(c);
 		cPopust.addSelectionListener(c);
@@ -207,8 +209,11 @@ public class ProdajaWindow {
 		lblDoPostaje.setBounds(400, 50, 63, 15);
 
 		cOdPostaje = new Button(shell, SWT.DROP_DOWN | SWT.READ_ONLY);
+		cOdPostaje.setAlignment(SWT.LEFT);
 		cOdPostaje.setFont(SWTResourceManager.getFont("Liberation Sans", 30, SWT.NORMAL));
 		cOdPostaje.setBounds(5, 65, 390, 70);
+		cOdPostaje.setText(Postaja.getList()[0]);
+		cOdPostaje.setData(0);
 
 		cDoPostaje = new Combo(shell, SWT.READ_ONLY);
 		cDoPostaje.setFont(SWTResourceManager.getFont("Liberation Sans", 30, SWT.NORMAL));
@@ -344,6 +349,10 @@ public class ProdajaWindow {
 	private class ComboSelectionListener extends SelectionAdapter {
 		public void widgetDefaultSelected(SelectionEvent e) {
 			if (e.widget.equals(cOdPostaje)) {
+				Button t = (Button) e.widget;
+				Picker picker = new Picker (t,(Integer)t.getData());
+				t.setData(picker.open());
+				t.setText(Postaja.getList()[(Integer)t.getData()]);
 				stavka.setOdPostaje(Postaja.get((Integer)cOdPostaje.getData()));
 				if ((cDoPostaje.getSelectionIndex() <= (Integer)cOdPostaje.getData()) && ((Integer)cOdPostaje.getData() < Postaja.getList().length - 1)) {
 					stavka.setDoPostaje(Postaja.get((Integer)cOdPostaje.getData() + 1));
