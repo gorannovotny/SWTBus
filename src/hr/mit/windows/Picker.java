@@ -99,7 +99,7 @@ public class Picker extends Dialog {
 				buttonList.get(i).setData(buttonList.get(i+1).getData());
 			
 			}
-			buttonList.get(MAX_PICKS-1).setText(Postaja.get(pos).getNaziv()+ " " + Postaja.get(pos).getVremeOdhoda());
+			buttonList.get(MAX_PICKS-1).setText(items.get(pos));
 			buttonList.get(MAX_PICKS-1).setData(pos);
 			pos++;
 			if (pos > 0 ) upButton.setEnabled(true);
@@ -115,7 +115,7 @@ public class Picker extends Dialog {
 			
 			}
 			pos--;
-			buttonList.get(0).setText(Postaja.get(pos-MAX_PICKS).getNaziv()+ " " + Postaja.get(pos-MAX_PICKS).getVremeOdhoda());
+			buttonList.get(0).setText(items.get(pos-MAX_PICKS));
 			buttonList.get(0).setData(pos-MAX_PICKS);
 			if (pos -MAX_PICKS <=0 ) upButton.setEnabled(false);
 			if (pos < items.size()) downButton.setEnabled(true);

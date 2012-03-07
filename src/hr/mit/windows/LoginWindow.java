@@ -151,6 +151,7 @@ public class LoginWindow {
 		public void mouseDown(MouseEvent e) {
 			Text t = (Text) e.widget;
 			VirtualKeyboard keypad = new VirtualKeyboard(e.display.getActiveShell(), SWT.APPLICATION_MODAL);
+			t.selectAll();
 			keypad.open(t);
 
 		}

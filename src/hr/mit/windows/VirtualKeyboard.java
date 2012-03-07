@@ -119,9 +119,10 @@ public class VirtualKeyboard extends Dialog {
 			if (b.getText().equals("\u21b5")) {
 				shell.dispose();
 			} else if (b.getText().equals("\u2b05")) {
-				polje.setText(polje.getText(0, polje.getCharCount() - 2));
+				polje.setSelection(polje.getCharCount()-1,polje.getCharCount());
+				polje.cut();
 			} else
-				polje.append(b.getText());
+				polje.insert(b.getText());
 		}
 
 	}

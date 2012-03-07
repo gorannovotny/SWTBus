@@ -35,7 +35,7 @@ public class ProdajaWindow {
 
 	protected Shell shell;
 
-	Combo cOdPostaje;
+	Button cOdPostaje;
 	Combo cDoPostaje;
 	Combo cKarta;
 	Combo cPopust;
@@ -108,7 +108,6 @@ public class ProdajaWindow {
 	}
 
 	private void screenToStavka() {
-		stavka.setOdPostaje(Postaja.get(cOdPostaje.getSelectionIndex()));
 		stavka.setDoPostaje(Postaja.get(cDoPostaje.getSelectionIndex()));
 		if (!Karta.get(cKarta.getSelectionIndex()).equals(stavka.getKarta())) {
 			stavka.setKarta(Karta.get(cKarta.getSelectionIndex()));
@@ -168,7 +167,6 @@ public class ProdajaWindow {
 
 	private void attachListeners() {
 		ComboSelectionListener c = new ComboSelectionListener();
-		cOdPostaje.addSelectionListener(c);
 		cDoPostaje.addSelectionListener(c);
 		cKarta.addSelectionListener(c);
 		cPopust.addSelectionListener(c);
@@ -208,11 +206,9 @@ public class ProdajaWindow {
 		lblDoPostaje.setFont(SWTResourceManager.getFont("Liberation Sans", 10, SWT.NORMAL));
 		lblDoPostaje.setBounds(400, 50, 63, 15);
 
-		cOdPostaje = new Combo(shell, SWT.DROP_DOWN | SWT.READ_ONLY);
+		cOdPostaje = new Button(shell, SWT.DROP_DOWN | SWT.READ_ONLY);
 		cOdPostaje.setFont(SWTResourceManager.getFont("Liberation Sans", 30, SWT.NORMAL));
-		cOdPostaje.setItems(Postaja.getList());
 		cOdPostaje.setBounds(5, 65, 390, 70);
-		cOdPostaje.select(0);
 
 		cDoPostaje = new Combo(shell, SWT.READ_ONLY);
 		cDoPostaje.setFont(SWTResourceManager.getFont("Liberation Sans", 30, SWT.NORMAL));
@@ -348,16 +344,16 @@ public class ProdajaWindow {
 	private class ComboSelectionListener extends SelectionAdapter {
 		public void widgetDefaultSelected(SelectionEvent e) {
 			if (e.widget.equals(cOdPostaje)) {
-				stavka.setOdPostaje(Postaja.get(cOdPostaje.getSelectionIndex()));
-				if ((cDoPostaje.getSelectionIndex() <= cOdPostaje.getSelectionIndex()) && (cOdPostaje.getSelectionIndex() < Postaja.getList().length - 1)) {
-					stavka.setDoPostaje(Postaja.get(cOdPostaje.getSelectionIndex() + 1));
-					cDoPostaje.select(cOdPostaje.getSelectionIndex() + 1);
+				stavka.setOdPostaje(Postaja.get((Integer)cOdPostaje.getData()));
+				if ((cDoPostaje.getSelectionIndex() <= (Integer)cOdPostaje.getData()) && ((Integer)cOdPostaje.getData() < Postaja.getList().length - 1)) {
+					stavka.setDoPostaje(Postaja.get((Integer)cOdPostaje.getData() + 1));
+					cDoPostaje.select((Integer) cOdPostaje.getData() + 1);
 				}
 			} else if (e.widget.equals(cDoPostaje)) {
 				stavka.setDoPostaje(Postaja.get(cDoPostaje.getSelectionIndex()));
-				if ((cOdPostaje.getSelectionIndex() >= cDoPostaje.getSelectionIndex()) && (cDoPostaje.getSelectionIndex() > 0)) {
+				if (((Integer)cOdPostaje.getData() >= cDoPostaje.getSelectionIndex()) && (cDoPostaje.getSelectionIndex() > 0)) {
 					stavka.setOdPostaje(Postaja.get(cDoPostaje.getSelectionIndex() - 1));
-					cOdPostaje.select(cDoPostaje.getSelectionIndex() - 1);
+					cOdPostaje.setText(Postaja.get(cDoPostaje.getSelectionIndex() - 1).getNaziv());
 				}
 			} else if (e.widget.equals(cKarta)) {
 				stavka.setKarta(Karta.get(cKarta.getSelectionIndex()));
