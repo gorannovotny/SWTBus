@@ -70,7 +70,7 @@ public class Picker extends Dialog {
 		if (pos - MAX_PICKS <= 0) upButton.setEnabled(false);
 		if (pos >= items.size()) downButton.setEnabled(false);
 
-		shell.setLocation(c.toDisplay(0, 0));
+		shell.setLocation(c.toDisplay(0, -c.getSize().y));
 		shell.setSize(c.getSize().x, (MAX_PICKS+2) * c.getSize().y);
 	}
 

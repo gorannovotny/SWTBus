@@ -36,7 +36,7 @@ public class ProdajaWindow {
 	protected Shell shell;
 
 	Button cOdPostaje;
-	Combo cDoPostaje;
+	Button cDoPostaje;
 	Combo cKarta;
 	Combo cPopust;
 	Combo cProdMjesto;
@@ -109,7 +109,7 @@ public class ProdajaWindow {
 
 	private void screenToStavka() {
 		stavka.setOdPostaje(Postaja.get((Integer)cOdPostaje.getData()));
-		stavka.setDoPostaje(Postaja.get(cDoPostaje.getSelectionIndex()));
+		stavka.setDoPostaje(Postaja.get((Integer)cDoPostaje.getData()));
 		if (!Karta.get(cKarta.getSelectionIndex()).equals(stavka.getKarta())) {
 			stavka.setKarta(Karta.get(cKarta.getSelectionIndex()));
 			Popust.setKartaStupac(Karta.get(cKarta.getSelectionIndex()), stupac);
@@ -170,6 +170,7 @@ public class ProdajaWindow {
 		ComboSelectionListener c = new ComboSelectionListener();
 		cOdPostaje.addSelectionListener(c);
 		cDoPostaje.addSelectionListener(c);
+		
 		cKarta.addSelectionListener(c);
 		cPopust.addSelectionListener(c);
 
@@ -208,18 +209,19 @@ public class ProdajaWindow {
 		lblDoPostaje.setFont(SWTResourceManager.getFont("Liberation Sans", 10, SWT.NORMAL));
 		lblDoPostaje.setBounds(400, 50, 63, 15);
 
-		cOdPostaje = new Button(shell, SWT.DROP_DOWN | SWT.READ_ONLY);
+		cOdPostaje = new Button(shell, SWT.READ_ONLY);
 		cOdPostaje.setAlignment(SWT.LEFT);
-		cOdPostaje.setFont(SWTResourceManager.getFont("Liberation Sans", 30, SWT.NORMAL));
+		cOdPostaje.setFont(SWTResourceManager.getFont("Liberation Sans", 25, SWT.NORMAL));
 		cOdPostaje.setBounds(5, 65, 390, 70);
 		cOdPostaje.setText(Postaja.getList()[0]);
 		cOdPostaje.setData(0);
 
-		cDoPostaje = new Combo(shell, SWT.READ_ONLY);
-		cDoPostaje.setFont(SWTResourceManager.getFont("Liberation Sans", 30, SWT.NORMAL));
+		cDoPostaje = new Button(shell, SWT.READ_ONLY);
+		cDoPostaje.setAlignment(SWT.LEFT);
+		cDoPostaje.setFont(SWTResourceManager.getFont("Liberation Sans", 25, SWT.NORMAL));
 		cDoPostaje.setBounds(400, 65, 390, 70);
-		cDoPostaje.setItems(Postaja.getList());
-		cDoPostaje.select(1);
+		cDoPostaje.setText(Postaja.getList()[1]);
+		cDoPostaje.setData(1);
 
 		lblVrstaKarte = new Label(shell, SWT.NONE);
 		lblVrstaKarte.setText("Vrsta karte");
@@ -318,15 +320,10 @@ public class ProdajaWindow {
 
 	private class ButtonSelectionListener extends SelectionAdapter {
 		public void widgetSelected(SelectionEvent e) {
-//			Stavka.add(stavka);
-//			stavkaToScreen();
-//			stavka = new Stavka(stupac);
-//			screenToStavka();
-			Button t = (Button) e.widget;
-			Picker picker = new Picker(t,0);
-			t.setText(Postaja.get(picker.open()).getNaziv());
-
-
+			Stavka.add(stavka);
+			stavkaToScreen();
+			stavka = new Stavka(stupac);
+			screenToStavka();
 		}
 	}
 
@@ -349,20 +346,32 @@ public class ProdajaWindow {
 	private class ComboSelectionListener extends SelectionAdapter {
 		public void widgetDefaultSelected(SelectionEvent e) {
 			if (e.widget.equals(cOdPostaje)) {
-				Button t = (Button) e.widget;
-				Picker picker = new Picker (t,(Integer)t.getData());
-				t.setData(picker.open());
-				t.setText(Postaja.getList()[(Integer)t.getData()]);
-				stavka.setOdPostaje(Postaja.get((Integer)cOdPostaje.getData()));
-				if ((cDoPostaje.getSelectionIndex() <= (Integer)cOdPostaje.getData()) && ((Integer)cOdPostaje.getData() < Postaja.getList().length - 1)) {
-					stavka.setDoPostaje(Postaja.get((Integer)cOdPostaje.getData() + 1));
-					cDoPostaje.select((Integer) cOdPostaje.getData() + 1);
+				Integer odIndex = (Integer) cOdPostaje.getData();
+				Integer doIndex = (Integer) cDoPostaje.getData();
+				
+				Picker picker = new Picker (cOdPostaje,odIndex);
+				odIndex = picker.open();
+				cOdPostaje.setData(odIndex);
+				cOdPostaje.setText(Postaja.getList()[odIndex]);
+				stavka.setOdPostaje(Postaja.get(odIndex));
+				if (doIndex <= odIndex && (odIndex < Postaja.getList().length - 1)) {
+					stavka.setDoPostaje(Postaja.get(odIndex + 1));
+					cDoPostaje.setData(odIndex + 1);
+					cDoPostaje.setText(Postaja.getList()[odIndex+1]);
 				}
 			} else if (e.widget.equals(cDoPostaje)) {
-				stavka.setDoPostaje(Postaja.get(cDoPostaje.getSelectionIndex()));
-				if (((Integer)cOdPostaje.getData() >= cDoPostaje.getSelectionIndex()) && (cDoPostaje.getSelectionIndex() > 0)) {
-					stavka.setOdPostaje(Postaja.get(cDoPostaje.getSelectionIndex() - 1));
-					cOdPostaje.setText(Postaja.get(cDoPostaje.getSelectionIndex() - 1).getNaziv());
+				Integer odIndex = (Integer) cOdPostaje.getData();
+				Integer doIndex = (Integer) cDoPostaje.getData();
+
+				Picker picker = new Picker (cDoPostaje,doIndex);
+				doIndex = picker.open();
+				cDoPostaje.setData(odIndex);
+				cDoPostaje.setText(Postaja.getList()[doIndex]);
+				
+				stavka.setDoPostaje(Postaja.get(doIndex));
+				if ((odIndex >= doIndex) && (doIndex > 0)) {
+					stavka.setOdPostaje(Postaja.get(doIndex - 1));
+					cOdPostaje.setText(Postaja.getList()[doIndex - 1]);
 				}
 			} else if (e.widget.equals(cKarta)) {
 				stavka.setKarta(Karta.get(cKarta.getSelectionIndex()));
