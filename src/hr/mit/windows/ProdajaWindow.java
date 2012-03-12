@@ -37,7 +37,7 @@ public class ProdajaWindow {
 
 	Button cOdPostaje;
 	Button cDoPostaje;
-	Combo cKarta;
+	Button cKarta;
 	Combo cPopust;
 	Combo cProdMjesto;
 
@@ -53,7 +53,7 @@ public class ProdajaWindow {
 	private Blagajna blagajna;
 	Stavka stavka;
 
-	private CLabel lClock;
+	CLabel lClock;
 	private CLabel lStupac;
 	private CLabel lVozac;
 	private Label lblOdPostaje;
@@ -110,9 +110,9 @@ public class ProdajaWindow {
 	private void screenToStavka() {
 		stavka.setOdPostaje(Postaja.get((Integer)cOdPostaje.getData()));
 		stavka.setDoPostaje(Postaja.get((Integer)cDoPostaje.getData()));
-		if (!Karta.get(cKarta.getSelectionIndex()).equals(stavka.getKarta())) {
-			stavka.setKarta(Karta.get(cKarta.getSelectionIndex()));
-			Popust.setKartaStupac(Karta.get(cKarta.getSelectionIndex()), stupac);
+		if (! Karta.get((Integer)cKarta.getData()).equals(stavka.getKarta())) {
+			stavka.setKarta(Karta.get((Integer)cKarta.getData()));
+			Popust.setKartaStupac(Karta.get((Integer)cKarta.getData()), stupac);
 			cPopust.select(0);
 		}
 
@@ -233,13 +233,14 @@ public class ProdajaWindow {
 		lblPopust.setFont(SWTResourceManager.getFont("Liberation Sans", 10, SWT.NORMAL));
 		lblPopust.setBounds(400, 135, 41, 15);
 
-		cKarta = new Combo(shell, SWT.READ_ONLY);
-		cKarta.setFont(SWTResourceManager.getFont("Liberation Sans", 30, SWT.NORMAL));
+		cKarta = new Button(shell, SWT.READ_ONLY);
+		cKarta.setAlignment(SWT.LEFT);
+		cKarta.setFont(SWTResourceManager.getFont("Liberation Sans", 25, SWT.NORMAL));
 		cKarta.setBounds(5, 150, 390, 70);
-		cKarta.setItems(Karta.getList());
-		cKarta.select(0);
+		cKarta.setText(Karta.getList()[0]);
 		Popust.setKartaStupac(Karta.get(0), stupac);
-
+		cKarta.setData(0);
+		
 		cPopust = new Combo(shell, SWT.READ_ONLY);
 		cPopust.setItems(Popust.getList());
 		cPopust.setFont(SWTResourceManager.getFont("Liberation Sans", 30, SWT.NORMAL));
@@ -349,11 +350,11 @@ public class ProdajaWindow {
 				Integer odIndex = (Integer) cOdPostaje.getData();
 				Integer doIndex = (Integer) cDoPostaje.getData();
 				
-				Picker picker = new Picker (cOdPostaje,odIndex);
-				odIndex = picker.open();
-				cOdPostaje.setData(odIndex);
-				cOdPostaje.setText(Postaja.getList()[odIndex]);
+				Picker picker = new Picker (cOdPostaje,Postaja.getArrayList(),odIndex);
+				cOdPostaje = picker.open();
+				odIndex = (Integer) cOdPostaje.getData();
 				stavka.setOdPostaje(Postaja.get(odIndex));
+
 				if (doIndex <= odIndex && (odIndex < Postaja.getList().length - 1)) {
 					stavka.setDoPostaje(Postaja.get(odIndex + 1));
 					cDoPostaje.setData(odIndex + 1);
@@ -363,10 +364,9 @@ public class ProdajaWindow {
 				Integer odIndex = (Integer) cOdPostaje.getData();
 				Integer doIndex = (Integer) cDoPostaje.getData();
 
-				Picker picker = new Picker (cDoPostaje,doIndex);
-				doIndex = picker.open();
-				cDoPostaje.setData(odIndex);
-				cDoPostaje.setText(Postaja.getList()[doIndex]);
+				Picker picker = new Picker (cDoPostaje,Postaja.getArrayList(),doIndex);
+				cDoPostaje = picker.open();
+				doIndex = (Integer) cDoPostaje.getData();
 				
 				stavka.setDoPostaje(Postaja.get(doIndex));
 				if ((odIndex >= doIndex) && (doIndex > 0)) {
@@ -374,8 +374,12 @@ public class ProdajaWindow {
 					cOdPostaje.setText(Postaja.getList()[doIndex - 1]);
 				}
 			} else if (e.widget.equals(cKarta)) {
-				stavka.setKarta(Karta.get(cKarta.getSelectionIndex()));
-				Popust.setKartaStupac(Karta.get(cKarta.getSelectionIndex()), stupac);
+				Integer index = (Integer)cKarta.getData();
+				Picker picker = new Picker (cKarta,Karta.getArrayList(),index);
+				cKarta = picker.open();
+				
+				stavka.setKarta(Karta.get((Integer)cKarta.getData()));
+				Popust.setKartaStupac(Karta.get((Integer)cKarta.getData()), stupac);
 				cPopust.setItems(Popust.getList());
 				cPopust.select(0);
 			} else if (e.widget.equals(cPopust))

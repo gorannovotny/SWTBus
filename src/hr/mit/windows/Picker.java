@@ -1,31 +1,38 @@
 package hr.mit.windows;
 
-import hr.mit.beans.Postaja;
-
 import java.util.ArrayList;
 import java.util.List;
 
+import org.eclipse.swt.SWT;
 import org.eclipse.swt.events.SelectionAdapter;
 import org.eclipse.swt.events.SelectionEvent;
-import org.eclipse.swt.widgets.Control;
+import org.eclipse.swt.widgets.Button;
 import org.eclipse.swt.widgets.Dialog;
 import org.eclipse.swt.widgets.Display;
 import org.eclipse.swt.widgets.Shell;
-import org.eclipse.swt.widgets.Button;
-import org.eclipse.swt.SWT;
 import org.eclipse.wb.swt.SWTResourceManager;
 
 public class Picker extends Dialog {
 
 	protected Shell shell;
 
-	private Button upButton;
-	private Button downButton;
-	private ArrayList<Button> buttonList = new ArrayList<Button>();
-	private List<String> items = Postaja.getArrayList();
-	private Integer pos = 0;
+	Button upButton;
+	Button downButton;
+	ArrayList<Button> buttonList = new ArrayList<Button>();
+	List<String> items = null;
+	Integer pos = 0;
+	int MAX_PICKS = 5;
+	
+	Button c;
 
-	private int MAX_PICKS = 5;
+	public List<String> getItems() {
+		return items;
+	}
+
+	public void setItems(List<String> items) {
+		this.items = items;
+	}
+
 
 	/**
 	 * Create the dialog.
@@ -33,9 +40,11 @@ public class Picker extends Dialog {
 	 * @param parent
 	 * @param style
 	 */
-	public Picker(Control c, Integer position) {
+	public Picker(Button c, List<String> items,Integer position) {
 		super(c.getShell(), SWT.NONE);
 		shell = new Shell(getParent(), getStyle());
+		this.c = c;
+		this.items = items;
 		
 		this.pos = position;
 		if (pos > items.size() - MAX_PICKS) pos = items.size() - MAX_PICKS;
@@ -79,7 +88,7 @@ public class Picker extends Dialog {
 	 * 
 	 * @return the result
 	 */
-	public int open() {
+	public Button open() {
 		shell.open();
 		shell.layout();
 
@@ -89,10 +98,12 @@ public class Picker extends Dialog {
 				display.sleep();
 			}
 		}
-		return pos;
+		c.setData(pos);
+		c.setText(items.get(pos));
+		return c;
 	}
 	
-	private class ButtonDownListener extends SelectionAdapter {
+	class ButtonDownListener extends SelectionAdapter {
 		public void widgetSelected(SelectionEvent e) {
 			for (int i = 0; i < (MAX_PICKS-1); i++) {
 				buttonList.get(i).setText(buttonList.get(i+1).getText());
@@ -107,12 +118,11 @@ public class Picker extends Dialog {
 		}
 	}
 
-	private class ButtonUpListener extends SelectionAdapter {
+	class ButtonUpListener extends SelectionAdapter {
 		public void widgetSelected(SelectionEvent e) {
 			for (int i = (MAX_PICKS -1); i > 0 ; i--) {
 				buttonList.get(i).setText(buttonList.get(i-1).getText());
 				buttonList.get(i).setData(buttonList.get(i-1).getData());
-			
 			}
 			pos--;
 			buttonList.get(0).setText(items.get(pos-MAX_PICKS));
@@ -122,7 +132,7 @@ public class Picker extends Dialog {
 		}
 	}
 
-	private class ButtonSelectListener extends SelectionAdapter {
+	class ButtonSelectListener extends SelectionAdapter {
 		public void widgetSelected(SelectionEvent e) {
 			pos = (Integer) ((Button) e.widget).getData();
 			shell.dispose();

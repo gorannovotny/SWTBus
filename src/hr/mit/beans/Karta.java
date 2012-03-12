@@ -6,6 +6,7 @@ import java.math.BigDecimal;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.ArrayList;
+import java.util.List;
 
 public class Karta {
 	private static ArrayList<Karta> kartaList = new ArrayList<Karta>();
@@ -103,4 +104,13 @@ public class Karta {
 	public Integer getTipKarteID(){
 		return tipKarteID;
 	}
+	
+	public static List<String> getArrayList() {
+		List<String> l = new ArrayList<String>();
+		for (Karta v : kartaList) {
+			l.add(v.getNaziv());
+		}
+		return l;
+	}
+
 }
