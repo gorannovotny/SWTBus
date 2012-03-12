@@ -45,8 +45,10 @@ public class Picker extends Dialog {
 		shell = new Shell(getParent(), getStyle());
 		this.c = c;
 		this.items = items;
-		
 		this.pos = position;
+
+		if(items.size() < MAX_PICKS) MAX_PICKS = items.size();
+		
 		if (pos > items.size() - MAX_PICKS) pos = items.size() - MAX_PICKS;
 		upButton = new Button(shell,SWT.NONE);
 		upButton.setFont(SWTResourceManager.getFont("Liberation Sans", 25, SWT.NORMAL));

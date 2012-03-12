@@ -38,7 +38,7 @@ public class ProdajaWindow {
 	Button cOdPostaje;
 	Button cDoPostaje;
 	Button cKarta;
-	Combo cPopust;
+	Button cPopust;
 	Combo cProdMjesto;
 
 	Text textCijena;
@@ -49,12 +49,12 @@ public class ProdajaWindow {
 	Button btnPrint;
 
 	private Vozac vozac;
-	private Stupac stupac;
+	Stupac stupac;
 	private Blagajna blagajna;
 	Stavka stavka;
 
 	CLabel lClock;
-	private CLabel lStupac;
+	private Button lStupac;
 	private CLabel lVozac;
 	private Label lblOdPostaje;
 	private Label lblDoPostaje;
@@ -93,18 +93,21 @@ public class ProdajaWindow {
 		attachListeners();
 		shell.open();
 		shell.layout();
-		display.timerExec(1000, new Runnable() {
+		Runnable r = new Runnable() {
 			public void run() {
 				lClock.setText(new SimpleDateFormat("HH:mm:ss").format(new Date()));
 				display.timerExec(1000, this);
 			}
-		});
+		};
+		
+		display.timerExec(1000, r);
 
 		while (!shell.isDisposed()) {
 			if (!display.readAndDispatch()) {
 				display.sleep();
 			}
 		}
+		display.timerExec(-1, r);
 	}
 
 	private void screenToStavka() {
@@ -113,10 +116,11 @@ public class ProdajaWindow {
 		if (! Karta.get((Integer)cKarta.getData()).equals(stavka.getKarta())) {
 			stavka.setKarta(Karta.get((Integer)cKarta.getData()));
 			Popust.setKartaStupac(Karta.get((Integer)cKarta.getData()), stupac);
-			cPopust.select(0);
+			cPopust.setData(0);
+			cPopust.setText(Popust.getList()[0]);;
 		}
 
-		stavka.setPopust(Popust.get(cPopust.getSelectionIndex()));
+		stavka.setPopust(Popust.get((Integer)cPopust.getData()));
 		String s = textCijena.getText();
 		try {
 			NumberFormat nf = NumberFormat.getNumberInstance();
@@ -135,7 +139,8 @@ public class ProdajaWindow {
 			cProdMjesto.setEnabled(true);
 			textBrKarte.setEnabled(true);
 			textCijena.setEnabled(true);
-			cPopust.select(0);
+			cPopust.setData(0);
+			cPopust.setText(Popust.getList()[0]);;
 			cPopust.setEnabled(false);
 			cProdMjesto.select(2);
 			textCijena.addMouseListener(mouseListener);
@@ -185,13 +190,27 @@ public class ProdajaWindow {
 		shell.setBounds(100, 100, 800, 600);
 		shell.setText("SWT Application");
 
-		lStupac = new CLabel(shell, SWT.NONE);
-		lStupac.setBackground(SWTResourceManager.getColor(SWT.COLOR_BLACK));
+		lStupac = new Button(shell, SWT.NONE);
 		lStupac.setForeground(SWTResourceManager.getColor(SWT.COLOR_WHITE));
+		lStupac.setBackground(SWTResourceManager.getColor(SWT.COLOR_DARK_GRAY));
+		lStupac.setAlignment(SWT.LEFT);
+//		lStupac.setBackground(SWTResourceManager.getColor(SWT.COLOR_BLACK));
+//		lStupac.setForeground(SWTResourceManager.getColor(SWT.COLOR_WHITE));
 		lStupac.setFont(SWTResourceManager.getFont("Liberation Sans", 20, SWT.NORMAL));
 		lStupac.setBounds(0, 0, 685, 50);
 		lStupac.setText(stupac.getOpis() + " " + stupac.getVremeOdhoda());
-
+		lStupac.addSelectionListener(new SelectionAdapter() {
+			@Override
+			public void widgetDefaultSelected(SelectionEvent e) {
+				stupac = null;
+				shell.dispose();
+			}
+			@Override
+			public void widgetSelected(SelectionEvent e) {
+				widgetDefaultSelected(e);
+			}
+		});
+		
 		lClock = new CLabel(shell, SWT.RIGHT);
 		lClock.setForeground(SWTResourceManager.getColor(SWT.COLOR_WHITE));
 		lClock.setBackground(SWTResourceManager.getColor(SWT.COLOR_BLACK));
@@ -241,11 +260,12 @@ public class ProdajaWindow {
 		Popust.setKartaStupac(Karta.get(0), stupac);
 		cKarta.setData(0);
 		
-		cPopust = new Combo(shell, SWT.READ_ONLY);
-		cPopust.setItems(Popust.getList());
-		cPopust.setFont(SWTResourceManager.getFont("Liberation Sans", 30, SWT.NORMAL));
+		cPopust = new Button(shell, SWT.READ_ONLY);
+		cPopust.setAlignment(SWT.LEFT);
+		cPopust.setFont(SWTResourceManager.getFont("Liberation Sans", 25, SWT.NORMAL));
 		cPopust.setBounds(400, 150, 390, 70);
-		cPopust.select(0);
+		cPopust.setData(0);
+		cPopust.setText(Popust.getList()[0]);;
 
 		lblProdajnoMjesto = new Label(shell, SWT.NONE);
 		lblProdajnoMjesto.setText("Prodajno mjesto");
@@ -380,11 +400,14 @@ public class ProdajaWindow {
 				
 				stavka.setKarta(Karta.get((Integer)cKarta.getData()));
 				Popust.setKartaStupac(Karta.get((Integer)cKarta.getData()), stupac);
-				cPopust.setItems(Popust.getList());
-				cPopust.select(0);
-			} else if (e.widget.equals(cPopust))
-				stavka.setPopust(Popust.get(cPopust.getSelectionIndex()));
-
+				cPopust.setData(0);
+				cPopust.setText(Popust.getList()[0]);;
+			} else if (e.widget.equals(cPopust)) {
+				Integer index = (Integer) cPopust.getData();
+				Picker picker = new Picker (cPopust,Popust.getArrayList(),index);
+				cPopust = picker.open();
+				stavka.setPopust(Popust.get((Integer)cPopust.getData()));
+			}
 			stavkaToScreen();
 
 		}

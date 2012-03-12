@@ -7,6 +7,7 @@ import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.ArrayList;
+import java.util.List;
 
 public class Popust {
 
@@ -65,5 +66,14 @@ public class Popust {
 	public BigDecimal getPopust() {
 		return popust;
 	}
+
+	public static List<String> getArrayList() {
+		List<String> l = new ArrayList<String>();
+		for (Popust v : popustList) {
+			l.add(v.getPopust().toString() + "% " + v.getNaziv());
+		}
+		return l;
+	}
+
 
 }
