@@ -42,7 +42,7 @@ public class Picker extends Dialog {
 	 */
 	public Picker(Button c, List<String> items,Integer position) {
 		super(c.getShell(), SWT.NONE);
-		shell = new Shell(getParent(), getStyle());
+		shell = new Shell(getParent(), SWT.APPLICATION_MODAL|SWT.ON_TOP );
 		this.c = c;
 		this.items = items;
 		this.pos = position;

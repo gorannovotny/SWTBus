@@ -5,6 +5,7 @@ import hr.mit.utils.DbUtil;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.ArrayList;
+import java.util.List;
 
 public class ProdajnoMjesto {
 	static ArrayList<ProdajnoMjesto> pmList = new ArrayList<ProdajnoMjesto>();
@@ -63,4 +64,12 @@ public class ProdajnoMjesto {
 		}
 		return l;
 	}
+	public static List<String> getArrayList() {
+		List<String> l = new ArrayList<String>();
+		for (ProdajnoMjesto v : pmList) {
+			l.add(v.getNaziv());
+		}
+		return l;
+	}
+
 }

@@ -24,7 +24,6 @@ import org.eclipse.swt.events.MouseEvent;
 import org.eclipse.swt.events.SelectionAdapter;
 import org.eclipse.swt.events.SelectionEvent;
 import org.eclipse.swt.widgets.Button;
-import org.eclipse.swt.widgets.Combo;
 import org.eclipse.swt.widgets.Display;
 import org.eclipse.swt.widgets.Label;
 import org.eclipse.swt.widgets.Shell;
@@ -39,7 +38,7 @@ public class ProdajaWindow {
 	Button cDoPostaje;
 	Button cKarta;
 	Button cPopust;
-	Combo cProdMjesto;
+	Button cProdMjesto;
 
 	Text textCijena;
 	Text textBrKarte;
@@ -64,7 +63,7 @@ public class ProdajaWindow {
 	private Label lblBrojKarte;
 	private Label lblCijena;
 	private Label lblUkupno;
-	private CLabel lBlagajna;
+	private Button lBlagajna;
 	private Button btnClear;
 
 	private TMouseListener mouseListener;
@@ -99,7 +98,7 @@ public class ProdajaWindow {
 				display.timerExec(1000, this);
 			}
 		};
-		
+
 		display.timerExec(1000, r);
 
 		while (!shell.isDisposed()) {
@@ -111,16 +110,17 @@ public class ProdajaWindow {
 	}
 
 	private void screenToStavka() {
-		stavka.setOdPostaje(Postaja.get((Integer)cOdPostaje.getData()));
-		stavka.setDoPostaje(Postaja.get((Integer)cDoPostaje.getData()));
-		if (! Karta.get((Integer)cKarta.getData()).equals(stavka.getKarta())) {
-			stavka.setKarta(Karta.get((Integer)cKarta.getData()));
-			Popust.setKartaStupac(Karta.get((Integer)cKarta.getData()), stupac);
+		stavka.setOdPostaje(Postaja.get((Integer) cOdPostaje.getData()));
+		stavka.setDoPostaje(Postaja.get((Integer) cDoPostaje.getData()));
+		if (!Karta.get((Integer) cKarta.getData()).equals(stavka.getKarta())) {
+			stavka.setKarta(Karta.get((Integer) cKarta.getData()));
+			Popust.setKartaStupac(Karta.get((Integer) cKarta.getData()), stupac);
 			cPopust.setData(0);
-			cPopust.setText(Popust.getList()[0]);;
+			cPopust.setText(Popust.getList()[0]);
+			;
 		}
 
-		stavka.setPopust(Popust.get((Integer)cPopust.getData()));
+		stavka.setPopust(Popust.get((Integer) cPopust.getData()));
 		String s = textCijena.getText();
 		try {
 			NumberFormat nf = NumberFormat.getNumberInstance();
@@ -130,7 +130,7 @@ public class ProdajaWindow {
 		} catch (Exception e) {
 			stavka.setCijena(BigDecimal.ZERO.setScale(2));
 		}
-		stavka.setProdajnoMjesto(ProdajnoMjesto.get(cProdMjesto.getSelectionIndex()));
+		stavka.setProdajnoMjesto(ProdajnoMjesto.get((Integer) cProdMjesto.getData()));
 		stavka.setBrojKarte(textBrKarte.getText());
 	}
 
@@ -140,9 +140,8 @@ public class ProdajaWindow {
 			textBrKarte.setEnabled(true);
 			textCijena.setEnabled(true);
 			cPopust.setData(0);
-			cPopust.setText(Popust.getList()[0]);;
+			cPopust.setText(Popust.getList()[0]);
 			cPopust.setEnabled(false);
-			cProdMjesto.select(2);
 			textCijena.addMouseListener(mouseListener);
 			textBrKarte.addMouseListener(mouseListener);
 		} else {
@@ -150,7 +149,8 @@ public class ProdajaWindow {
 			textBrKarte.removeMouseListener(mouseListener);
 			CijenaKarte c = new CijenaKarte(stavka);
 			stavka.setCijena(c.getUkupnaCijena().multiply(BigDecimal.ONE.subtract(stavka.getPopust().getPopust().movePointLeft(2))).setScale(2));
-			cProdMjesto.select(0);
+			cProdMjesto.setData(0);
+			cProdMjesto.setText(ProdajnoMjesto.getList()[0]);
 			cProdMjesto.setEnabled(false);
 			textBrKarte.setEnabled(false);
 			textCijena.setEnabled(false);
@@ -159,7 +159,7 @@ public class ProdajaWindow {
 			cPopust.setEnabled(true);
 		}
 		textRacun.setText(Stavka.getDescription());
-		lblUkupno.setText(Stavka.getUkupno().toString());
+		lblUkupno.setText("Kn " + Stavka.getUkupno().toString());
 
 		if (Stavka.getCount() > 0) {
 			cOdPostaje.setEnabled(false);
@@ -175,48 +175,38 @@ public class ProdajaWindow {
 		ComboSelectionListener c = new ComboSelectionListener();
 		cOdPostaje.addSelectionListener(c);
 		cDoPostaje.addSelectionListener(c);
-		
+
 		cKarta.addSelectionListener(c);
 		cPopust.addSelectionListener(c);
+		cProdMjesto.addSelectionListener(c);
 
 		bAdd.addSelectionListener(new ButtonSelectionListener());
 	}
 
 	protected void createContents() {
-		shell = new Shell(SWT.MODELESS);
-		shell.setSize(919, 518);
+		shell = new Shell(SWT.APPLICATION_MODAL | SWT.ON_TOP);
 		shell.setMaximized(true);
 
 		shell.setBounds(100, 100, 800, 600);
-		shell.setText("SWT Application");
 
 		lStupac = new Button(shell, SWT.NONE);
-		lStupac.setForeground(SWTResourceManager.getColor(SWT.COLOR_WHITE));
-		lStupac.setBackground(SWTResourceManager.getColor(SWT.COLOR_DARK_GRAY));
+		// lStupac.setForeground(SWTResourceManager.getColor(SWT.COLOR_WHITE));
+		// lStupac.setBackground(SWTResourceManager.getColor(SWT.COLOR_DARK_GRAY));
 		lStupac.setAlignment(SWT.LEFT);
-//		lStupac.setBackground(SWTResourceManager.getColor(SWT.COLOR_BLACK));
-//		lStupac.setForeground(SWTResourceManager.getColor(SWT.COLOR_WHITE));
-		lStupac.setFont(SWTResourceManager.getFont("Liberation Sans", 20, SWT.NORMAL));
-		lStupac.setBounds(0, 0, 685, 50);
-		lStupac.setText(stupac.getOpis() + " " + stupac.getVremeOdhoda());
+		lStupac.setFont(SWTResourceManager.getFont("Liberation Sans", 15, SWT.NORMAL));
+		lStupac.setBounds(5, 0, 785, 50);
+		lStupac.setText("Vozač: " + vozac.getNaziv() + "\t\tRelacija: " + stupac.getOpis() + "@" + stupac.getVremeOdhoda());
 		lStupac.addSelectionListener(new SelectionAdapter() {
 			@Override
 			public void widgetDefaultSelected(SelectionEvent e) {
-				stupac = null;
 				shell.dispose();
 			}
+
 			@Override
 			public void widgetSelected(SelectionEvent e) {
 				widgetDefaultSelected(e);
 			}
 		});
-		
-		lClock = new CLabel(shell, SWT.RIGHT);
-		lClock.setForeground(SWTResourceManager.getColor(SWT.COLOR_WHITE));
-		lClock.setBackground(SWTResourceManager.getColor(SWT.COLOR_BLACK));
-		lClock.setFont(SWTResourceManager.getFont("Liberation Sans", 20, SWT.NORMAL));
-		lClock.setBounds(684, 0, 114, 50);
-		lClock.setText(new SimpleDateFormat("HH:mm:ss").format(new Date()));
 
 		lblOdPostaje = new Label(shell, SWT.NONE);
 		lblOdPostaje.setFont(SWTResourceManager.getFont("Liberation Sans", 10, SWT.NORMAL));
@@ -259,13 +249,14 @@ public class ProdajaWindow {
 		cKarta.setText(Karta.getList()[0]);
 		Popust.setKartaStupac(Karta.get(0), stupac);
 		cKarta.setData(0);
-		
+
 		cPopust = new Button(shell, SWT.READ_ONLY);
 		cPopust.setAlignment(SWT.LEFT);
 		cPopust.setFont(SWTResourceManager.getFont("Liberation Sans", 25, SWT.NORMAL));
 		cPopust.setBounds(400, 150, 390, 70);
 		cPopust.setData(0);
-		cPopust.setText(Popust.getList()[0]);;
+		cPopust.setText(Popust.getList()[0]);
+		;
 
 		lblProdajnoMjesto = new Label(shell, SWT.NONE);
 		lblProdajnoMjesto.setText("Prodajno mjesto");
@@ -282,20 +273,21 @@ public class ProdajaWindow {
 		lblCijena.setFont(SWTResourceManager.getFont("Liberation Sans", 10, SWT.NORMAL));
 		lblCijena.setBounds(640, 220, 94, 15);
 
-		cProdMjesto = new Combo(shell, SWT.READ_ONLY);
-		cProdMjesto.setItems(ProdajnoMjesto.getList());
-		cProdMjesto.setFont(SWTResourceManager.getFont("Liberation Sans", 30, SWT.NORMAL));
+		cProdMjesto = new Button(shell, SWT.READ_ONLY);
+		cProdMjesto.setFont(SWTResourceManager.getFont("Liberation Sans", 25, SWT.NORMAL));
 		cProdMjesto.setBounds(5, 235, 325, 70);
-		cProdMjesto.select(0);
+		cProdMjesto.setAlignment(SWT.LEFT);
+		cProdMjesto.setData(0);
+		cProdMjesto.setText(ProdajnoMjesto.getList()[0]);
 
 		textBrKarte = new Text(shell, SWT.BORDER | SWT.RIGHT);
-		textBrKarte.setText("");
-		textBrKarte.setFont(SWTResourceManager.getFont("Liberation Sans", 30, SWT.NORMAL));
+		textBrKarte.setFont(SWTResourceManager.getFont("Liberation Sans", 25, SWT.NORMAL));
 		textBrKarte.setBounds(335, 235, 295, 70);
+		textBrKarte.setText(stavka.getBrojKarte());
 		textBrKarte.setEnabled(false);
 
 		textCijena = new Text(shell, SWT.BORDER | SWT.RIGHT);
-		textCijena.setFont(SWTResourceManager.getFont("Liberation Sans", 30, SWT.NORMAL));
+		textCijena.setFont(SWTResourceManager.getFont("Liberation Sans", 25, SWT.NORMAL));
 		textCijena.setBounds(635, 235, 155, 70);
 		textCijena.setText("3334,12");
 
@@ -306,7 +298,7 @@ public class ProdajaWindow {
 		lblUkupno = new Label(shell, SWT.RIGHT);
 		lblUkupno.setText("");
 		lblUkupno.setFont(SWTResourceManager.getFont("Liberation Sans", 50, SWT.NORMAL));
-		lblUkupno.setBounds(470, 366, 320, 80);
+		lblUkupno.setBounds(470, 310, 320, 75);
 
 		textRacun = new Text(shell, SWT.BORDER | SWT.MULTI);
 		textRacun.setFont(SWTResourceManager.getFont("Liberation Mono", 14, SWT.NORMAL));
@@ -316,27 +308,27 @@ public class ProdajaWindow {
 		btnClear.addSelectionListener(new BtnClearSelectionListener());
 		btnClear.setText("Clear");
 		btnClear.setFont(SWTResourceManager.getFont("Liberation Sans", 25, SWT.NORMAL));
-		btnClear.setBounds(470, 455, 145, 85);
+		btnClear.setBounds(470, 385, 160, 155);
 
 		btnPrint = new Button(shell, SWT.NONE);
 		btnPrint.addSelectionListener(new BtnPrintSelectionListener());
 		btnPrint.setText("Print");
 		btnPrint.setFont(SWTResourceManager.getFont("Liberation Sans", 25, SWT.NORMAL));
-		btnPrint.setBounds(648, 455, 145, 85);
+		btnPrint.setBounds(635, 385, 158, 155);
 
-		lVozac = new CLabel(shell, SWT.NONE);
-		lVozac.setBackground(SWTResourceManager.getColor(0, 0, 0));
-		lVozac.setForeground(SWTResourceManager.getColor(192, 192, 192));
-		lVozac.setText(vozac.getNaziv());
-		lVozac.setFont(SWTResourceManager.getFont("Liberation Sans", 20, SWT.NORMAL));
-		lVozac.setBounds(0, 544, 640, 54);
+		lClock = new CLabel(shell, SWT.LEFT);
+		// lClock.setForeground(SWTResourceManager.getColor(SWT.COLOR_WHITE));
+		// lClock.setBackground(SWTResourceManager.getColor(SWT.COLOR_BLACK));
+		lClock.setFont(SWTResourceManager.getFont("Liberation Sans", 20, SWT.NORMAL));
+		lClock.setBounds(670, 555, 112, 36);
+		lClock.setText(new SimpleDateFormat("HH:mm:ss").format(new Date()));
 
-		lBlagajna = new CLabel(shell, SWT.RIGHT);
-		lBlagajna.setText("0,00");
-		lBlagajna.setForeground(SWTResourceManager.getColor(192, 192, 192));
+		lBlagajna = new Button(shell, SWT.LEFT);
+		lBlagajna.setText("Blagajna: 0,00");
+		// lBlagajna.setForeground(SWTResourceManager.getColor(192, 192, 192));
 		lBlagajna.setFont(SWTResourceManager.getFont("Liberation Sans", 20, SWT.NORMAL));
-		lBlagajna.setBackground(SWTResourceManager.getColor(0, 0, 0));
-		lBlagajna.setBounds(640, 544, 158, 54);
+		// lBlagajna.setBackground(SWTResourceManager.getColor(0, 0, 0));
+		lBlagajna.setBounds(5, 544, 785, 54);
 	}
 
 	private class ButtonSelectionListener extends SelectionAdapter {
@@ -369,8 +361,8 @@ public class ProdajaWindow {
 			if (e.widget.equals(cOdPostaje)) {
 				Integer odIndex = (Integer) cOdPostaje.getData();
 				Integer doIndex = (Integer) cDoPostaje.getData();
-				
-				Picker picker = new Picker (cOdPostaje,Postaja.getArrayList(),odIndex);
+
+				Picker picker = new Picker(cOdPostaje, Postaja.getArrayList(), odIndex);
 				cOdPostaje = picker.open();
 				odIndex = (Integer) cOdPostaje.getData();
 				stavka.setOdPostaje(Postaja.get(odIndex));
@@ -378,35 +370,41 @@ public class ProdajaWindow {
 				if (doIndex <= odIndex && (odIndex < Postaja.getList().length - 1)) {
 					stavka.setDoPostaje(Postaja.get(odIndex + 1));
 					cDoPostaje.setData(odIndex + 1);
-					cDoPostaje.setText(Postaja.getList()[odIndex+1]);
+					cDoPostaje.setText(Postaja.getList()[odIndex + 1]);
 				}
 			} else if (e.widget.equals(cDoPostaje)) {
 				Integer odIndex = (Integer) cOdPostaje.getData();
 				Integer doIndex = (Integer) cDoPostaje.getData();
 
-				Picker picker = new Picker (cDoPostaje,Postaja.getArrayList(),doIndex);
+				Picker picker = new Picker(cDoPostaje, Postaja.getArrayList(), doIndex);
 				cDoPostaje = picker.open();
 				doIndex = (Integer) cDoPostaje.getData();
-				
+
 				stavka.setDoPostaje(Postaja.get(doIndex));
 				if ((odIndex >= doIndex) && (doIndex > 0)) {
 					stavka.setOdPostaje(Postaja.get(doIndex - 1));
 					cOdPostaje.setText(Postaja.getList()[doIndex - 1]);
 				}
 			} else if (e.widget.equals(cKarta)) {
-				Integer index = (Integer)cKarta.getData();
-				Picker picker = new Picker (cKarta,Karta.getArrayList(),index);
+				Integer index = (Integer) cKarta.getData();
+				Picker picker = new Picker(cKarta, Karta.getArrayList(), index);
 				cKarta = picker.open();
-				
-				stavka.setKarta(Karta.get((Integer)cKarta.getData()));
-				Popust.setKartaStupac(Karta.get((Integer)cKarta.getData()), stupac);
+
+				stavka.setKarta(Karta.get((Integer) cKarta.getData()));
+				Popust.setKartaStupac(Karta.get((Integer) cKarta.getData()), stupac);
 				cPopust.setData(0);
-				cPopust.setText(Popust.getList()[0]);;
+				cPopust.setText(Popust.getList()[0]);
+				;
 			} else if (e.widget.equals(cPopust)) {
 				Integer index = (Integer) cPopust.getData();
-				Picker picker = new Picker (cPopust,Popust.getArrayList(),index);
+				Picker picker = new Picker(cPopust, Popust.getArrayList(), index);
 				cPopust = picker.open();
-				stavka.setPopust(Popust.get((Integer)cPopust.getData()));
+				stavka.setPopust(Popust.get((Integer) cPopust.getData()));
+			} else if (e.widget.equals(cProdMjesto)) {
+				Integer index = (Integer) cProdMjesto.getData();
+				Picker picker = new Picker(cProdMjesto, ProdajnoMjesto.getArrayList(), index);
+				cProdMjesto = picker.open();
+				stavka.setProdajnoMjesto(ProdajnoMjesto.get((Integer) cProdMjesto.getData()));
 			}
 			stavkaToScreen();
 
@@ -429,10 +427,10 @@ public class ProdajaWindow {
 	}
 
 	protected class TMouseListener extends MouseAdapter {
-		@Override
 		public void mouseDown(MouseEvent e) {
 			Text t = (Text) e.widget;
-			VirtualKeyboard keypad = new VirtualKeyboard(e.display.getActiveShell(), SWT.APPLICATION_MODAL);
+			VirtualKeyboard keypad = new VirtualKeyboard(e.display.getActiveShell(), SWT.APPLICATION_MODAL | SWT.ON_TOP);
+			t.selectAll();
 			keypad.open(t);
 			screenToStavka();
 			if (t.equals(textCijena))
