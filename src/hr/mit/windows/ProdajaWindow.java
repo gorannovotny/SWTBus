@@ -324,7 +324,8 @@ public class ProdajaWindow {
 		lClock.setText(new SimpleDateFormat("HH:mm:ss").format(new Date()));
 
 		lBlagajna = new Button(shell, SWT.LEFT);
-		lBlagajna.setText("Blagajna: 0,00");
+		lBlagajna.addSelectionListener(new LBlagajnaSelectionListener());
+		lBlagajna.setText("Blagajna: " + Blagajna.getSaldo().toString());
 		// lBlagajna.setForeground(SWTResourceManager.getColor(192, 192, 192));
 		lBlagajna.setFont(SWTResourceManager.getFont("Liberation Sans", 20, SWT.NORMAL));
 		// lBlagajna.setBackground(SWTResourceManager.getColor(0, 0, 0));
@@ -343,16 +344,10 @@ public class ProdajaWindow {
 	private class BtnPrintSelectionListener extends SelectionAdapter {
 		@Override
 		public void widgetSelected(SelectionEvent e) {
-			// blagajna.add(stavke.getUkupno());
-			// lBlagajna.setText(new
-			// DecimalFormat("#0.00").format(blagajna.getSaldo()));
-			// stavke.clear();
-			// list.setItems(stavke.getList());
-			// textCijena.setText("0,00");
-			shell.dispose();
-			cOdPostaje.setEnabled(true);
-			cDoPostaje.setEnabled(true);
-
+			Blagajna.save(vozac, Stavka.getList());
+			lBlagajna.setText("Blagajna: " + Blagajna.getSaldo().toString());
+			Stavka.clear();
+			stavkaToScreen();
 		}
 	}
 
@@ -435,6 +430,17 @@ public class ProdajaWindow {
 			screenToStavka();
 			if (t.equals(textCijena))
 				t.setText(stavka.getCijena().toString());
+		}
+	}
+
+	private class LBlagajnaSelectionListener extends SelectionAdapter {
+		@Override
+		public void widgetDefaultSelected(SelectionEvent e) {
+			shell.dispose();
+		}
+
+		public void widgetSelected(SelectionEvent e) {
+			widgetDefaultSelected(e);
 		}
 	}
 }

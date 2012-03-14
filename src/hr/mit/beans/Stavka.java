@@ -4,6 +4,7 @@ import hr.mit.utils.CijenaKarte;
 
 import java.math.BigDecimal;
 import java.util.ArrayList;
+import java.util.List;
 
 public class Stavka {
 
@@ -24,6 +25,10 @@ public class Stavka {
 
 	public static void add(Stavka stavka) {
 		stavkaList.add(stavka);
+	}
+	
+	public static List<Stavka> getList() {
+		return stavkaList;
 	}
 
 	public static String getDescription() {
