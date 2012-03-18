@@ -74,10 +74,10 @@ public class Stavka {
 
 	public String getDesc() {
 		String k = karta.getNaziv();
-		if (k.length() > 25)
-			k = k.substring(0, 25);
+		if (k.length() > 19)
+			k = k.substring(0, 19);
 
-		String out = String.format("%-25s %5.2f%% %7.2f", k, popust.getPopust().doubleValue(), getCijena().doubleValue());
+		String out = String.format("%-19s %3.0f%% %7.2f", k, popust.getPopust().doubleValue(), getCijena().doubleValue());
 		return out;
 	}
 

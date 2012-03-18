@@ -51,7 +51,7 @@ public class Picker extends Dialog {
 		
 		if (pos > items.size() - MAX_PICKS) pos = items.size() - MAX_PICKS;
 		upButton = new Button(shell,SWT.NONE);
-		upButton.setFont(SWTResourceManager.getFont("Liberation Sans", 25, SWT.NORMAL));
+		upButton.setFont(c.getFont());
 		upButton.setLocation(0,0);
 		upButton.setSize(c.getSize());
 		upButton.setAlignment(SWT.CENTER);
@@ -60,7 +60,7 @@ public class Picker extends Dialog {
 		
 		for (int i = 0; i < MAX_PICKS; i++) {
 			Button b = new Button(shell, SWT.NONE);
-			b.setFont(SWTResourceManager.getFont("Liberation Sans", 25, SWT.NORMAL));
+			b.setFont(c.getFont());
 			b.setLocation(0,(i+1) * c.getSize().y);
 			b.setSize(c.getSize());
 			b.setAlignment(SWT.LEFT);
@@ -73,7 +73,7 @@ public class Picker extends Dialog {
 		}
 		downButton = new Button(shell,SWT.NONE);
 		downButton.addSelectionListener(new ButtonDownListener());
-		downButton.setFont(SWTResourceManager.getFont("Liberation Sans", 25, SWT.NORMAL));
+		downButton.setFont(c.getFont());
 		downButton.setLocation(0,(MAX_PICKS+1) * c.getSize().y);
 		downButton.setSize(c.getSize());
 		downButton.setAlignment(SWT.CENTER);

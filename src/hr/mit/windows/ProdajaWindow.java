@@ -9,6 +9,7 @@ import hr.mit.beans.Stavka;
 import hr.mit.beans.Stupac;
 import hr.mit.beans.Vozac;
 import hr.mit.utils.CijenaKarte;
+import hr.mit.utils.PrintUtils;
 
 import java.math.BigDecimal;
 import java.text.DecimalFormat;
@@ -68,15 +69,9 @@ public class ProdajaWindow {
 
 	private TMouseListener mouseListener;
 
-	public ProdajaWindow(Vozac vozac, Stupac stupac) {
-		this.vozac = vozac;
-		this.stupac = stupac;
-		Postaja.setStupac(stupac);
+	public ProdajaWindow() {
 
 		Stavka.clear();
-		stavka = new Stavka(stupac);
-		int random = new Random().nextInt(1000000000);
-		stavka.setBrojKarte(String.valueOf(random));
 		blagajna = new Blagajna();
 		mouseListener = new TMouseListener();
 	}
@@ -84,7 +79,14 @@ public class ProdajaWindow {
 	/**
 	 * @wbp.parser.entryPoint
 	 */
-	public void open() {
+	public void open(Vozac vozac, Stupac stupac) {
+		this.vozac = vozac;
+		this.stupac = stupac;
+		Postaja.setStupac(stupac);
+		stavka = new Stavka(stupac);
+		int random = new Random().nextInt(1000000000);
+		stavka.setBrojKarte(String.valueOf(random));
+
 		final Display display = Display.getDefault();
 		createContents();
 		screenToStavka();
@@ -184,14 +186,11 @@ public class ProdajaWindow {
 	}
 
 	protected void createContents() {
-		shell = new Shell(SWT.APPLICATION_MODAL | SWT.ON_TOP);
+		shell = new Shell(SWT.SYSTEM_MODAL);
+		shell.setBounds(0, 0, 800, 600);
 		shell.setMaximized(true);
 
-		shell.setBounds(100, 100, 800, 600);
-
 		lStupac = new Button(shell, SWT.NONE);
-		// lStupac.setForeground(SWTResourceManager.getColor(SWT.COLOR_WHITE));
-		// lStupac.setBackground(SWTResourceManager.getColor(SWT.COLOR_DARK_GRAY));
 		lStupac.setAlignment(SWT.LEFT);
 		lStupac.setFont(SWTResourceManager.getFont("Liberation Sans", 15, SWT.NORMAL));
 		lStupac.setBounds(5, 0, 785, 50);
@@ -346,6 +345,7 @@ public class ProdajaWindow {
 		public void widgetSelected(SelectionEvent e) {
 			Blagajna.save(vozac, Stavka.getList());
 			lBlagajna.setText("Blagajna: " + Blagajna.getSaldo().toString());
+			PrintUtils.print(vozac, Stavka.getList());
 			Stavka.clear();
 			stavkaToScreen();
 		}
@@ -424,7 +424,7 @@ public class ProdajaWindow {
 	protected class TMouseListener extends MouseAdapter {
 		public void mouseDown(MouseEvent e) {
 			Text t = (Text) e.widget;
-			VirtualKeyboard keypad = new VirtualKeyboard(e.display.getActiveShell(), SWT.APPLICATION_MODAL | SWT.ON_TOP);
+			VirtualKeyboard keypad = new VirtualKeyboard(e.display.getActiveShell());
 			t.selectAll();
 			keypad.open(t);
 			screenToStavka();

@@ -1,5 +1,6 @@
 package hr.mit.windows;
 
+import org.eclipse.swt.SWT;
 import org.eclipse.swt.events.SelectionAdapter;
 import org.eclipse.swt.events.SelectionEvent;
 import org.eclipse.swt.events.SelectionListener;
@@ -9,17 +10,15 @@ import org.eclipse.swt.widgets.Display;
 import org.eclipse.swt.widgets.Shell;
 import org.eclipse.swt.widgets.Text;
 
-public class VirtualKeyboard extends Dialog {
+public class VirtualKeyboard {
 
 	protected Object result;
 	protected Shell shell;
 
 	private Text polje;
 
-	public VirtualKeyboard(Shell parent, int style) {
-		super(parent, style);
-		setText("Virtual Keyboard");
-
+	public VirtualKeyboard(Shell parent) {
+		this.shell = parent;
 	}
 
 	/**
@@ -32,7 +31,7 @@ public class VirtualKeyboard extends Dialog {
 		createContents();
 		shell.open();
 		shell.layout();
-		Display display = getParent().getDisplay();
+		Display display = shell.getDisplay();
 		while (!shell.isDisposed()) {
 			if (!display.readAndDispatch()) {
 				display.sleep();
@@ -44,12 +43,10 @@ public class VirtualKeyboard extends Dialog {
 	/**
 	 * Create contents of the dialog.
 	 */
-	@SuppressWarnings("unused")
 	private void createContents() {
-		shell = new Shell(getParent(), getStyle());
+		shell = new Shell(shell, SWT.APPLICATION_MODAL | SWT.ON_TOP);
 		shell.setSize(800, 215);
-		shell.setLocation(getParent().getLocation().x, getParent().getLocation().y + 385);
-		shell.setText(getText());
+		shell.setLocation(shell.getLocation().x, shell.getLocation().y + 385);
 		SelectionListener listener = new MyButtonSelectionListener();
 
 		MyButton b1 = new MyButton(shell, "1", 4, 13, listener);
@@ -119,7 +116,7 @@ public class VirtualKeyboard extends Dialog {
 			if (b.getText().equals("\u21b5")) {
 				shell.dispose();
 			} else if (b.getText().equals("\u2b05")) {
-				polje.setSelection(polje.getCharCount()-1,polje.getCharCount());
+				polje.setSelection(polje.getCharCount() - 1, polje.getCharCount());
 				polje.cut();
 			} else
 				polje.insert(b.getText());

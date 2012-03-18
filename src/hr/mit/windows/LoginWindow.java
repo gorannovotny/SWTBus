@@ -31,7 +31,7 @@ public class LoginWindow {
 	private Text tVozac;
 	private Text tVozilo;
 	private Text tLinija;
-	protected Combo comboPolazak;
+	protected Button comboPolazak;
 	private Button button;
 
 	protected Label lOpisVozilo;
@@ -40,15 +40,20 @@ public class LoginWindow {
 
 	private Vozac vozac;
 	private Stupac stupac;
+	private Button btnNewButton;
 
 	/**
 	 * @wbp.parser.entryPoint
 	 */
 	public void open() {
 		Display display = Display.getDefault();
-		shlPrijava = new Shell(SWT.MODELESS);
+		shlPrijava = new Shell(SWT.ON_TOP);
+		shlPrijava.setSize(758, 354);
+		shlPrijava.setBounds(0, 0, 800, 600);
+		shlPrijava.setMaximized(true);
 		createContents();
 		shlPrijava.open();
+		shlPrijava.layout();
 		while (!shlPrijava.isDisposed()) {
 			if (!display.readAndDispatch()) {
 				display.sleep();
@@ -57,69 +62,67 @@ public class LoginWindow {
 	}
 
 	protected void createContents() {
-		shlPrijava.setMaximized(true);
-		shlPrijava.setBounds(100, 100, 800, 600);
-		shlPrijava.setText("Prijava");
-
 		lblPrijava = new Label(shlPrijava, SWT.NONE);
 		lblPrijava.setFont(SWTResourceManager.getFont("Liberation Sans", 45, SWT.NORMAL));
 		lblPrijava.setBounds(290, 10, 183, 67);
 		lblPrijava.setText("Prijava");
 
 		lblVozac = new Label(shlPrijava, SWT.NONE);
-		lblVozac.setAlignment(SWT.RIGHT);
 		lblVozac.setFont(SWTResourceManager.getFont("Liberation Sans", 30, SWT.NORMAL));
-		lblVozac.setBounds(0, 150, 220, 50);
+		lblVozac.setBounds(5, 130, 220, 50);
 		lblVozac.setText("Šifra vozača");
 
-		tVozac = new Text(shlPrijava, SWT.BORDER | SWT.RIGHT);
-		tVozac.setFont(SWTResourceManager.getFont("Liberation Sans", 30, SWT.NORMAL));
-		tVozac.setBounds(225, 150, 100, 50);
+		tVozac = new Text(shlPrijava, SWT.BORDER);
+		tVozac.setFont(SWTResourceManager.getFont("Liberation Sans", 20, SWT.NORMAL));
+		tVozac.setBounds(225, 130, 80, 50);
 
 		lOpisVozac = new Label(shlPrijava, SWT.NONE);
 		lOpisVozac.setText("");
 		lOpisVozac.setFont(SWTResourceManager.getFont("Liberation Sans", 20, SWT.NORMAL));
-		lOpisVozac.setBounds(330, 160, 425, 30);
+		lOpisVozac.setBounds(310, 140, 480, 30);
 
 		lblVozilo = new Label(shlPrijava, SWT.NONE);
-		lblVozilo.setAlignment(SWT.RIGHT);
 		lblVozilo.setFont(SWTResourceManager.getFont("Liberation Sans", 30, SWT.NORMAL));
-		lblVozilo.setBounds(20, 205, 200, 50);
+		lblVozilo.setBounds(5, 180, 200, 50);
 		lblVozilo.setText("Šifra vozila");
 
-		tVozilo = new Text(shlPrijava, SWT.BORDER | SWT.RIGHT);
-		tVozilo.setFont(SWTResourceManager.getFont("Liberation Sans", 30, SWT.NORMAL));
-		tVozilo.setBounds(225, 205, 100, 50);
+		tVozilo = new Text(shlPrijava, SWT.BORDER);
+		tVozilo.setFont(SWTResourceManager.getFont("Liberation Sans", 20, SWT.NORMAL));
+		tVozilo.setBounds(225, 180, 80, 50);
 
 		lOpisVozilo = new Label(shlPrijava, SWT.NONE);
-		lOpisVozilo.setBounds(330, 215, 425, 30);
+		lOpisVozilo.setBounds(310, 190, 480, 30);
 		lOpisVozilo.setFont(SWTResourceManager.getFont("Liberation Sans", 20, SWT.NORMAL));
 		lOpisVozilo.setText("");
 
 		lblLinija = new Label(shlPrijava, SWT.NONE);
-		lblLinija.setAlignment(SWT.RIGHT);
 		lblLinija.setFont(SWTResourceManager.getFont("Liberation Sans", 30, SWT.NORMAL));
-		lblLinija.setBounds(40, 260, 180, 50);
+		lblLinija.setBounds(5, 230, 180, 50);
 		lblLinija.setText("Šifra linije");
 
 		tLinija = new Text(shlPrijava, SWT.BORDER);
 		tLinija.setFont(SWTResourceManager.getFont("Liberation Sans", 20, SWT.NORMAL));
-		tLinija.setBounds(225, 260, 130, 50);
+		tLinija.setBounds(175, 230, 130, 50);
 
 		lOpisLinije = new Label(shlPrijava, SWT.NONE);
 		lOpisLinije.setText("");
 		lOpisLinije.setFont(SWTResourceManager.getFont("Liberation Sans", 20, SWT.NORMAL));
-		lOpisLinije.setBounds(360, 270, 425, 30);
+		lOpisLinije.setBounds(310, 240, 480, 30);
 
 		lblPolazak = new Label(shlPrijava, SWT.NONE);
-		lblPolazak.setAlignment(SWT.RIGHT);
 		lblPolazak.setFont(SWTResourceManager.getFont("Liberation Sans", 30, SWT.NORMAL));
-		lblPolazak.setBounds(40, 315, 180, 50);
+		lblPolazak.setBounds(5, 280, 180, 50);
 		lblPolazak.setText("Polazak");
 
-		comboPolazak = new Combo(shlPrijava, SWT.READ_ONLY);
-		comboPolazak.setFont(SWTResourceManager.getFont("Liberation Sans", 30, SWT.NORMAL));
-		comboPolazak.setBounds(225, 315, 150, 54);
+		comboPolazak = new Button(shlPrijava, SWT.READ_ONLY);
+		comboPolazak.addSelectionListener(new ComboPolazakSelectionListener());
+		comboPolazak.setFont(SWTResourceManager.getFont("Liberation Sans", 20, SWT.NORMAL));
+		comboPolazak.setBounds(225, 280, 80, 50);
+
+		btnNewButton = new Button(shlPrijava, SWT.NONE);
+		btnNewButton.addSelectionListener(new ComboPolazakSelectionListener());
+		btnNewButton.setBounds(40, 469, 75, 26);
+		btnNewButton.setText("New Button");
 
 		button = new Button(shlPrijava, SWT.ARROW | SWT.RIGHT);
 		button.setFont(SWTResourceManager.getFont("Liberation Sans", 30, SWT.NORMAL));
@@ -141,16 +144,17 @@ public class LoginWindow {
 	protected class ButtonSelectionListener extends SelectionAdapter {
 		public void widgetSelected(SelectionEvent e) {
 			setVozac(Vozac.getBySifra(Integer.parseInt(tVozac.getText())));
-			setStupac(Stupac.get(comboPolazak.getSelectionIndex()));
+			setStupac(Stupac.get((Integer) comboPolazak.getData()));
 			shlPrijava.dispose();
 		}
+
 	}
 
 	protected class textMouseListener extends MouseAdapter {
 		@Override
 		public void mouseDown(MouseEvent e) {
 			Text t = (Text) e.widget;
-			VirtualKeyboard keypad = new VirtualKeyboard(e.display.getActiveShell(), SWT.APPLICATION_MODAL);
+			VirtualKeyboard keypad = new VirtualKeyboard(shlPrijava);
 			t.selectAll();
 			keypad.open(t);
 
@@ -183,8 +187,27 @@ public class LoginWindow {
 			Text t = (Text) e.widget;
 			lOpisLinije.setText(VozniRed.getNaziv(t.getText()));
 			Stupac.setVozniRed(t.getText());
-			comboPolazak.setItems(Stupac.getList());
-			comboPolazak.select(0);
+			if (Stupac.getList().length > 0) {
+				comboPolazak.setText(Stupac.getList()[0]);
+				comboPolazak.setData(0);
+			}
+		}
+	}
+
+	private class ComboPolazakSelectionListener extends SelectionAdapter {
+		@Override
+		public void widgetDefaultSelected(SelectionEvent e) {
+			if (e.widget.equals(btnNewButton)) {
+				throw new RuntimeException();
+			}
+			Integer index = (Integer) comboPolazak.getData();
+			Picker picker = new Picker(comboPolazak, Stupac.getArrayList(), index);
+			comboPolazak = picker.open();
+
+		}
+
+		public void widgetSelected(SelectionEvent e) {
+			widgetDefaultSelected(e);
 		}
 	}
 

@@ -16,7 +16,7 @@ public class Vozilo {
 			String sql = "SELECT Sifra,Naziv,RegSt FROM PromVozila ORDER BY Sifra";
 			ResultSet rs = DbUtil.getConnection().createStatement().executeQuery(sql);
 			while (rs.next()) {
-				nazivList.add(rs.getString(2)+" ("+rs.getString(3)+")");
+				nazivList.add(rs.getString(3)+" "+rs.getString(2));
 				idList.add(rs.getInt(1));
 			}
 		} catch (SQLException e) {

@@ -6,6 +6,7 @@ import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.ArrayList;
+import java.util.List;
 
 public class Stupac {
 	private static ArrayList<Stupac> stupacList = new ArrayList<Stupac>();
@@ -58,6 +59,14 @@ public class Stupac {
 		return l;
 	}
 
+	public static List<String> getArrayList() {
+		List<String> l = new ArrayList<String>();
+		for (Stupac v : stupacList) {
+			l.add(v.getVremeOdhoda());
+		}
+		return l;
+	}
+	
 	public String getVremeOdhoda() {
 		return vremeOdhoda;
 	}
