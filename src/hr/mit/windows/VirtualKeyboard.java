@@ -114,6 +114,7 @@ public class VirtualKeyboard {
 		public void widgetDefaultSelected(SelectionEvent e) {
 			Button b = (Button) e.widget;
 			if (b.getText().equals("\u21b5")) {
+				polje.clearSelection();
 				shell.dispose();
 			} else if (b.getText().equals("\u2b05")) {
 				polje.setSelection(polje.getCharCount() - 1, polje.getCharCount());
