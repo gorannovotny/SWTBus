@@ -1,5 +1,6 @@
 package hr.mit.windows;
 
+import hr.mit.Starter;
 import hr.mit.beans.Blagajna;
 import hr.mit.beans.Karta;
 import hr.mit.beans.Popust;
@@ -48,8 +49,6 @@ public class ProdajaWindow {
 	Button bAdd;
 	Button btnPrint;
 
-	Vozac vozac;
-	Stupac stupac;
 	Stavka stavka;
 
 	CLabel lClock;
@@ -78,11 +77,9 @@ public class ProdajaWindow {
 	/**
 	 * @wbp.parser.entryPoint
 	 */
-	public boolean open(Vozac vozac, Stupac stupac) {
-		this.vozac = vozac;
-		this.stupac = stupac;
-		Postaja.setStupac(stupac);
-		stavka = new Stavka(stupac);
+	public boolean open() {
+		Postaja.setStupac(Starter.stupac);
+		stavka = new Stavka(Starter.stupac);
 		int random = new Random().nextInt(1000000000);
 		stavka.setBrojKarte(String.valueOf(random));
 
@@ -116,7 +113,7 @@ public class ProdajaWindow {
 		stavka.setDoPostaje(Postaja.get((Integer) cDoPostaje.getData()));
 		if (!Karta.get((Integer) cKarta.getData()).equals(stavka.getKarta())) {
 			stavka.setKarta(Karta.get((Integer) cKarta.getData()));
-			Popust.setKartaStupac(Karta.get((Integer) cKarta.getData()), stupac);
+			Popust.setKartaStupac(Karta.get((Integer) cKarta.getData()), Starter.stupac);
 			cPopust.setData(0);
 			cPopust.setText(Popust.getList()[0]);
 			;
@@ -194,7 +191,7 @@ public class ProdajaWindow {
 		lStupac.setAlignment(SWT.LEFT);
 		lStupac.setFont(SWTResourceManager.getFont("Liberation Sans", 15, SWT.NORMAL));
 		lStupac.setBounds(5, 0, 785, 50);
-		lStupac.setText("Vozač: " + vozac.getNaziv() + "\t\tRelacija: " + stupac.getOpis() + "@" + stupac.getVremeOdhoda());
+		lStupac.setText("Vozač: " + Starter.vozac.getNaziv() + "\t\tRelacija: " + Starter.stupac.getOpis() + "@" + Starter.stupac.getVremeOdhoda());
 		lStupac.addSelectionListener(new SelectionAdapter() {
 			@Override
 			public void widgetDefaultSelected(SelectionEvent e) {
@@ -246,7 +243,7 @@ public class ProdajaWindow {
 		cKarta.setFont(SWTResourceManager.getFont("Liberation Sans", 25, SWT.NORMAL));
 		cKarta.setBounds(5, 150, 390, 70);
 		cKarta.setText(Karta.getList()[0]);
-		Popust.setKartaStupac(Karta.get(0), stupac);
+		Popust.setKartaStupac(Karta.get(0), Starter.stupac);
 		cKarta.setData(0);
 
 		cPopust = new Button(shell, SWT.READ_ONLY);
@@ -335,7 +332,7 @@ public class ProdajaWindow {
 		public void widgetSelected(SelectionEvent e) {
 			Stavka.add(stavka);
 			stavkaToScreen();
-			stavka = new Stavka(stupac);
+			stavka = new Stavka(Starter.stupac);
 			screenToStavka();
 		}
 	}
@@ -343,9 +340,9 @@ public class ProdajaWindow {
 	protected class PrintButtonListener extends SelectionAdapter {
 		@Override
 		public void widgetSelected(SelectionEvent e) {
-			Blagajna.save(vozac, Stavka.getList());
+			Blagajna.save(Starter.vozac, Stavka.getList());
 			lBlagajna.setText("Blagajna: " + Blagajna.getSaldo().toString());
-			PrintUtils.print(vozac, Stavka.getList());
+			PrintUtils.print(Starter.vozac, Stavka.getList());
 			Stavka.clear();
 			stavkaToScreen();
 		}
@@ -386,7 +383,7 @@ public class ProdajaWindow {
 				cKarta = picker.open();
 
 				stavka.setKarta(Karta.get((Integer) cKarta.getData()));
-				Popust.setKartaStupac(Karta.get((Integer) cKarta.getData()), stupac);
+				Popust.setKartaStupac(Karta.get((Integer) cKarta.getData()), Starter.stupac);
 				cPopust.setData(0);
 				cPopust.setText(Popust.getList()[0]);
 				;

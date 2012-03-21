@@ -17,7 +17,7 @@ public class PrintUtils {
 		try {
 			FileWriter out = new FileWriter("/dev/ttyS0");
 			out.write(reset);
-			out.write(createString(vozac,stavkaList));
+			out.write(filter(createString(vozac,stavkaList)));
 			out.flush();
 			out.close();
 		} catch (IOException e) {
@@ -45,6 +45,25 @@ public class PrintUtils {
 		sb.append("--------------------------------\r");
 
 		
+		return sb.toString();
+	}
+	
+	private static String filter(String in){
+		StringBuffer sb = new StringBuffer();
+		for (int i = 0; i < in.length(); i++) {
+			char a = in.charAt(i);
+			if (a == 'č')  a = 'c';
+			else if (a == 'Č') a = 'C';
+			else if (a == 'ć') a = 'c';
+			else if (a == 'Ć') a = 'C';
+			else if (a == 'ž') a = 'z';
+			else if (a == 'Ž') a = 'Z';
+			else if (a == 'š') a = 's';
+			else if (a == 'Š') a = 'S';
+			else if (a == 'đ') a = 'd';
+			else if (a == 'Đ') a = 'D';
+			sb.append(a);
+		}
 		return sb.toString();
 	}
 	

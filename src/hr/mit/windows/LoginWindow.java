@@ -1,5 +1,6 @@
 package hr.mit.windows;
 
+import hr.mit.Starter;
 import hr.mit.beans.Stupac;
 import hr.mit.beans.Vozac;
 import hr.mit.beans.Vozilo;
@@ -38,8 +39,6 @@ public class LoginWindow {
 	protected Label lOpisVozac;
 	protected Label lOpisLinije;
 
-	private Vozac vozac;
-	private Stupac stupac;
 	private Button btnNewButton;
 
 	/**
@@ -143,8 +142,9 @@ public class LoginWindow {
 
 	protected class ButtonSelectionListener extends SelectionAdapter {
 		public void widgetSelected(SelectionEvent e) {
-			setVozac(Vozac.getBySifra(Integer.parseInt(tVozac.getText())));
-			setStupac(Stupac.get((Integer) comboPolazak.getData()));
+			Starter.vozac = Vozac.getBySifra(Integer.parseInt(tVozac.getText()));
+			Starter.stupac = Stupac.get((Integer) comboPolazak.getData());
+// TODO			Starter.vozilo = Vozilo.get((Integer) tVozilo.getData());
 			shlPrijava.dispose();
 		}
 
@@ -211,19 +211,5 @@ public class LoginWindow {
 		}
 	}
 
-	public Vozac getVozac() {
-		return vozac;
-	}
 
-	public Stupac getStupac() {
-		return stupac;
-	}
-
-	public void setVozac(Vozac vozac) {
-		this.vozac = vozac;
-	}
-
-	public void setStupac(Stupac stupac) {
-		this.stupac = stupac;
-	}
 }

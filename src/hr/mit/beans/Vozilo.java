@@ -25,10 +25,6 @@ public class Vozilo {
 		
 	}
 	
-	public Vozilo(Integer id) {
-
-	}
-
 	public static String[] getList() {
 		return nazivList.toArray(new String[0]);
 	}
