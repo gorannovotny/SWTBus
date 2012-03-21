@@ -65,7 +65,7 @@ public class ProdajaWindow {
 	private Button btnClear;
 
 	private TMouseListener mouseListener;
-	
+
 	protected boolean exit;
 
 	public ProdajaWindow() {
@@ -183,7 +183,7 @@ public class ProdajaWindow {
 	}
 
 	protected void createContents() {
-		shell = new Shell(SWT.SYSTEM_MODAL);
+		shell = new Shell(SWT.SYSTEM_MODAL | SWT.ON_TOP);
 		shell.setBounds(0, 0, 800, 600);
 		shell.setMaximized(true);
 
@@ -435,7 +435,8 @@ public class ProdajaWindow {
 		public void widgetDefaultSelected(SelectionEvent e) {
 			ObracunWindow ow = new ObracunWindow();
 			exit = ow.open(shell);
-			if (exit) shell.dispose();
+			if (exit)
+				shell.dispose();
 		}
 
 		public void widgetSelected(SelectionEvent e) {

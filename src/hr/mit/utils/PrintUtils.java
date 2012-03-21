@@ -41,7 +41,7 @@ public class PrintUtils {
 		sb.append(String.format("Za platiti               %7.2f\r", Stavka.getUkupno()));
 		sb.append("\r");
 		sb.append("Vozač : " + vozac.getNaziv() + "\n" );
-		sb.append(sdf.format(new Date()));
+		sb.append(sdf.format(new Date())+"\r");
 		sb.append("--------------------------------\r");
 
 		
