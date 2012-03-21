@@ -48,14 +48,12 @@ public class ProdajaWindow {
 	Button bAdd;
 	Button btnPrint;
 
-	private Vozac vozac;
+	Vozac vozac;
 	Stupac stupac;
-	private Blagajna blagajna;
 	Stavka stavka;
 
 	CLabel lClock;
 	private Button lStupac;
-	private CLabel lVozac;
 	private Label lblOdPostaje;
 	private Label lblDoPostaje;
 	private Label lblVrstaKarte;
@@ -64,22 +62,23 @@ public class ProdajaWindow {
 	private Label lblBrojKarte;
 	private Label lblCijena;
 	private Label lblUkupno;
-	private Button lBlagajna;
+	Button lBlagajna;
 	private Button btnClear;
 
 	private TMouseListener mouseListener;
+	
+	protected boolean exit;
 
 	public ProdajaWindow() {
 
 		Stavka.clear();
-		blagajna = new Blagajna();
 		mouseListener = new TMouseListener();
 	}
 
 	/**
 	 * @wbp.parser.entryPoint
 	 */
-	public void open(Vozac vozac, Stupac stupac) {
+	public boolean open(Vozac vozac, Stupac stupac) {
 		this.vozac = vozac;
 		this.stupac = stupac;
 		Postaja.setStupac(stupac);
@@ -109,9 +108,10 @@ public class ProdajaWindow {
 			}
 		}
 		display.timerExec(-1, r);
+		return exit;
 	}
 
-	private void screenToStavka() {
+	protected void screenToStavka() {
 		stavka.setOdPostaje(Postaja.get((Integer) cOdPostaje.getData()));
 		stavka.setDoPostaje(Postaja.get((Integer) cDoPostaje.getData()));
 		if (!Karta.get((Integer) cKarta.getData()).equals(stavka.getKarta())) {
@@ -136,7 +136,7 @@ public class ProdajaWindow {
 		stavka.setBrojKarte(textBrKarte.getText());
 	}
 
-	private void stavkaToScreen() {
+	protected void stavkaToScreen() {
 		if (stavka.getKarta().getId().equals(Karta.ZAMJENSKA_KARTA)) {
 			cProdMjesto.setEnabled(true);
 			textBrKarte.setEnabled(true);
@@ -174,7 +174,7 @@ public class ProdajaWindow {
 	}
 
 	private void attachListeners() {
-		ComboSelectionListener c = new ComboSelectionListener();
+		PickerListener c = new PickerListener();
 		cOdPostaje.addSelectionListener(c);
 		cDoPostaje.addSelectionListener(c);
 
@@ -182,7 +182,7 @@ public class ProdajaWindow {
 		cPopust.addSelectionListener(c);
 		cProdMjesto.addSelectionListener(c);
 
-		bAdd.addSelectionListener(new ButtonSelectionListener());
+		bAdd.addSelectionListener(new PlusButtonListener());
 	}
 
 	protected void createContents() {
@@ -304,13 +304,13 @@ public class ProdajaWindow {
 		textRacun.setBounds(5, 385, 460, 155);
 
 		btnClear = new Button(shell, SWT.NONE);
-		btnClear.addSelectionListener(new BtnClearSelectionListener());
+		btnClear.addSelectionListener(new ClearButtonListener());
 		btnClear.setText("Clear");
 		btnClear.setFont(SWTResourceManager.getFont("Liberation Sans", 25, SWT.NORMAL));
 		btnClear.setBounds(470, 385, 160, 155);
 
 		btnPrint = new Button(shell, SWT.NONE);
-		btnPrint.addSelectionListener(new BtnPrintSelectionListener());
+		btnPrint.addSelectionListener(new PrintButtonListener());
 		btnPrint.setText("Print");
 		btnPrint.setFont(SWTResourceManager.getFont("Liberation Sans", 25, SWT.NORMAL));
 		btnPrint.setBounds(635, 385, 158, 155);
@@ -331,7 +331,7 @@ public class ProdajaWindow {
 		lBlagajna.setBounds(5, 544, 785, 54);
 	}
 
-	private class ButtonSelectionListener extends SelectionAdapter {
+	protected class PlusButtonListener extends SelectionAdapter {
 		public void widgetSelected(SelectionEvent e) {
 			Stavka.add(stavka);
 			stavkaToScreen();
@@ -340,7 +340,7 @@ public class ProdajaWindow {
 		}
 	}
 
-	private class BtnPrintSelectionListener extends SelectionAdapter {
+	protected class PrintButtonListener extends SelectionAdapter {
 		@Override
 		public void widgetSelected(SelectionEvent e) {
 			Blagajna.save(vozac, Stavka.getList());
@@ -351,7 +351,7 @@ public class ProdajaWindow {
 		}
 	}
 
-	private class ComboSelectionListener extends SelectionAdapter {
+	protected class PickerListener extends SelectionAdapter {
 		public void widgetDefaultSelected(SelectionEvent e) {
 			if (e.widget.equals(cOdPostaje)) {
 				Integer odIndex = (Integer) cOdPostaje.getData();
@@ -410,7 +410,7 @@ public class ProdajaWindow {
 		}
 	}
 
-	private class BtnClearSelectionListener extends SelectionAdapter {
+	protected class ClearButtonListener extends SelectionAdapter {
 		public void widgetDefaultSelected(SelectionEvent e) {
 			Stavka.clear();
 			stavkaToScreen();
@@ -436,7 +436,9 @@ public class ProdajaWindow {
 	private class LBlagajnaSelectionListener extends SelectionAdapter {
 		@Override
 		public void widgetDefaultSelected(SelectionEvent e) {
-			shell.dispose();
+			ObracunWindow ow = new ObracunWindow();
+			exit = ow.open(shell);
+			if (exit) shell.dispose();
 		}
 
 		public void widgetSelected(SelectionEvent e) {

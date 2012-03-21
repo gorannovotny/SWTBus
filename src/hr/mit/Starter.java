@@ -10,9 +10,8 @@ public class Starter {
 			LoginWindow loginWindow = new LoginWindow();
 			ProdajaWindow prodajaWindow = new ProdajaWindow();
 			loginWindow.open();
-			if (loginWindow.getVozac() != null && loginWindow.getStupac() != null) {
-				prodajaWindow.open(loginWindow.getVozac(), loginWindow.getStupac());
-			}
+			boolean exit = prodajaWindow.open(loginWindow.getVozac(), loginWindow.getStupac());
+			if (exit) break;
 		}
 	}
 
