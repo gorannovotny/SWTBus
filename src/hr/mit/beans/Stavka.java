@@ -9,6 +9,7 @@ import java.util.List;
 public class Stavka {
 
 	private static ArrayList<Stavka> stavkaList = new ArrayList<Stavka>();
+	private static ArrayList<Stavka> oldStavkaList;
 
 	private Postaja odPostaje;
 	private Postaja doPostaje;
@@ -23,12 +24,42 @@ public class Stavka {
 		stavkaList.clear();
 	}
 
+	public static void saveList() {
+		oldStavkaList = new ArrayList<Stavka>(stavkaList);
+	}
+	
+	public static List<Stavka>  getStorno(List<Stavka> sl) {
+		for (Stavka s : sl) {
+			s.setCijena(s.getCijena().negate());
+		}
+		return sl;
+	}
+	
 	public static void add(Stavka stavka) {
 		stavkaList.add(stavka);
 	}
 	
 	public static List<Stavka> getList() {
 		return stavkaList;
+	}
+
+	public static List<Stavka> getOldList() {
+		return oldStavkaList;
+	}
+	
+	public static String getOldDescription() {
+		StringBuffer sb = new StringBuffer("");
+		if (oldStavkaList != null && oldStavkaList.size() != 0) {
+			sb.append(oldStavkaList.get(0).getRelacija());
+			sb.append("\n");
+			sb.append("----------------------------------------");
+			sb.append("\n");
+			for (Stavka s : oldStavkaList) {
+				sb.append(s.getDesc());
+				sb.append("\n");
+			}
+		}
+		return sb.toString();
 	}
 
 	public static String getDescription() {
@@ -53,7 +84,7 @@ public class Stavka {
 	public static BigDecimal getUkupno() {
 		BigDecimal retval = BigDecimal.ZERO;
 		for (Stavka s : stavkaList) {
-			retval = retval.add(s.getCijena());
+			if (! s.getKarta().getId().equals(Karta.ZAMJENSKA_KARTA)) retval = retval.add(s.getCijena());
 		}
 		return retval.setScale(2);
 	}
@@ -83,6 +114,10 @@ public class Stavka {
 
 	public String getRelacija() {
 		return odPostaje.getNaziv() + " - " + doPostaje.getNaziv();
+	}
+
+	public String getRelacijaKontra() {
+		return doPostaje.getNaziv() + " - " + odPostaje.getNaziv();
 	}
 
 	public BigDecimal getCijena() {

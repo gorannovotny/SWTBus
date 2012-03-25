@@ -16,6 +16,7 @@ import org.eclipse.swt.events.SelectionEvent;
 import org.eclipse.swt.widgets.Button;
 import org.eclipse.swt.widgets.Display;
 import org.eclipse.swt.widgets.Label;
+import org.eclipse.swt.widgets.MessageBox;
 import org.eclipse.swt.widgets.Shell;
 import org.eclipse.swt.widgets.Text;
 import org.eclipse.wb.swt.SWTResourceManager;
@@ -43,8 +44,8 @@ public class LoginWindow {
 	 */
 	public void open() {
 		Display display = Display.getDefault();
-		shlPrijava = new Shell(SWT.ON_TOP);
-		shlPrijava.setSize(758, 354);
+		shlPrijava = new Shell(display, SWT.NONE);
+		// shlPrijava.setSize(758, 354);
 		shlPrijava.setBounds(0, 0, 800, 600);
 		shlPrijava.setMaximized(true);
 		createContents();
@@ -135,12 +136,19 @@ public class LoginWindow {
 	protected class ButtonSelectionListener extends SelectionAdapter {
 		public void widgetSelected(SelectionEvent e) {
 			Starter.vozac = Vozac.getBySifra(Integer.parseInt(tVozac.getText()));
+			if (Stupac.getList().length > 0)
 			Starter.stupac = Stupac.get((Integer) comboPolazak.getData());
 			// TODO Starter.vozilo = Vozilo.get((Integer) tVozilo.getData());
-			ProdajaWindow pw = new ProdajaWindow();
-			boolean exit = pw.open();
-			if (exit)
-				shlPrijava.dispose();
+			if (Starter.vozac == null || Starter.stupac == null) {
+				MessageBox mb = new MessageBox(shlPrijava, SWT.OK | SWT.ICON_ERROR);
+				mb.setMessage("Morate prijaviti vozača i liniju!");
+				mb.open();
+			} else {
+				ProdajaWindow pw = new ProdajaWindow();
+				boolean exit = pw.open();
+				if (exit)
+					shlPrijava.dispose();
+			}
 		}
 
 	}

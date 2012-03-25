@@ -6,6 +6,8 @@ import hr.mit.beans.Vozac;
 import java.io.FileWriter;
 import java.io.IOException;
 import java.math.BigDecimal;
+import java.text.DecimalFormat;
+import java.text.NumberFormat;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.List;
@@ -30,16 +32,18 @@ public class PrintUtils {
 	private static String createString(Vozac vozac,List<Stavka> stavkaList) {
 		SimpleDateFormat sdf = new SimpleDateFormat("dd.MM.yyyy. hh:mm");
 		StringBuffer sb = new StringBuffer();
-		sb.append("AP d.d. Varazdin\nGospodarska 56\nOIB: 4434343433\n\nBroj racuna: XXXXXXXXX\nPrijevoznik: AP d.d\n");
+		sb.append("AP d.d. Varazdin\nGospodarska 56\nOIB: 4434343433\n\nBroj racuna: 734234429\nPrijevoznik: AP d.d\n");
 		sb.append("Relacija : " + stavkaList.get(0).getRelacija() + "\n\n");
 		sb.append("Vrsta karte       Popust  Cijena\n--------------------------------\n");
 		for (Stavka stavka : stavkaList) {
 			sb.append(stavka.getDesc() + "\n");	
 		}
 		sb.append("--------------------------------\n");
-		sb.append(String.format("Osnovica PDV 25%%         %7.2f\n", Stavka.getUkupno().multiply(new BigDecimal(0.75))));
-		sb.append(String.format("PDV 25%%                  %7.2f\n", Stavka.getUkupno().multiply(new BigDecimal(0.25))));
-		sb.append(String.format("Za platiti               %7.2f\n", Stavka.getUkupno()));
+		double osnovica = Stavka.getUkupno().doubleValue();
+		
+		sb.append(String.format("Osnovica PDV 25%%         %7.2f\n",osnovica*.75));
+		sb.append(String.format("PDV 25%%                  %7.2f\n", osnovica*0.25));
+		sb.append(String.format("Za platiti               %7.2f\n", osnovica));
 		sb.append("\n");
 		sb.append("Vozač : " + vozac.getNaziv() + "\n" );
 		sb.append(sdf.format(new Date())+"\n");
@@ -49,14 +53,20 @@ public class PrintUtils {
 				sb.append("Talon: "+ stavka.getRelacija()+"\n");
 				sb.append("Vrsta karte: "+ stavka.getKarta().getNaziv() + "\n");
 				sb.append("Broj karte: " + stavka.getBrojKarte() + "\n");
-				sb.append(barcode);
-				sb.append(stavka.getBrojKarte()+"\n");
+				sb.append("--------------------------------\n");
+			}
+			if (stavka.getKarta().getStVoznji().equals(2)) {
+				sb.append("Talon: "+ stavka.getRelacija()+"\n");
+				sb.append("Vrsta karte: "+ stavka.getKarta().getNaziv() + "\n");
+				sb.append("Broj karte: " + stavka.getBrojKarte() + "\n");
+				sb.append("--------------------------------\n");
+				sb.append("Talon: "+ stavka.getRelacijaKontra()+"\n");
+				sb.append("Vrsta karte: "+ stavka.getKarta().getNaziv() + "\n");
+				sb.append("Broj karte: " + stavka.getBrojKarte() + "\n");
 				sb.append("--------------------------------\n");
 			}
 		}
-		sb.append("\n\n\n");	
-
-		
+		sb.append(" \n \n");	
 		return sb.toString();
 	}
 	

@@ -17,6 +17,7 @@ import java.text.DecimalFormat;
 import java.text.NumberFormat;
 import java.text.SimpleDateFormat;
 import java.util.Date;
+import java.util.List;
 import java.util.Random;
 
 import org.eclipse.swt.SWT;
@@ -68,6 +69,8 @@ public class ProdajaWindow {
 
 	protected boolean exit;
 	private Button btnZadnji;
+
+	protected List<Stavka> oldRacun;
 
 	public ProdajaWindow() {
 
@@ -172,6 +175,10 @@ public class ProdajaWindow {
 			btnPrint.setEnabled(false);
 			btnClear.setEnabled(false);
 		}
+		if (Stavka.getOldList() == null || Stavka.getOldList().isEmpty())
+			btnZadnji.setEnabled(false);
+		else
+			btnZadnji.setEnabled(true);
 
 	}
 
@@ -310,6 +317,7 @@ public class ProdajaWindow {
 		bAdd.setText("+");
 
 		lblUkupno = new Label(shell, SWT.RIGHT);
+		lblUkupno.setForeground(SWTResourceManager.getColor(SWT.COLOR_RED));
 		lblUkupno.setBackground(SWTResourceManager.getColor(SWT.COLOR_GRAY));
 		lblUkupno.setText("");
 		lblUkupno.setFont(SWTResourceManager.getFont("Liberation Sans", 50, SWT.NORMAL));
@@ -326,6 +334,7 @@ public class ProdajaWindow {
 		btnClear.setBounds(470, 385, 160, 75);
 
 		btnZadnji = new Button(shell, SWT.NONE);
+		btnZadnji.addSelectionListener(new BtnZadnjiSelectionListener());
 		btnZadnji.setText("Zadnji");
 		btnZadnji.setFont(SWTResourceManager.getFont("Liberation Sans", 25, SWT.NORMAL));
 		btnZadnji.setBounds(470, 465, 160, 75);
@@ -369,6 +378,7 @@ public class ProdajaWindow {
 			Blagajna.save(Starter.vozac, Stavka.getList());
 			lBlagajna.setText("Blagajna: " + Blagajna.getSaldo().toString());
 			PrintUtils.print(Starter.vozac, Stavka.getList());
+			Stavka.saveList();
 			Stavka.clear();
 			stavkaToScreen();
 		}
@@ -470,6 +480,20 @@ public class ProdajaWindow {
 		}
 
 		public void widgetSelected(SelectionEvent e) {
+			widgetDefaultSelected(e);
+		}
+	}
+
+	private class BtnZadnjiSelectionListener extends SelectionAdapter {
+		@Override
+		public void widgetDefaultSelected(SelectionEvent e) {
+			Zadnji z = new Zadnji(shell);
+			z.open();
+		}
+
+		@Override
+		public void widgetSelected(SelectionEvent e) {
+			// TODO Auto-generated method stub
 			widgetDefaultSelected(e);
 		}
 	}

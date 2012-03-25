@@ -39,7 +39,7 @@ public class Blagajna {
 	public static BigDecimal getSaldo() {
 		BigDecimal saldo = BigDecimal.ZERO;
 		try {
-			PreparedStatement ps = DbUtil.getConnection().prepareStatement("SELECT sum(cena) FROM PTKTProdaja"); 
+			PreparedStatement ps = DbUtil.getConnection().prepareStatement("SELECT sum(cena) FROM PTKTProdaja WHERE StatusZK IS NULL"); 
 			double ss = DbUtil.getSingleResultDouble(ps);
 			saldo = new BigDecimal(ss);
 		} catch (SQLException e) {
@@ -70,5 +70,14 @@ public class Blagajna {
 			
 		}
 		return retval.toString();
+	}
+	
+	public static void closeObracun() {
+		String sql = "UPDATE PTKTProdaja SET StatusZK = 'Z' WHERE StatusZK IS NULL";
+		try {
+			DbUtil.getConnection().createStatement().execute(sql);
+		} catch (SQLException e) {
+			e.printStackTrace();
+		}
 	}
 }
