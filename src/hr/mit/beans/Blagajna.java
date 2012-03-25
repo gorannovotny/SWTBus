@@ -5,6 +5,7 @@ import hr.mit.utils.DbUtil;
 import java.io.ObjectInputStream.GetField;
 import java.math.BigDecimal;
 import java.sql.PreparedStatement;
+import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.List;
 
@@ -47,4 +48,27 @@ public class Blagajna {
 		return saldo.setScale(2,BigDecimal.ROUND_DOWN);
 	}
 	
+	public static String getObracun() {
+		double ukupno = 0;
+		StringBuffer retval = new StringBuffer("Tip                           Komada  Ukupno\n--------------------------------------------\n");
+		try {
+			PreparedStatement ps = DbUtil.getConnection().prepareStatement("select a.VoznaKartaID,c.Opis,COUNT(*) Komada,SUM(Cena) cena from ptktprodaja a,PTKTVozneKarte b,PTKTTipiKarti c WHERE a.VoznaKartaID = b.ID AND c.ID = b.TipKarteID AND StatusZK IS NULL GROUP BY 1,2 ORDER BY 1,2");
+			ResultSet rs = ps.executeQuery();
+			while(rs.next()){
+				int id = rs.getInt("VoznaKartaID");
+				String opis = rs.getString("Opis");
+				int komada = rs.getInt("Komada");
+				double cena =  rs.getDouble("cena");
+				retval.append(String.format("%-30s %5d %7.2f\n",opis,komada,cena));
+				if (id != Karta.ZAMJENSKA_KARTA) {
+					ukupno = ukupno + cena;
+				}
+			}
+			retval.append(String.format("--------------------------------------------\n%-36s %7.2f","Blagajna",ukupno));
+		} catch(SQLException e) {
+			e.printStackTrace();
+			
+		}
+		return retval.toString();
+	}
 }

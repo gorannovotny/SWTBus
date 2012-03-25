@@ -37,7 +37,7 @@ public class Karta {
 		} catch (SQLException e) {
 			e.printStackTrace();
 		}
-		kartaList.add(new Karta(Karta.ZAMJENSKA_KARTA,"Zamjenska karta",1,0,0,0,0,0.0,0));	
+//		kartaList.add(new Karta(Karta.ZAMJENSKA_KARTA,"Zamjenska karta",1,0,0,0,0,0.0,0));	
 	}
 
 	public Karta(int id, String naziv,int stVoznji, int nacinDolocanjaCene, int tarifniRazredID, double FiksnaCena, int kmPogoja,double popustProcent,int tip) {

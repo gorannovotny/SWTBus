@@ -39,8 +39,6 @@ public class LoginWindow {
 	protected Label lOpisVozac;
 	protected Label lOpisLinije;
 
-	private Button btnNewButton;
-
 	/**
 	 * @wbp.parser.entryPoint
 	 */
@@ -118,11 +116,6 @@ public class LoginWindow {
 		comboPolazak.setFont(SWTResourceManager.getFont("Liberation Sans", 20, SWT.NORMAL));
 		comboPolazak.setBounds(225, 280, 80, 50);
 
-		btnNewButton = new Button(shlPrijava, SWT.NONE);
-		btnNewButton.addSelectionListener(new ComboPolazakSelectionListener());
-		btnNewButton.setBounds(40, 469, 75, 26);
-		btnNewButton.setText("New Button");
-
 		button = new Button(shlPrijava, SWT.ARROW | SWT.RIGHT);
 		button.setFont(SWTResourceManager.getFont("Liberation Sans", 30, SWT.NORMAL));
 		button.setBounds(700, 480, 60, 56);
@@ -144,7 +137,7 @@ public class LoginWindow {
 		public void widgetSelected(SelectionEvent e) {
 			Starter.vozac = Vozac.getBySifra(Integer.parseInt(tVozac.getText()));
 			Starter.stupac = Stupac.get((Integer) comboPolazak.getData());
-// TODO			Starter.vozilo = Vozilo.get((Integer) tVozilo.getData());
+			// TODO Starter.vozilo = Vozilo.get((Integer) tVozilo.getData());
 			shlPrijava.dispose();
 		}
 
@@ -197,9 +190,6 @@ public class LoginWindow {
 	private class ComboPolazakSelectionListener extends SelectionAdapter {
 		@Override
 		public void widgetDefaultSelected(SelectionEvent e) {
-			if (e.widget.equals(btnNewButton)) {
-				throw new RuntimeException();
-			}
 			Integer index = (Integer) comboPolazak.getData();
 			Picker picker = new Picker(comboPolazak, Stupac.getArrayList(), index);
 			comboPolazak = picker.open();
@@ -210,6 +200,5 @@ public class LoginWindow {
 			widgetDefaultSelected(e);
 		}
 	}
-
 
 }

@@ -52,7 +52,7 @@ public class ProdajaWindow {
 	Stavka stavka;
 
 	CLabel lClock;
-	private Button lStupac;
+	private Button btnStupac;
 	private Label lblOdPostaje;
 	private Label lblDoPostaje;
 	private Label lblVrstaKarte;
@@ -187,12 +187,12 @@ public class ProdajaWindow {
 		shell.setBounds(0, 0, 800, 600);
 		shell.setMaximized(true);
 
-		lStupac = new Button(shell, SWT.NONE);
-		lStupac.setAlignment(SWT.LEFT);
-		lStupac.setFont(SWTResourceManager.getFont("Liberation Sans", 15, SWT.NORMAL));
-		lStupac.setBounds(5, 0, 785, 50);
-		lStupac.setText("Vozač: " + Starter.vozac.getNaziv() + "\t\tRelacija: " + Starter.stupac.getOpis() + "@" + Starter.stupac.getVremeOdhoda());
-		lStupac.addSelectionListener(new SelectionAdapter() {
+		btnStupac = new Button(shell, SWT.NONE);
+		btnStupac.setAlignment(SWT.LEFT);
+		btnStupac.setFont(SWTResourceManager.getFont("Liberation Sans", 15, SWT.NORMAL));
+		btnStupac.setBounds(5, 0, 785, 50);
+		btnStupac.setText("Vozač: " + Starter.vozac.getNaziv() + "\t\tRelacija: " + Starter.stupac.getOpis() + "@" + Starter.stupac.getVremeOdhoda());
+		btnStupac.addSelectionListener(new SelectionAdapter() {
 			@Override
 			public void widgetDefaultSelected(SelectionEvent e) {
 				shell.dispose();
@@ -302,7 +302,7 @@ public class ProdajaWindow {
 
 		btnClear = new Button(shell, SWT.NONE);
 		btnClear.addSelectionListener(new ClearButtonListener());
-		btnClear.setText("Clear");
+		btnClear.setText("Briši");
 		btnClear.setFont(SWTResourceManager.getFont("Liberation Sans", 25, SWT.NORMAL));
 		btnClear.setBounds(470, 385, 160, 155);
 
