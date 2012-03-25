@@ -63,7 +63,7 @@ public class Picker extends Dialog {
 			b.setFont(c.getFont());
 			b.setLocation(0,(i+1) * c.getSize().y);
 			b.setSize(c.getSize());
-			b.setAlignment(SWT.LEFT);
+			b.setAlignment(c.getAlignment());
 			b.setText(items.get(pos));
 			b.setData(pos);
 			b.addSelectionListener(new ButtonSelectListener());

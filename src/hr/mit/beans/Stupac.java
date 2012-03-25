@@ -18,11 +18,11 @@ public class Stupac {
 	private String opis;
 	private String vremeOdhoda;
 
-	public static void setVozniRed(String sifraVR) {
+	public static void setVozniRed(Integer sifraVR) {
 		try {
-			String sql = "select a.ID,a.VozniRedID,a.VarijantaVRID,a.SmerVoznje,b.Opis1,b.Opis2,a.VremeOdhoda from PTStupciVR a,PTVozniRedi b WHERE a.VozniRedID = b.id AND b.Sifra = ? ORDER BY a.VremeOdhoda";
+			String sql = "select a.ID,a.VozniRedID,a.VarijantaVRID,a.SmerVoznje,b.Opis1,b.Opis2,a.VremeOdhoda from PTStupciVR a,PTVozniRedi b WHERE a.VozniRedID = b.id AND b.ID = ? ORDER BY a.VremeOdhoda";
 			PreparedStatement ps = DbUtil.getConnection().prepareStatement(sql);
-			ps.setString(1, sifraVR);
+			ps.setInt(1, sifraVR);
 			ResultSet rs = ps.executeQuery();
 			stupacList.clear();
 			while (rs.next()) {

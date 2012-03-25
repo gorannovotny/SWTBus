@@ -12,7 +12,8 @@ import java.util.List;
 
 public class PrintUtils {
 	private static char[] reset = { 27, 64, 13 };
-	
+	private static char[] barcode = { 29,107,72,15 };
+
 	public static void print(Vozac vozac,List<Stavka> stavkaList) {
 		try {
 			FileWriter out = new FileWriter("/dev/ttyS0");
@@ -29,20 +30,31 @@ public class PrintUtils {
 	private static String createString(Vozac vozac,List<Stavka> stavkaList) {
 		SimpleDateFormat sdf = new SimpleDateFormat("dd.MM.yyyy. hh:mm");
 		StringBuffer sb = new StringBuffer();
-		sb.append("AP d.d. Varazdin\rGospodarska 56\rOIB: 4434343433\n\nBroj racuna: XXXXXXXXX\rPrijevoznik: AP d.d\r");
+		sb.append("AP d.d. Varazdin\nGospodarska 56\nOIB: 4434343433\n\nBroj racuna: XXXXXXXXX\nPrijevoznik: AP d.d\n");
 		sb.append("Relacija : " + stavkaList.get(0).getRelacija() + "\n\n");
-		sb.append("Vrsta karte       Popust  Cijena\r--------------------------------\r");
+		sb.append("Vrsta karte       Popust  Cijena\n--------------------------------\n");
 		for (Stavka stavka : stavkaList) {
-			sb.append(stavka.getDesc() + "\r");	
+			sb.append(stavka.getDesc() + "\n");	
 		}
-		sb.append("--------------------------------\r");
-		sb.append(String.format("Osnovica PDV 25%%         %7.2f\r", Stavka.getUkupno().multiply(new BigDecimal(0.75))));
-		sb.append(String.format("PDV 25%%                  %7.2f\r", Stavka.getUkupno().multiply(new BigDecimal(0.25))));
-		sb.append(String.format("Za platiti               %7.2f\r", Stavka.getUkupno()));
-		sb.append("\r");
+		sb.append("--------------------------------\n");
+		sb.append(String.format("Osnovica PDV 25%%         %7.2f\n", Stavka.getUkupno().multiply(new BigDecimal(0.75))));
+		sb.append(String.format("PDV 25%%                  %7.2f\n", Stavka.getUkupno().multiply(new BigDecimal(0.25))));
+		sb.append(String.format("Za platiti               %7.2f\n", Stavka.getUkupno()));
+		sb.append("\n");
 		sb.append("Vozač : " + vozac.getNaziv() + "\n" );
-		sb.append(sdf.format(new Date())+"\r");
-		sb.append("--------------------------------\r");
+		sb.append(sdf.format(new Date())+"\n");
+		sb.append("--------------------------------\n");
+		for (Stavka stavka : stavkaList) {
+			if (stavka.getKarta().getStVoznji().equals(1)) {
+				sb.append("Talon: "+ stavka.getRelacija()+"\n");
+				sb.append("Vrsta karte: "+ stavka.getKarta().getNaziv() + "\n");
+				sb.append("Broj karte: " + stavka.getBrojKarte() + "\n");
+				sb.append(barcode);
+				sb.append(stavka.getBrojKarte()+"\n");
+				sb.append("--------------------------------\n");
+			}
+		}
+		sb.append("\n\n\n");	
 
 		
 		return sb.toString();

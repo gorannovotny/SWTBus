@@ -13,13 +13,11 @@ public class Starter {
 	public static Vozilo vozilo = null;
 	
 	public static void main(String[] args) {
-		while (true) {
 			LoginWindow loginWindow = new LoginWindow();
-			ProdajaWindow prodajaWindow = new ProdajaWindow();
 			loginWindow.open();
-			boolean exit = prodajaWindow.open();
-			if (exit) break;
-		}
+//			ProdajaWindow prodajaWindow = new ProdajaWindow();
+//			boolean exit = prodajaWindow.open();
+//			if (exit) break;
 	}
 
 }

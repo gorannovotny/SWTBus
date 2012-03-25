@@ -67,6 +67,7 @@ public class ProdajaWindow {
 	private TMouseListener mouseListener;
 
 	protected boolean exit;
+	private Button btnZadnji;
 
 	public ProdajaWindow() {
 
@@ -163,9 +164,13 @@ public class ProdajaWindow {
 		if (Stavka.getCount() > 0) {
 			cOdPostaje.setEnabled(false);
 			cDoPostaje.setEnabled(false);
+			btnPrint.setEnabled(true);
+			btnClear.setEnabled(true);
 		} else {
 			cOdPostaje.setEnabled(true);
 			cDoPostaje.setEnabled(true);
+			btnPrint.setEnabled(false);
+			btnClear.setEnabled(false);
 		}
 
 	}
@@ -184,10 +189,12 @@ public class ProdajaWindow {
 
 	protected void createContents() {
 		shell = new Shell(SWT.SYSTEM_MODAL | SWT.ON_TOP);
+		shell.setBackground(SWTResourceManager.getColor(SWT.COLOR_GRAY));
 		shell.setBounds(0, 0, 800, 600);
 		shell.setMaximized(true);
 
 		btnStupac = new Button(shell, SWT.NONE);
+		btnStupac.setBackground(SWTResourceManager.getColor(SWT.COLOR_GRAY));
 		btnStupac.setAlignment(SWT.LEFT);
 		btnStupac.setFont(SWTResourceManager.getFont("Liberation Sans", 15, SWT.NORMAL));
 		btnStupac.setBounds(5, 0, 785, 50);
@@ -205,11 +212,13 @@ public class ProdajaWindow {
 		});
 
 		lblOdPostaje = new Label(shell, SWT.NONE);
+		lblOdPostaje.setBackground(SWTResourceManager.getColor(SWT.COLOR_GRAY));
 		lblOdPostaje.setFont(SWTResourceManager.getFont("Liberation Sans", 10, SWT.NORMAL));
 		lblOdPostaje.setBounds(5, 50, 63, 15);
 		lblOdPostaje.setText("Od postaje");
 
 		lblDoPostaje = new Label(shell, SWT.NONE);
+		lblDoPostaje.setBackground(SWTResourceManager.getColor(SWT.COLOR_GRAY));
 		lblDoPostaje.setText("Do postaje");
 		lblDoPostaje.setFont(SWTResourceManager.getFont("Liberation Sans", 10, SWT.NORMAL));
 		lblDoPostaje.setBounds(400, 50, 63, 15);
@@ -217,6 +226,7 @@ public class ProdajaWindow {
 		cOdPostaje = new Button(shell, SWT.READ_ONLY);
 		cOdPostaje.setAlignment(SWT.LEFT);
 		cOdPostaje.setFont(SWTResourceManager.getFont("Liberation Sans", 25, SWT.NORMAL));
+		// cOdPostaje.setBackground(SWTResourceManager.getColor(SWT.COLOR_LIST_SELECTION));
 		cOdPostaje.setBounds(5, 65, 390, 70);
 		cOdPostaje.setText(Postaja.getList()[0]);
 		cOdPostaje.setData(0);
@@ -224,16 +234,20 @@ public class ProdajaWindow {
 		cDoPostaje = new Button(shell, SWT.READ_ONLY);
 		cDoPostaje.setAlignment(SWT.LEFT);
 		cDoPostaje.setFont(SWTResourceManager.getFont("Liberation Sans", 25, SWT.NORMAL));
+		// cDoPostaje.setBackground(SWTResourceManager.getColor(SWT.COLOR_LIST_SELECTION));
+
 		cDoPostaje.setBounds(400, 65, 390, 70);
 		cDoPostaje.setText(Postaja.getList()[1]);
 		cDoPostaje.setData(1);
 
 		lblVrstaKarte = new Label(shell, SWT.NONE);
+		lblVrstaKarte.setBackground(SWTResourceManager.getColor(SWT.COLOR_GRAY));
 		lblVrstaKarte.setText("Vrsta karte");
 		lblVrstaKarte.setFont(SWTResourceManager.getFont("Liberation Sans", 10, SWT.NORMAL));
 		lblVrstaKarte.setBounds(5, 135, 64, 15);
 
 		lblPopust = new Label(shell, SWT.NONE);
+		lblPopust.setBackground(SWTResourceManager.getColor(SWT.COLOR_GRAY));
 		lblPopust.setText("Popust");
 		lblPopust.setFont(SWTResourceManager.getFont("Liberation Sans", 10, SWT.NORMAL));
 		lblPopust.setBounds(400, 135, 41, 15);
@@ -255,16 +269,19 @@ public class ProdajaWindow {
 		;
 
 		lblProdajnoMjesto = new Label(shell, SWT.NONE);
+		lblProdajnoMjesto.setBackground(SWTResourceManager.getColor(SWT.COLOR_GRAY));
 		lblProdajnoMjesto.setText("Prodajno mjesto");
 		lblProdajnoMjesto.setFont(SWTResourceManager.getFont("Liberation Sans", 10, SWT.NORMAL));
 		lblProdajnoMjesto.setBounds(5, 220, 94, 15);
 
 		lblBrojKarte = new Label(shell, SWT.NONE);
+		lblBrojKarte.setBackground(SWTResourceManager.getColor(SWT.COLOR_GRAY));
 		lblBrojKarte.setText("Broj karte");
 		lblBrojKarte.setFont(SWTResourceManager.getFont("Liberation Sans", 10, SWT.NORMAL));
 		lblBrojKarte.setBounds(340, 220, 94, 15);
 
 		lblCijena = new Label(shell, SWT.NONE);
+		lblCijena.setBackground(SWTResourceManager.getColor(SWT.COLOR_GRAY));
 		lblCijena.setText("Cijena");
 		lblCijena.setFont(SWTResourceManager.getFont("Liberation Sans", 10, SWT.NORMAL));
 		lblCijena.setBounds(640, 220, 94, 15);
@@ -288,13 +305,15 @@ public class ProdajaWindow {
 		textCijena.setText("3334,12");
 
 		bAdd = new Button(shell, SWT.NONE);
+		bAdd.setFont(SWTResourceManager.getFont("Liberation Sans", 25, SWT.NORMAL));
 		bAdd.setBounds(5, 310, 460, 70);
 		bAdd.setText("+");
 
 		lblUkupno = new Label(shell, SWT.RIGHT);
+		lblUkupno.setBackground(SWTResourceManager.getColor(SWT.COLOR_GRAY));
 		lblUkupno.setText("");
 		lblUkupno.setFont(SWTResourceManager.getFont("Liberation Sans", 50, SWT.NORMAL));
-		lblUkupno.setBounds(470, 310, 320, 75);
+		lblUkupno.setBounds(470, 310, 320, 70);
 
 		textRacun = new Text(shell, SWT.BORDER | SWT.MULTI);
 		textRacun.setFont(SWTResourceManager.getFont("Liberation Mono", 14, SWT.NORMAL));
@@ -304,7 +323,12 @@ public class ProdajaWindow {
 		btnClear.addSelectionListener(new ClearButtonListener());
 		btnClear.setText("Briši");
 		btnClear.setFont(SWTResourceManager.getFont("Liberation Sans", 25, SWT.NORMAL));
-		btnClear.setBounds(470, 385, 160, 155);
+		btnClear.setBounds(470, 385, 160, 75);
+
+		btnZadnji = new Button(shell, SWT.NONE);
+		btnZadnji.setText("Zadnji");
+		btnZadnji.setFont(SWTResourceManager.getFont("Liberation Sans", 25, SWT.NORMAL));
+		btnZadnji.setBounds(470, 465, 160, 75);
 
 		btnPrint = new Button(shell, SWT.NONE);
 		btnPrint.addSelectionListener(new PrintButtonListener());
@@ -313,6 +337,7 @@ public class ProdajaWindow {
 		btnPrint.setBounds(635, 385, 158, 155);
 
 		lClock = new CLabel(shell, SWT.LEFT);
+		lClock.setBackground(SWTResourceManager.getColor(SWT.COLOR_GRAY));
 		// lClock.setForeground(SWTResourceManager.getColor(SWT.COLOR_WHITE));
 		// lClock.setBackground(SWTResourceManager.getColor(SWT.COLOR_BLACK));
 		lClock.setFont(SWTResourceManager.getFont("Liberation Sans", 20, SWT.NORMAL));
@@ -320,6 +345,7 @@ public class ProdajaWindow {
 		lClock.setText(new SimpleDateFormat("HH:mm:ss").format(new Date()));
 
 		lBlagajna = new Button(shell, SWT.LEFT);
+		lBlagajna.setBackground(SWTResourceManager.getColor(SWT.COLOR_GRAY));
 		lBlagajna.addSelectionListener(new LBlagajnaSelectionListener());
 		lBlagajna.setText("Blagajna: " + Blagajna.getSaldo().toString());
 		// lBlagajna.setForeground(SWTResourceManager.getColor(192, 192, 192));
@@ -386,7 +412,11 @@ public class ProdajaWindow {
 				Popust.setKartaStupac(Karta.get((Integer) cKarta.getData()), Starter.stupac);
 				cPopust.setData(0);
 				cPopust.setText(Popust.getList()[0]);
-				;
+				if (stavka.getKarta().getId().equals(Karta.ZAMJENSKA_KARTA)) {
+					cProdMjesto.setData(1);
+					cProdMjesto.setText(ProdajnoMjesto.getList()[1]);
+					stavka.setProdajnoMjesto(ProdajnoMjesto.get(1));
+				}
 			} else if (e.widget.equals(cPopust)) {
 				Integer index = (Integer) cPopust.getData();
 				Picker picker = new Picker(cPopust, Popust.getArrayList(), index);

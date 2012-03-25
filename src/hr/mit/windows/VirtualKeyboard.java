@@ -5,10 +5,10 @@ import org.eclipse.swt.events.SelectionAdapter;
 import org.eclipse.swt.events.SelectionEvent;
 import org.eclipse.swt.events.SelectionListener;
 import org.eclipse.swt.widgets.Button;
-import org.eclipse.swt.widgets.Dialog;
 import org.eclipse.swt.widgets.Display;
 import org.eclipse.swt.widgets.Shell;
 import org.eclipse.swt.widgets.Text;
+import org.eclipse.wb.swt.SWTResourceManager;
 
 public class VirtualKeyboard {
 
@@ -43,6 +43,7 @@ public class VirtualKeyboard {
 	/**
 	 * Create contents of the dialog.
 	 */
+	@SuppressWarnings("unused")
 	private void createContents() {
 		shell = new Shell(shell, SWT.APPLICATION_MODAL | SWT.ON_TOP);
 		shell.setSize(800, 215);
@@ -100,7 +101,10 @@ public class VirtualKeyboard {
 		// MyButton plus = new MyButton(shell, "+", 4, 11, listener);
 
 		MyButton ok = new MyButton(shell, "\u21b5", 5, 11, listener);
+		ok.setBackground(SWTResourceManager.getColor(SWT.COLOR_LIST_SELECTION));
 		MyButton ok1 = new MyButton(shell, "\u21b5", 5, 15, listener);
+		ok1.setBackground(SWTResourceManager.getColor(SWT.COLOR_LIST_SELECTION));
+
 		MyButton space = new MyButton(shell, " ", 5, 3, listener);
 		MyButton slash = new MyButton(shell, "/", 5, 10, listener);
 
