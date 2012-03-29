@@ -30,9 +30,9 @@ public class PrintUtils {
 	}
 
 	private static String createString(Vozac vozac,List<Stavka> stavkaList) {
-		SimpleDateFormat sdf = new SimpleDateFormat("dd.MM.yyyy. hh:mm");
+		SimpleDateFormat sdf = new SimpleDateFormat("dd.MM.yyyy. HH:mm");
 		StringBuffer sb = new StringBuffer();
-		sb.append("AP d.d. Varazdin\nGospodarska 56\nOIB: 4434343433\n\nBroj racuna: 734234429\nPrijevoznik: AP d.d\n");
+		sb.append("AP d.d. Varazdin u stecaju\nGospodarska 56\nOIB: 51631089795\n\nBroj racuna: 734234429\nPrijevoznik: AP d.d\n");
 		sb.append("Relacija : " + stavkaList.get(0).getRelacija() + "\n\n");
 		sb.append("Vrsta karte       Popust  Cijena\n--------------------------------\n");
 		for (Stavka stavka : stavkaList) {
