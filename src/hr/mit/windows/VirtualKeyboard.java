@@ -1,5 +1,8 @@
 package hr.mit.windows;
 
+import java.text.SimpleDateFormat;
+import java.util.Date;
+
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.events.SelectionAdapter;
 import org.eclipse.swt.events.SelectionEvent;
@@ -31,12 +34,26 @@ public class VirtualKeyboard {
 		createContents();
 		shell.open();
 		shell.layout();
-		Display display = shell.getDisplay();
+		final Display display = shell.getDisplay();
+		Runnable r = new Runnable() {
+			public void run() {
+				if (shell.getBackground().equals(SWTResourceManager.getColor(SWT.COLOR_WHITE)))
+						shell.setBackground(SWTResourceManager.getColor(SWT.COLOR_GRAY));
+				else
+					shell.setBackground(SWTResourceManager.getColor(SWT.COLOR_WHITE));
+							display.timerExec(400, this);
+			}
+		};
+
+		display.timerExec(400, r);
+
 		while (!shell.isDisposed()) {
 			if (!display.readAndDispatch()) {
 				display.sleep();
 			}
 		}
+		display.timerExec(-1, r);
+
 		return result;
 	}
 
