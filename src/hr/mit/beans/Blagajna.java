@@ -2,7 +2,6 @@ package hr.mit.beans;
 
 import hr.mit.utils.DbUtil;
 
-import java.io.ObjectInputStream.GetField;
 import java.math.BigDecimal;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;

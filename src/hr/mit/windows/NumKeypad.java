@@ -180,6 +180,7 @@ public class NumKeypad extends Dialog {
 	}
 
 	private class ButtonSelectionListener extends SelectionAdapter {
+		@Override
 		public void widgetSelected(SelectionEvent e) {
 			Button b = (Button) e.widget;
 			if (b.getText().equals("OK")) {

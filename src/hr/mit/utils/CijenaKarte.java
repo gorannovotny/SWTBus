@@ -7,7 +7,6 @@ import hr.mit.beans.Stupac;
 
 import java.math.BigDecimal;
 import java.sql.PreparedStatement;
-import java.sql.ResultSet;
 import java.sql.SQLException;
 
 public class CijenaKarte {

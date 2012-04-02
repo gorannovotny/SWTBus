@@ -12,7 +12,6 @@ import org.eclipse.swt.widgets.Display;
 import org.eclipse.swt.widgets.Label;
 import org.eclipse.swt.widgets.Shell;
 import org.eclipse.wb.swt.SWTResourceManager;
-import org.eclipse.swt.widgets.Text;
 import org.eclipse.swt.events.SelectionAdapter;
 
 public class ObracunWindow {
@@ -61,10 +60,12 @@ public class ObracunWindow {
 		backButton.setBounds(227, 350, 150, 50);
 		backButton.setText("Povratak");
 		backButton.addSelectionListener(new SelectionListener() {
+			@Override
 			public void widgetSelected(SelectionEvent arg0) {
 				widgetDefaultSelected(arg0);
 			}
 
+			@Override
 			public void widgetDefaultSelected(SelectionEvent arg0) {
 				shell.dispose();
 			}
@@ -81,10 +82,12 @@ public class ObracunWindow {
 		btnGaenje.setFont(SWTResourceManager.getFont("Liberation Sans", 20, SWT.NORMAL));
 		btnGaenje.setBounds(330, 435, 150, 50);
 		exitButton.addSelectionListener(new SelectionListener() {
+			@Override
 			public void widgetSelected(SelectionEvent arg0) {
 				widgetDefaultSelected(arg0);
 			}
 
+			@Override
 			public void widgetDefaultSelected(SelectionEvent arg0) {
 				Blagajna.closeObracun();
 				shell.dispose();
@@ -95,6 +98,7 @@ public class ObracunWindow {
 	}
 
 	private class BtnGaenjeSelectionListener extends SelectionAdapter {
+		@Override
 		public void widgetSelected(SelectionEvent e) {
 			try {
 				Runtime.getRuntime().exec("/sbin/shutdown now");

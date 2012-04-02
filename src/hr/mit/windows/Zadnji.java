@@ -5,14 +5,12 @@ import hr.mit.beans.Stavka;
 import hr.mit.utils.PrintUtils;
 
 import org.eclipse.swt.SWT;
-import org.eclipse.swt.widgets.Dialog;
 import org.eclipse.swt.widgets.Display;
 import org.eclipse.swt.widgets.Shell;
 import org.eclipse.swt.widgets.Text;
 import org.eclipse.swt.widgets.Button;
 import org.eclipse.swt.events.SelectionAdapter;
 import org.eclipse.swt.events.SelectionEvent;
-import org.eclipse.swt.widgets.Label;
 import org.eclipse.wb.swt.SWTResourceManager;
 
 public class Zadnji {
@@ -84,6 +82,7 @@ public class Zadnji {
 	}
 
 	private class BtnZatvoriSelectionListener extends SelectionAdapter {
+		@Override
 		public void widgetDefaultSelected(SelectionEvent e) {
 			if (e.widget.equals(btnZatvori))
 				shell.dispose();
@@ -91,6 +90,7 @@ public class Zadnji {
 				PrintUtils.print(Starter.vozac, Stavka.getStorno(Stavka.getOldList()));
 		}
 
+		@Override
 		public void widgetSelected(SelectionEvent e) {
 			widgetDefaultSelected(e);
 		}

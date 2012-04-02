@@ -25,6 +25,7 @@ public class MyButton extends Button {
 	}
 	
 
+	@Override
 	protected void checkSubclass() {
 	}
 }

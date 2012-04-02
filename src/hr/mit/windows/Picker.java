@@ -10,7 +10,6 @@ import org.eclipse.swt.widgets.Button;
 import org.eclipse.swt.widgets.Dialog;
 import org.eclipse.swt.widgets.Display;
 import org.eclipse.swt.widgets.Shell;
-import org.eclipse.wb.swt.SWTResourceManager;
 
 public class Picker extends Dialog {
 
@@ -106,6 +105,7 @@ public class Picker extends Dialog {
 	}
 	
 	class ButtonDownListener extends SelectionAdapter {
+		@Override
 		public void widgetSelected(SelectionEvent e) {
 			for (int i = 0; i < (MAX_PICKS-1); i++) {
 				buttonList.get(i).setText(buttonList.get(i+1).getText());
@@ -121,6 +121,7 @@ public class Picker extends Dialog {
 	}
 
 	class ButtonUpListener extends SelectionAdapter {
+		@Override
 		public void widgetSelected(SelectionEvent e) {
 			for (int i = (MAX_PICKS -1); i > 0 ; i--) {
 				buttonList.get(i).setText(buttonList.get(i-1).getText());
@@ -135,6 +136,7 @@ public class Picker extends Dialog {
 	}
 
 	class ButtonSelectListener extends SelectionAdapter {
+		@Override
 		public void widgetSelected(SelectionEvent e) {
 			pos = (Integer) ((Button) e.widget).getData();
 			shell.dispose();

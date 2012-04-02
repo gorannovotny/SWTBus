@@ -7,8 +7,6 @@ import hr.mit.beans.Popust;
 import hr.mit.beans.Postaja;
 import hr.mit.beans.ProdajnoMjesto;
 import hr.mit.beans.Stavka;
-import hr.mit.beans.Stupac;
-import hr.mit.beans.Vozac;
 import hr.mit.utils.CijenaKarte;
 import hr.mit.utils.PrintUtils;
 
@@ -95,6 +93,7 @@ public class ProdajaWindow {
 		shell.open();
 		shell.layout();
 		Runnable r = new Runnable() {
+			@Override
 			public void run() {
 				lClock.setText(new SimpleDateFormat("HH:mm:ss").format(new Date()));
 				display.timerExec(1000, this);
@@ -364,6 +363,7 @@ public class ProdajaWindow {
 	}
 
 	protected class PlusButtonListener extends SelectionAdapter {
+		@Override
 		public void widgetSelected(SelectionEvent e) {
 			Stavka.add(stavka);
 			stavkaToScreen();
@@ -385,6 +385,7 @@ public class ProdajaWindow {
 	}
 
 	protected class PickerListener extends SelectionAdapter {
+		@Override
 		public void widgetDefaultSelected(SelectionEvent e) {
 			if (e.widget.equals(cOdPostaje)) {
 				Integer odIndex = (Integer) cOdPostaje.getData();
@@ -442,23 +443,27 @@ public class ProdajaWindow {
 
 		}
 
+		@Override
 		public void widgetSelected(SelectionEvent e) {
 			widgetDefaultSelected(e);
 		}
 	}
 
 	protected class ClearButtonListener extends SelectionAdapter {
+		@Override
 		public void widgetDefaultSelected(SelectionEvent e) {
 			Stavka.clear();
 			stavkaToScreen();
 		}
 
+		@Override
 		public void widgetSelected(SelectionEvent e) {
 			widgetDefaultSelected(e);
 		}
 	}
 
 	protected class TMouseListener extends MouseAdapter {
+		@Override
 		public void mouseDown(MouseEvent e) {
 			Text t = (Text) e.widget;
 			VirtualKeyboard keypad = new VirtualKeyboard(e.display.getActiveShell());
@@ -479,6 +484,7 @@ public class ProdajaWindow {
 				shell.dispose();
 		}
 
+		@Override
 		public void widgetSelected(SelectionEvent e) {
 			widgetDefaultSelected(e);
 		}

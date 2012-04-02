@@ -12,7 +12,6 @@ public class Stupac {
 	private static ArrayList<Stupac> stupacList = new ArrayList<Stupac>();
 
 	private Integer id;
-	private Integer vozniRedID;
 	private String smjer;
 	private Integer varijantaID;
 	private String opis;
@@ -39,7 +38,6 @@ public class Stupac {
 	public Stupac(Integer id, Integer vozniRedID, String smjer, Integer varijantaID, String opis1, String opis2, double vremeOdhoda) {
 		super();
 		this.id = id;
-		this.vozniRedID = vozniRedID;
 		this.smjer = smjer;
 		this.varijantaID = varijantaID;
 		if (smjer.equals("-"))
@@ -53,7 +51,7 @@ public class Stupac {
 		String[] l = new String[stupacList.size()];
 		int x = 0;
 		for (Stupac v : stupacList) {
-			l[x] = v.getVremeOdhoda();
+			l[x] = v.getVremeOdhoda() + " " + v.getSmjer();
 			x++;
 		}
 		return l;

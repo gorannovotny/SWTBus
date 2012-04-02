@@ -1,8 +1,5 @@
 package hr.mit.windows;
 
-import java.text.SimpleDateFormat;
-import java.util.Date;
-
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.events.SelectionAdapter;
 import org.eclipse.swt.events.SelectionEvent;
@@ -36,6 +33,7 @@ public class VirtualKeyboard {
 		shell.layout();
 		final Display display = shell.getDisplay();
 		Runnable r = new Runnable() {
+			@Override
 			public void run() {
 				if (shell.getBackground().equals(SWTResourceManager.getColor(SWT.COLOR_WHITE)))
 						shell.setBackground(SWTResourceManager.getColor(SWT.COLOR_GRAY));
@@ -128,10 +126,12 @@ public class VirtualKeyboard {
 	}
 
 	private class MyButtonSelectionListener extends SelectionAdapter {
+		@Override
 		public void widgetSelected(SelectionEvent e) {
 			widgetDefaultSelected(e);
 		}
 
+		@Override
 		public void widgetDefaultSelected(SelectionEvent e) {
 			Button b = (Button) e.widget;
 			if (b.getText().equals("\u21b5")) {

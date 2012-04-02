@@ -134,6 +134,7 @@ public class LoginWindow {
 	}
 
 	protected class ButtonSelectionListener extends SelectionAdapter {
+		@Override
 		public void widgetSelected(SelectionEvent e) {
 			Starter.vozac = Vozac.getBySifra(Integer.parseInt(tVozac.getText()));
 			if (Stupac.getList().length > 0)
@@ -165,6 +166,7 @@ public class LoginWindow {
 	}
 
 	protected class TVoziloModifyListener implements ModifyListener {
+		@Override
 		public void modifyText(ModifyEvent e) {
 			Text t = (Text) e.widget;
 			if (t.getText().matches("\\d+"))
@@ -173,6 +175,7 @@ public class LoginWindow {
 	}
 
 	protected class TVozacModifyListener implements ModifyListener {
+		@Override
 		public void modifyText(ModifyEvent e) {
 			Vozac v = null;
 			Text t = (Text) e.widget;
@@ -186,6 +189,7 @@ public class LoginWindow {
 	}
 
 	protected class TLinijaModifyListener implements ModifyListener {
+		@Override
 		public void modifyText(ModifyEvent e) {
 			Integer id;
 			Text t = (Text) e.widget;
@@ -210,6 +214,7 @@ public class LoginWindow {
 
 		}
 
+		@Override
 		public void widgetSelected(SelectionEvent e) {
 			widgetDefaultSelected(e);
 		}
