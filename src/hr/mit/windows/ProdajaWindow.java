@@ -268,7 +268,7 @@ public class ProdajaWindow {
 
 		cPopust = new Button(shell, SWT.READ_ONLY);
 		cPopust.setAlignment(SWT.LEFT);
-		cPopust.setFont(SWTResourceManager.getFont("Liberation Sans", 25, SWT.NORMAL));
+		cPopust.setFont(SWTResourceManager.getFont("Liberation Sans", 18, SWT.NORMAL));
 		cPopust.setBounds(400, 150, 390, 70);
 		cPopust.setData(0);
 		cPopust.setText(Popust.getList()[0]);
@@ -313,7 +313,7 @@ public class ProdajaWindow {
 		bAdd = new Button(shell, SWT.NONE);
 		bAdd.setFont(SWTResourceManager.getFont("Liberation Sans", 25, SWT.NORMAL));
 		bAdd.setBounds(5, 310, 460, 70);
-		bAdd.setText("+");
+		bAdd.setText("Dodaj kartu");
 
 		lblUkupno = new Label(shell, SWT.RIGHT);
 		lblUkupno.setForeground(SWTResourceManager.getColor(SWT.COLOR_RED));
