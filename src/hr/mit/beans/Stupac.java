@@ -89,11 +89,6 @@ public class Stupac {
 		return smjer;
 	}
 	
-	private String getVrijemeSmjer() {
-		return getVremeOdhoda() + " " + getSmjer();
-		
-	}
-
 	public String getSmjerOpis() {
 		if (smjer.equals("-"))
 		return "Odl.";
