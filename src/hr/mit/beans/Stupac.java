@@ -51,7 +51,7 @@ public class Stupac {
 		String[] l = new String[stupacList.size()];
 		int x = 0;
 		for (Stupac v : stupacList) {
-			l[x] = v.getVrijemeSmjer();
+			l[x] = v.getVremeOdhoda() + " " + v.getSmjerOpis();
 			x++;
 		}
 		return l;
@@ -60,7 +60,7 @@ public class Stupac {
 	public static List<String> getArrayList() {
 		List<String> l = new ArrayList<String>();
 		for (Stupac v : stupacList) {
-			l.add(v.getVrijemeSmjer());
+			l.add(v.getVremeOdhoda()+ " " + v.getSmjerOpis());
 		}
 		return l;
 	}
@@ -92,6 +92,12 @@ public class Stupac {
 	private String getVrijemeSmjer() {
 		return getVremeOdhoda() + " " + getSmjer();
 		
+	}
+
+	public String getSmjerOpis() {
+		if (smjer.equals("-"))
+		return "Odl.";
+		else return "Dol.";
 	}
 
 }
