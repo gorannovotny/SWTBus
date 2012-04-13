@@ -74,7 +74,7 @@ public class LoginWindow {
 
 		tVozac = new Text(shlPrijava, SWT.BORDER);
 		tVozac.setFont(SWTResourceManager.getFont("Liberation Sans", 30, SWT.NORMAL));
-		tVozac.setBounds(145, 130, 160, 50);
+		tVozac.setBounds(165, 130, 125, 50);
 
 		lOpisVozac = new Label(shlPrijava, SWT.NONE);
 		lOpisVozac.setBackground(SWTResourceManager.getColor(SWT.COLOR_GRAY));
@@ -90,7 +90,7 @@ public class LoginWindow {
 
 		tVozilo = new Text(shlPrijava, SWT.BORDER);
 		tVozilo.setFont(SWTResourceManager.getFont("Liberation Sans", 30, SWT.NORMAL));
-		tVozilo.setBounds(145, 180, 160, 50);
+		tVozilo.setBounds(165, 180, 125, 50);
 
 		lOpisVozilo = new Label(shlPrijava, SWT.NONE);
 		lOpisVozilo.setBackground(SWTResourceManager.getColor(SWT.COLOR_GRAY));
@@ -106,7 +106,7 @@ public class LoginWindow {
 
 		tLinija = new Text(shlPrijava, SWT.BORDER);
 		tLinija.setFont(SWTResourceManager.getFont("Liberation Sans", 30, SWT.NORMAL));
-		tLinija.setBounds(145, 230, 160, 50);
+		tLinija.setBounds(165, 230, 125, 50);
 
 		lOpisLinije = new Label(shlPrijava, SWT.NONE);
 		lOpisLinije.setBackground(SWTResourceManager.getColor(SWT.COLOR_GRAY));
@@ -124,7 +124,7 @@ public class LoginWindow {
 		comboPolazak.addSelectionListener(new ComboPolazakSelectionListener());
 		comboPolazak.setFont(SWTResourceManager.getFont("Liberation Sans", 30, SWT.NORMAL));
 		comboPolazak.setAlignment(SWT.LEFT);
-		comboPolazak.setBounds(175, 280, 200, 50);
+		comboPolazak.setBounds(165, 280, 200, 50);
 
 		button = new Button(shlPrijava, SWT.ARROW | SWT.RIGHT);
 		button.setFont(SWTResourceManager.getFont("Liberation Sans", 30, SWT.NORMAL));
