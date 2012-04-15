@@ -28,10 +28,10 @@ public class Karta {
 
 	static {
 		try {
-			String sql = "Select a.id,b.Opis,stVoznji,NacinDolocanjaCene,TarifniRazredID,FiksnaCena,KMPogoja,PopustProcent,TipKarteID from PTKTVozneKarte a,PTKTTipiKarti b WHERE a.MobilnaProdaja = 1 AND a.TipKarteID = b.ID";
+			String sql = "Select a.id,a.kratkiOpis,stVoznji,NacinDolocanjaCene,TarifniRazredID,FiksnaCena,KMPogoja,PopustProcent,TipKarteID from PTKTVozneKarte a ";
 			ResultSet rs = DbUtil.getConnection().createStatement().executeQuery(sql);
 			while (rs.next()) {
-				kartaList.add(new Karta(rs.getInt("ID"),rs.getString("Opis"),rs.getInt("stVoznji"),rs.getInt("NacinDolocanjaCene"),rs.getInt("TarifniRazredID"),rs.getDouble("FiksnaCena"),rs.getInt("KmPogoja"),rs.getDouble("PopustProcent"),rs.getInt("TipKarteID")));
+				kartaList.add(new Karta(rs.getInt("ID"),rs.getString("kratkiOpis"),rs.getInt("stVoznji"),rs.getInt("NacinDolocanjaCene"),rs.getInt("TarifniRazredID"),rs.getDouble("FiksnaCena"),rs.getInt("KmPogoja"),rs.getDouble("PopustProcent"),rs.getInt("TipKarteID")));
 			}
 			rs.close();
 		} catch (SQLException e) {

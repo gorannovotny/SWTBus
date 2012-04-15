@@ -2,7 +2,6 @@ package hr.mit.beans;
 
 import hr.mit.utils.DbUtil;
 
-import java.math.BigDecimal;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
@@ -13,8 +12,8 @@ public class Blagajna {
 	public static void save(Vozac vozac,List<Stavka> stavkaList) {
 		String sql = "INSERT INTO PTKTProdaja (Firma,Datum,VoznaKartaID,Code,Cena,Popust,Vozac1ID,StupacID,OdPostajeID,DoPostajeID,VoziloID) VALUES(5,DATETIME('now'),?,?,?,?,?,?,?,?,?)";
 		try {
-			DbUtil.getConnection().setAutoCommit(false);
-			PreparedStatement ps = DbUtil.getConnection().prepareStatement(sql);
+			DbUtil.getConnection2().setAutoCommit(false);
+			PreparedStatement ps = DbUtil.getConnection2().prepareStatement(sql);
 			
 			for (Stavka stavka : stavkaList) {
 				ps.setInt(1, stavka.getKarta().getId());
@@ -27,31 +26,21 @@ public class Blagajna {
 				ps.setInt(8, stavka.getDoPostaje().getZapSt());
 				ps.execute();
 			}
-			DbUtil.getConnection().commit();
-			DbUtil.getConnection().setAutoCommit(true);
+			DbUtil.getConnection2().commit();
+			DbUtil.getConnection2().setAutoCommit(true);
 			ps.close();
 		} catch (SQLException e) {
 			e.printStackTrace();
 		}
 	}
 	
-	public static BigDecimal getSaldo() {
-		BigDecimal saldo = BigDecimal.ZERO;
-		try {
-			PreparedStatement ps = DbUtil.getConnection().prepareStatement("SELECT sum(cena) FROM PTKTProdaja WHERE StatusZK IS NULL"); 
-			double ss = DbUtil.getSingleResultDouble(ps);
-			saldo = new BigDecimal(ss);
-		} catch (SQLException e) {
-			e.printStackTrace();
-		}
-		return saldo.setScale(2,BigDecimal.ROUND_DOWN);
-	}
+
 	
 	public static String getObracun() {
 		double ukupno = 0;
 		StringBuffer retval = new StringBuffer("Tip                           Komada  Ukupno\n--------------------------------------------\n");
 		try {
-			PreparedStatement ps = DbUtil.getConnection().prepareStatement("select a.VoznaKartaID,c.Opis,COUNT(*) Komada,SUM(Cena) cena from ptktprodaja a,PTKTVozneKarte b,PTKTTipiKarti c WHERE a.VoznaKartaID = b.ID AND c.ID = b.TipKarteID AND StatusZK IS NULL GROUP BY 1,2 ORDER BY 1,2");
+			PreparedStatement ps = DbUtil.getConnection2().prepareStatement("select obracunID,stupacID,VoznaKartaID,COUNT(*) Komada,SUM(Cena) cena from ptktprodaja  GROUP BY 1,2,3 ORDER BY 1,2,3;");
 			ResultSet rs = ps.executeQuery();
 			while(rs.next()){
 				int id = rs.getInt("VoznaKartaID");
@@ -71,12 +60,6 @@ public class Blagajna {
 		return retval.toString();
 	}
 	
-	public static void closeObracun() {
-		String sql = "UPDATE PTKTProdaja SET StatusZK = 'Z' WHERE StatusZK IS NULL";
-		try {
-			DbUtil.getConnection().createStatement().execute(sql);
-		} catch (SQLException e) {
-			e.printStackTrace();
-		}
-	}
+	
+	
 }

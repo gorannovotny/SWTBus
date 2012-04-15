@@ -8,17 +8,30 @@ import java.sql.SQLException;
 
 public class DbUtil {
 	static Connection con;
+	static Connection con2;
 
 	public static Connection getConnection() {
 		if (con == null) {
 			try {
 				Class.forName("org.sqlite.JDBC");
-				con = DriverManager.getConnection("jdbc:sqlite:test.db");
+				con = DriverManager.getConnection("jdbc:sqlite:baza.db");
 			} catch (Exception e) {
-				e.printStackTrace();
+				throw new RuntimeException(e);
 			}
 		}
 		return con;
+	}
+
+	public static Connection getConnection2() {
+		if (con2 == null) {
+			try {
+				Class.forName("org.sqlite.JDBC");
+				con2 = DriverManager.getConnection("jdbc:sqlite:prodaja.db");
+			} catch (Exception e) {
+				throw new RuntimeException(e);
+			}
+		}
+		return con2;
 	}
 
 	public static Integer getSingleResult(PreparedStatement ps) throws SQLException {

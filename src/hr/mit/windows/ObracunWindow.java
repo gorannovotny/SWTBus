@@ -3,6 +3,7 @@ package hr.mit.windows;
 import java.io.IOException;
 
 import hr.mit.beans.Blagajna;
+import hr.mit.beans.Obracun;
 
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.events.SelectionEvent;
@@ -13,6 +14,7 @@ import org.eclipse.swt.widgets.Label;
 import org.eclipse.swt.widgets.Shell;
 import org.eclipse.wb.swt.SWTResourceManager;
 import org.eclipse.swt.events.SelectionAdapter;
+import org.eclipse.swt.widgets.List;
 
 public class ObracunWindow {
 
@@ -23,6 +25,7 @@ public class ObracunWindow {
 	private boolean exit = false;
 	private Label text;
 	private Button btnGaenje;
+	private List list;
 
 	/**
 	 * @wbp.parser.entryPoint
@@ -50,9 +53,14 @@ public class ObracunWindow {
 		lblObracun.setBounds(290, 10, 229, 67);
 		lblObracun.setText("Obračun");
 
+		list = new List(shell, SWT.BORDER);
+		list.setFont(SWTResourceManager.getFont("Liberation Sans", 15, SWT.NORMAL));
+		list.setBounds(5, 120, 275, 210);
+		list.setItems(Obracun.getList());
+
 		text = new Label(shell, SWT.NONE);
 		text.setFont(SWTResourceManager.getFont("Liberation Mono", 15, SWT.NORMAL));
-		text.setBounds(120, 120, 555, 210);
+		text.setBounds(290, 120, 500, 210);
 		text.setText(Blagajna.getObracun());
 
 		backButton = new Button(shell, SWT.NONE);
@@ -89,7 +97,7 @@ public class ObracunWindow {
 
 			@Override
 			public void widgetDefaultSelected(SelectionEvent arg0) {
-				Blagajna.closeObracun();
+				Obracun.closeObracun();
 				shell.dispose();
 				exit = true;
 			}

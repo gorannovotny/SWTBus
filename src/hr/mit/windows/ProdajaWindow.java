@@ -3,6 +3,7 @@ package hr.mit.windows;
 import hr.mit.Starter;
 import hr.mit.beans.Blagajna;
 import hr.mit.beans.Karta;
+import hr.mit.beans.Obracun;
 import hr.mit.beans.Popust;
 import hr.mit.beans.Postaja;
 import hr.mit.beans.ProdajnoMjesto;
@@ -355,7 +356,7 @@ public class ProdajaWindow {
 		lBlagajna = new Button(shell, SWT.LEFT);
 		lBlagajna.setBackground(SWTResourceManager.getColor(SWT.COLOR_GRAY));
 		lBlagajna.addSelectionListener(new LBlagajnaSelectionListener());
-		lBlagajna.setText("Blagajna: " + Blagajna.getSaldo().toString());
+		lBlagajna.setText("Blagajna: " + Obracun.getSaldo().toString());
 		// lBlagajna.setForeground(SWTResourceManager.getColor(192, 192, 192));
 		lBlagajna.setFont(SWTResourceManager.getFont("Liberation Sans", 20, SWT.NORMAL));
 		// lBlagajna.setBackground(SWTResourceManager.getColor(0, 0, 0));
@@ -376,7 +377,7 @@ public class ProdajaWindow {
 		@Override
 		public void widgetSelected(SelectionEvent e) {
 			Blagajna.save(Starter.vozac, Stavka.getList());
-			lBlagajna.setText("Blagajna: " + Blagajna.getSaldo().toString());
+			lBlagajna.setText("Blagajna: " + Obracun.getSaldo().toString());
 			PrintUtils.print(Starter.vozac, Stavka.getList());
 			Stavka.saveList();
 			Stavka.clear();

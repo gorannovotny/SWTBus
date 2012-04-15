@@ -11,31 +11,34 @@ public class BaseMaker {
 	public static void main(String[] args) throws SQLException {
 		Connection con1 = null;
 		Connection con2 = null;
+		Connection con3 = null;
 		long stoperica = System.currentTimeMillis();
 		try {
 			Class.forName("org.sqlite.JDBC");
 			Class.forName("net.sourceforge.jtds.jdbc.Driver");
 			con1 = DriverManager.getConnection("jdbc:jtds:sqlserver://tehnoinspekt.dyndns.org:1433;DatabaseName=MitSql", "sa", "SaKlik2003");
-			con2 = DriverManager.getConnection("jdbc:sqlite:test.db");
+			con2 = DriverManager.getConnection("jdbc:sqlite:baza.db");
+			con3 = DriverManager.getConnection("jdbc:sqlite:prodaja.db");
 			con2.setAutoCommit(false);
+			con3.setAutoCommit(false);
 
-			doPTVozniRedi(con1, con2);
-			doPTVarijanteVR(con1, con2);
-			doPTStupciVR(con1, con2);
-			doPTPostaje(con1, con2);
-			doPTPostajeVR(con1, con2);
-			doPTPostajeVarijantVR(con1, con2);
-			doPTCasiVoznjeVR(con1, con2);
+//			doPTVozniRedi(con1, con2);
+//			doPTVarijanteVR(con1, con2);
+//			doPTStupciVR(con1, con2);
+//			doPTPostaje(con1, con2);
+//			doPTPostajeVR(con1, con2);
+//			doPTPostajeVarijantVR(con1, con2);
+//			doPTCasiVoznjeVR(con1, con2);
 			doPTKTVozneKarte(con1, con2);
-			doPTVozaci(con1, con2);
-			doPTKTTarifniRazrediCenik(con1, con2);
-			doPTKTVrstePopustov(con1, con2);
-			doPTIzjemeCenikaVR(con1, con2);
-			doPTKTProdaja(con1, con2);
-			doPTKTTipiKarti(con1, con2);
-			doPTKTPopusti(con1, con2);
-			doPromVozila(con1, con2);
-			doPTProdajnaMesta(con1, con2);
+//			doPTVozaci(con1, con2);
+//			doPTKTTarifniRazrediCenik(con1, con2);
+//			doPTKTVrstePopustov(con1, con2);
+//			doPTIzjemeCenikaVR(con1, con2);
+//			doPTKTProdaja(con1, con3);
+//			doPTKTTipiKarti(con1, con2);
+//			doPTKTPopusti(con1, con2);
+//			doPromVozila(con1, con2);
+//			doPTProdajnaMesta(con1, con2);
 		} catch (Exception e) {
 			e.printStackTrace();
 		} finally {
@@ -43,6 +46,8 @@ public class BaseMaker {
 				con2.close();
 			if (con1 != null)
 				con1.close();
+			if (con3 != null)
+				con3.close();
 			System.out.println(String.format("Trajanje: %d ms", (System.currentTimeMillis() - stoperica)));
 		}
 
@@ -84,7 +89,7 @@ public class BaseMaker {
 		}
 		ps.executeBatch();
 		con2.commit();
-		System.out.println(String.format("%20s -> %7d","PTVozniRedi",i));
+		System.out.println(String.format("%20s -> %7d", "PTVozniRedi", i));
 		rs.close();
 		ps.close();
 	}
@@ -109,7 +114,7 @@ public class BaseMaker {
 		}
 		ps.executeBatch();
 		con2.commit();
-		System.out.println(String.format("%20s -> %7d","PTVarijanteVR",i));
+		System.out.println(String.format("%20s -> %7d", "PTVarijanteVR", i));
 		rs.close();
 		ps.close();
 	}
@@ -121,8 +126,10 @@ public class BaseMaker {
 				.executeUpdate(
 						"CREATE TABLE PTStupciVR (ID INT NOT NULL,Firma INT NOT NULL,VozniRedID INT NOT NULL,VarijantaVRID INT NOT NULL,ZapSt VARCHAR NOT NULL,SmerVoznje VARCHAR,DneviVoznjeID INT,PrevoznikID INT,VrstaPrevoza INT,VrstaBusa INT,StBusov INT,NacinPrevoza INT,VrstaPosadeID INT,VremeOdhoda FLOAT,OE INT,VeljaOd DATETIME,VeljaDo DATETIME,StatusERR INT,DOSID INT,PRIMARY KEY (ID),FOREIGN KEY (VarijantaVRID) REFERENCES PTVarijanteVR (ID))");
 		PreparedStatement ps = con2.prepareStatement("INSERT INTO PTStupciVR VALUES (?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)");
-		ResultSet rs = con1.createStatement().executeQuery(
-				"SELECT * FROM PTStupciVR WHERE VarijantaVRID IN (select ID from PTVarijanteVR where VozniRedID IN (SELECT ID FROM PTVozniRedi WHERE VeljaOd< GETDATE() and veljaDo > GETDATE())) AND ID NOT IN (select StupacID from dbo.PTStupciVRMirovanja WHERE GETDATE() BETWEEN PTStupciVRMirovanja.OdDatuma AND PTStupciVRMirovanja.DoDatuma)");
+		ResultSet rs = con1
+				.createStatement()
+				.executeQuery(
+						"SELECT * FROM PTStupciVR WHERE VarijantaVRID IN (select ID from PTVarijanteVR where VozniRedID IN (SELECT ID FROM PTVozniRedi WHERE VeljaOd< GETDATE() and veljaDo > GETDATE())) AND ID NOT IN (select StupacID from dbo.PTStupciVRMirovanja WHERE GETDATE() BETWEEN PTStupciVRMirovanja.OdDatuma AND PTStupciVRMirovanja.DoDatuma)");
 		while (rs.next()) {
 			ps.setInt(1, rs.getInt(1));
 			ps.setInt(2, rs.getInt(2));
@@ -148,7 +155,7 @@ public class BaseMaker {
 		}
 		ps.executeBatch();
 		con2.commit();
-		System.out.println(String.format("%20s -> %7d","PTStupciVR",i));
+		System.out.println(String.format("%20s -> %7d", "PTStupciVR", i));
 		rs.close();
 		ps.close();
 	}
@@ -179,7 +186,7 @@ public class BaseMaker {
 		}
 		ps.executeBatch();
 		con2.commit();
-		System.out.println(String.format("%20s -> %7d","PTPostajeVarijantVR",i));
+		System.out.println(String.format("%20s -> %7d", "PTPostajeVarijantVR", i));
 		rs.close();
 		ps.close();
 	}
@@ -207,7 +214,7 @@ public class BaseMaker {
 		}
 		ps.executeBatch();
 		con2.commit();
-		System.out.println(String.format("%20s -> %7d","PTPostajeVR",i));
+		System.out.println(String.format("%20s -> %7d", "PTPostajeVR", i));
 		rs.close();
 		ps.close();
 	}
@@ -231,7 +238,7 @@ public class BaseMaker {
 		}
 		ps.executeBatch();
 		con2.commit();
-		System.out.println(String.format("%20s -> %7d","PTPostaje",i));
+		System.out.println(String.format("%20s -> %7d", "PTPostaje", i));
 		rs.close();
 		ps.close();
 	}
@@ -259,7 +266,7 @@ public class BaseMaker {
 		}
 		ps.executeBatch();
 		con2.commit();
-		System.out.println(String.format("%20s -> %7d","PTCasiVoznjeVR",i));
+		System.out.println(String.format("%20s -> %7d", "PTCasiVoznjeVR", i));
 		rs.close();
 		ps.close();
 	}
@@ -269,8 +276,8 @@ public class BaseMaker {
 		con2.createStatement().executeUpdate("drop table if exists PTKTVozneKarte");
 		con2.createStatement()
 				.executeUpdate(
-						"CREATE TABLE PTKTVozneKarte(ID INT NOT NULL , Firma INT NOT NULL,Sifra VARCHAR(10) NOT NULL,Oznaka VARCHAR(16) ,TipKarteID INT NOT NULL,TarifniRazredID INT,Opis VARCHAR(50) ,StVoznji INT,SmerVoznje INT,OdDanaM INT,DoDanaM INT,VeljaDniOdProdaje INT,Status INT,PrevoznikID INT,NacinDolocanjaCene INT,KMPogoja INT,FiksnaCena FLOAT(53),PopustProcent FLOAT(53),SifraValute INT,RoundN FLOAT(53),MobilnaProdaja INT,InternetProdaja INT,DOSID INT,CenaRezervacije FLOAT(53),KmRezervacije INT,PRIMARY KEY (ID))");
-		PreparedStatement ps = con2.prepareStatement("INSERT INTO PTKTVozneKarte VALUES (?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)");
+						"CREATE TABLE PTKTVozneKarte(ID INT NOT NULL , Firma INT NOT NULL,Sifra VARCHAR(10) NOT NULL,Oznaka VARCHAR(16) ,TipKarteID INT NOT NULL,TarifniRazredID INT,Opis VARCHAR(50) ,StVoznji INT,SmerVoznje INT,OdDanaM INT,DoDanaM INT,VeljaDniOdProdaje INT,Status INT,PrevoznikID INT,NacinDolocanjaCene INT,KMPogoja INT,FiksnaCena FLOAT(53),FaktorCene FLOAT(53),PopustProcent FLOAT(53),SifraValute INT,RoundN FLOAT(53),MobilnaProdaja INT,InternetProdaja INT,DOSID INT,CenaRezervacije FLOAT(53),KmRezervacije INT,kratkiOpis VARCHAR(20),PRIMARY KEY (ID))");
+		PreparedStatement ps = con2.prepareStatement("INSERT INTO PTKTVozneKarte VALUES (?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)");
 		ResultSet rs = con1.createStatement().executeQuery("SELECT * FROM PTKTVozneKarte WHERE MobilnaProdaja = 1");
 		while (rs.next()) {
 			ps.setInt(1, rs.getInt(1));
@@ -291,19 +298,23 @@ public class BaseMaker {
 			ps.setInt(16, rs.getInt(16));
 			ps.setDouble(17, rs.getDouble(17));
 			ps.setDouble(18, rs.getDouble(18));
-			ps.setInt(19, rs.getInt(19));
-			ps.setDouble(20, rs.getDouble(20));
-			ps.setInt(21, rs.getInt(21));
+			ps.setDouble(19, rs.getDouble(19));
+			ps.setInt(20, rs.getInt(20));
+			ps.setDouble(21, rs.getDouble(21));
 			ps.setInt(22, rs.getInt(22));
 			ps.setInt(23, rs.getInt(23));
-			ps.setDouble(24, rs.getDouble(24));
-			ps.setInt(25, rs.getInt(25));
+			ps.setInt(24, rs.getInt(24));
+			ps.setDouble(25, rs.getDouble(25));
+			ps.setInt(26, rs.getInt(26));
+			ps.setString(27, rs.getString(27));
 			ps.addBatch();
 			i++;
 		}
 		ps.executeBatch();
+		con2.createStatement().execute("insert into PTKTVozneKarte (ID,Firma,Sifra,TipKarteID,kratkiOpis) VALUES (99,5,99,1,'ZAMJENSKA KARTA');");
+		con2.createStatement().execute("UPDATE PTKTVozneKarte SET kratkiOpis = 'Dnevna' WHERE kratkiOpis IS NULL");
 		con2.commit();
-		System.out.println(String.format("%20s -> %7d","PTKTVozneKarte",i));
+		System.out.println(String.format("%20s -> %7d", "PTKTVozneKarte", i));
 		rs.close();
 		ps.close();
 	}
@@ -327,7 +338,7 @@ public class BaseMaker {
 		}
 		ps.executeBatch();
 		con2.commit();
-		System.out.println(String.format("%20s -> %7d","PTVozaci",i));
+		System.out.println(String.format("%20s -> %7d", "PTVozaci", i));
 		rs.close();
 		ps.close();
 	}
@@ -338,7 +349,10 @@ public class BaseMaker {
 		con2.createStatement().executeUpdate(
 				"CREATE TABLE PTKTTarifniRazrediCenik(ID INT NOT NULL ,IDRazreda INT NOT NULL,VeljaOd DATETIME NOT NULL,OdKM INT NOT NULL,Cena FLOAT(53),DOSID INT,PRIMARY KEY (ID))");
 		PreparedStatement ps = con2.prepareStatement("INSERT INTO PTKTTarifniRazrediCenik VALUES (?,?,?,?,?,?)");
-		ResultSet rs = con1.createStatement().executeQuery("SELECT * FROM PTKTTarifniRazrediCenik a WHERE IDRazreda IN ( SELECT DISTINCT TarifniRazredID FROM PTKTVozneKarte WHERE MobilnaProdaja = 1) AND VeljaOD = (SELECT MAX(VeljaOd) FROM PTKTTarifniRazrediCenik b WHERE b.IDRazreda = a.IDRazreda AND b.OdKM = a.OdKM AND b.VeljaOd <= GETDATE())");
+		ResultSet rs = con1
+				.createStatement()
+				.executeQuery(
+						"SELECT * FROM PTKTTarifniRazrediCenik a WHERE IDRazreda IN ( SELECT DISTINCT TarifniRazredID FROM PTKTVozneKarte WHERE MobilnaProdaja = 1) AND VeljaOD = (SELECT MAX(VeljaOd) FROM PTKTTarifniRazrediCenik b WHERE b.IDRazreda = a.IDRazreda AND b.OdKM = a.OdKM AND b.VeljaOd <= GETDATE())");
 		while (rs.next()) {
 			ps.setInt(1, rs.getInt(1));
 			ps.setInt(2, rs.getInt(2));
@@ -351,7 +365,7 @@ public class BaseMaker {
 		}
 		ps.executeBatch();
 		con2.commit();
-		System.out.println(String.format("%20s -> %7d","PTKTTarifniRazrediCenik",i));
+		System.out.println(String.format("%20s -> %7d", "PTKTTarifniRazrediCenik", i));
 		rs.close();
 		ps.close();
 	}
@@ -377,7 +391,7 @@ public class BaseMaker {
 		}
 		ps.executeBatch();
 		con2.commit();
-		System.out.println(String.format("%20s -> %7d","PTKTVrstePopustov",i));
+		System.out.println(String.format("%20s -> %7d", "PTKTVrstePopustov", i));
 		rs.close();
 		ps.close();
 	}
@@ -406,7 +420,7 @@ public class BaseMaker {
 		}
 		ps.executeBatch();
 		con2.commit();
-		System.out.println(String.format("%-20s -> %7d","PTIzjemeCenikaVR",i));
+		System.out.println(String.format("%-20s -> %7d", "PTIzjemeCenikaVR", i));
 		rs.close();
 		ps.close();
 	}
@@ -414,11 +428,13 @@ public class BaseMaker {
 	private static void doPTKTProdaja(Connection con1, Connection con2) throws SQLException {
 		int i = 0;
 		con2.createStatement().executeUpdate("drop table if exists PTKTProdaja;");
-		con2.createStatement()
+		con2.createStatement().executeUpdate("drop table if exists PTKTObracun;");
+			con2.createStatement()
 				.executeUpdate(
-						"CREATE TABLE PTKTProdaja(ID INT PRIMARY KEY ,Firma INT NOT NULL,DokumentProdajeID INT,VrsticaProdajeID INT,DokumentBlagajneID INT,BUSProdajaID INT,Datum DATETIME,Vreme DATETIME,VoznaKartaID INT,Code VARCHAR(20) ,BRVoznji INT,Cena FLOAT(53),Popust1ID INT,Popust2ID INT,Popust3ID INT,PCenaKarte FLOAT(53),NCenaKarte FLOAT(53),Popust FLOAT(53),ZaPlatiti FLOAT(53),PorezProcent INT,ProdajnoMestoID INT,PrevoznikID INT,VrstaPosadeID INT,Vozac1ID INT,Vozac2ID INT,Vozac3ID INT,Blagajnik INT,Blagajna INT,StupacID INT,OdPostajeID INT,DoPostajeID INT,VoziloID INT,Rezervacija INT,StatusZK INT,KmLinijeVR INT,KmDomaci INT,KmIno INT,BRPutnika INT,BRKarata INT,MobStrojID INT,GUID VARCHAR(40))");
+						"CREATE TABLE PTKTProdaja(ID INTEGER PRIMARY KEY ,Firma INT NOT NULL,DokumentProdajeID INT,VrsticaProdajeID INT,DokumentBlagajneID INT,BUSProdajaID INT,Datum DATETIME,Vreme DATETIME,VoznaKartaID INT,Code VARCHAR(20) ,BRVoznji INT,Cena FLOAT(53),Popust1ID INT,Popust2ID INT,Popust3ID INT,PCenaKarte FLOAT(53),NCenaKarte FLOAT(53),Popust FLOAT(53),ZaPlatiti FLOAT(53),PorezProcent INT,ProdajnoMestoID INT,PrevoznikID INT,VrstaPosadeID INT,Vozac1ID INT,Vozac2ID INT,Vozac3ID INT,Blagajnik INT,Blagajna INT,StupacID INT,OdPostajeID INT,DoPostajeID INT,VoziloID INT,Rezervacija INT,StatusZK INT,KmLinijeVR INT,KmDomaci INT,KmIno INT,BRPutnika INT,BRKarata INT,MobStrojID INT,ObracunID INT)");
+		con2.createStatement().executeUpdate("CREATE TABLE PTKTObracun(ID INTEGER PRIMARY KEY,Datum DATETIME,VozacID INT,GUID VARCHAR)");
 		con2.commit();
-		System.out.println(String.format("%-20s -> %7d","PTKTProdaja",i));
+		System.out.println(String.format("%-20s -> %7d", "PTKTProdaja", i));
 	}
 
 	private static void doPTKTPopusti(Connection con1, Connection con2) throws SQLException {
@@ -444,7 +460,7 @@ public class BaseMaker {
 		}
 		ps.executeBatch();
 		con2.commit();
-		System.out.println(String.format("%-20s -> %7d","PTKTPopusti",i));
+		System.out.println(String.format("%-20s -> %7d", "PTKTPopusti", i));
 	}
 
 	private static void doPTKTTipiKarti(Connection con1, Connection con2) throws SQLException {
@@ -469,13 +485,15 @@ public class BaseMaker {
 		}
 		ps.executeBatch();
 		con2.commit();
-		System.out.println(String.format("%-20s -> %7d","PTKTTipiKarti",i));
+		System.out.println(String.format("%-20s -> %7d", "PTKTTipiKarti", i));
 	}
 
 	private static void doPromVozila(Connection con1, Connection con2) throws SQLException {
 		int i = 0;
 		con2.createStatement().executeUpdate("drop table if exists PromVozila;");
-		con2.createStatement().executeUpdate("CREATE TABLE PromVozila(ID INT NOT NULL,Firma INT NOT NULL,Sifra INT NOT NULL,PGRID INT,Status INT,GUID VARCHAR(40),Naziv VARCHAR(40),RegSt VARCHAR(12),LastnikVA VARCHAR(3),LastnikAnalitika INT,VrstaID INT,ZnamkaID INT,TipID INT,ModelID INT,OblikaKaroserije INT,Namena INT,Barva VARCHAR(20),StSasije VARCHAR(30),DrzavaIzdelave INT,LetoIzdelave DATETIME,PrvaRegistracija DATETIME,StSedezev INT,StStojisc INT,StLezisc INT,TezaPraznega INT,MaxTeza INT,MaxHitrost INT,StOsovin INT,VrstaMotorja INT,EuroStandard INT,MocKW INT,Vrtljaji INT,ZapremninaMotorja INT,DimDolzina INT,DimSirina INT,DimVisina INT,DimVolumen INT,StKoles INT,DimezijeGumPrednje VARCHAR(20),DimenzijeGumZadnje VARCHAR(20),VrstaZavor INT,Vleka INT,Vitlo INT,Opomba VARCHAR, PRIMARY KEY (ID))");
+		con2.createStatement()
+				.executeUpdate(
+						"CREATE TABLE PromVozila(ID INT NOT NULL,Firma INT NOT NULL,Sifra INT NOT NULL,PGRID INT,Status INT,GUID VARCHAR(40),Naziv VARCHAR(40),RegSt VARCHAR(12),LastnikVA VARCHAR(3),LastnikAnalitika INT,VrstaID INT,ZnamkaID INT,TipID INT,ModelID INT,OblikaKaroserije INT,Namena INT,Barva VARCHAR(20),StSasije VARCHAR(30),DrzavaIzdelave INT,LetoIzdelave DATETIME,PrvaRegistracija DATETIME,StSedezev INT,StStojisc INT,StLezisc INT,TezaPraznega INT,MaxTeza INT,MaxHitrost INT,StOsovin INT,VrstaMotorja INT,EuroStandard INT,MocKW INT,Vrtljaji INT,ZapremninaMotorja INT,DimDolzina INT,DimSirina INT,DimVisina INT,DimVolumen INT,StKoles INT,DimezijeGumPrednje VARCHAR(20),DimenzijeGumZadnje VARCHAR(20),VrstaZavor INT,Vleka INT,Vitlo INT,Opomba VARCHAR, PRIMARY KEY (ID))");
 		PreparedStatement ps = con2.prepareStatement("INSERT INTO PromVozila (ID,Firma,Sifra,PGRID,Status,GUID,Naziv,RegSt,LastnikVA) VALUES (?,?,?,?,?,?,?,?,?)");
 		ResultSet rs = con1.createStatement().executeQuery("SELECT * FROM PromVozila");
 		while (rs.next()) {
@@ -493,13 +511,15 @@ public class BaseMaker {
 		}
 		ps.executeBatch();
 		con2.commit();
-		System.out.println(String.format("%-20s -> %7d","PromVozila",i));
+		System.out.println(String.format("%-20s -> %7d", "PromVozila", i));
 	}
 
 	private static void doPTProdajnaMesta(Connection con1, Connection con2) throws SQLException {
 		int i = 0;
 		con2.createStatement().executeUpdate("drop table if exists PTProdajnaMesta;");
-		con2.createStatement().executeUpdate("CREATE TABLE PTProdajnaMesta(ID INT NOT NULL ,Firma INT NOT NULL,Sifra INT NOT NULL, Oznaka VARCHAR(10),Naziv VARCHAR(50),Partner INT,Strm INT,OE INT,PostajaID INT,PRIMARY KEY (ID))");
+		con2.createStatement()
+				.executeUpdate(
+						"CREATE TABLE PTProdajnaMesta(ID INT NOT NULL ,Firma INT NOT NULL,Sifra INT NOT NULL, Oznaka VARCHAR(10),Naziv VARCHAR(50),Partner INT,Strm INT,OE INT,PostajaID INT,PRIMARY KEY (ID))");
 		PreparedStatement ps = con2.prepareStatement("INSERT INTO PTProdajnaMesta VALUES (?,?,?,?,?,?,?,?,?)");
 		ResultSet rs = con1.createStatement().executeQuery("SELECT * FROM PTProdajnaMesta");
 		while (rs.next()) {
@@ -517,7 +537,7 @@ public class BaseMaker {
 		}
 		ps.executeBatch();
 		con2.commit();
-		System.out.println(String.format("%-20s -> %7d","PTProdajnaMesta",i));
+		System.out.println(String.format("%-20s -> %7d", "PTProdajnaMesta", i));
 	}
 
 }
