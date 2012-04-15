@@ -20,7 +20,6 @@ public class Karta {
 	private BigDecimal popustProcent;
 	private Integer tipKarteID;
 
-	
 	public static Integer TARIFNI_DALJINAR = 1;
 	public static Integer FIKSNA_CIJENA = 2;
 	public static Integer FIKSNI_KILOMETRI = 3;
@@ -31,16 +30,18 @@ public class Karta {
 			String sql = "Select a.id,a.kratkiOpis,stVoznji,NacinDolocanjaCene,TarifniRazredID,FiksnaCena,KMPogoja,PopustProcent,TipKarteID from PTKTVozneKarte a ";
 			ResultSet rs = DbUtil.getConnection().createStatement().executeQuery(sql);
 			while (rs.next()) {
-				kartaList.add(new Karta(rs.getInt("ID"),rs.getString("kratkiOpis"),rs.getInt("stVoznji"),rs.getInt("NacinDolocanjaCene"),rs.getInt("TarifniRazredID"),rs.getDouble("FiksnaCena"),rs.getInt("KmPogoja"),rs.getDouble("PopustProcent"),rs.getInt("TipKarteID")));
+				kartaList.add(new Karta(rs.getInt("ID"), rs.getString("kratkiOpis"), rs.getInt("stVoznji"), rs.getInt("NacinDolocanjaCene"), rs.getInt("TarifniRazredID"), rs.getDouble("FiksnaCena"),
+						rs.getInt("KmPogoja"), rs.getDouble("PopustProcent"), rs.getInt("TipKarteID")));
 			}
 			rs.close();
 		} catch (SQLException e) {
 			e.printStackTrace();
 		}
-//		kartaList.add(new Karta(Karta.ZAMJENSKA_KARTA,"Zamjenska karta",1,0,0,0,0,0.0,0));	
+		// kartaList.add(new
+		// Karta(Karta.ZAMJENSKA_KARTA,"Zamjenska karta",1,0,0,0,0,0.0,0));
 	}
 
-	public Karta(int id, String naziv,int stVoznji, int nacinDolocanjaCene, int tarifniRazredID, double FiksnaCena, int kmPogoja,double popustProcent,int tip) {
+	public Karta(int id, String naziv, int stVoznji, int nacinDolocanjaCene, int tarifniRazredID, double FiksnaCena, int kmPogoja, double popustProcent, int tip) {
 		this.id = id;
 		this.naziv = naziv;
 		this.stVoznji = stVoznji;
@@ -61,7 +62,15 @@ public class Karta {
 		}
 		return l;
 	}
-	
+
+	public static Karta getByID(int id) {
+		for (Karta v : kartaList) {
+			if (v.getId().equals(id))
+				return v;
+		}
+		return null;
+	}
+
 	public static Karta get(int index) {
 		return kartaList.get(index);
 	}
@@ -78,7 +87,7 @@ public class Karta {
 		if (nacinDolocanjaCene == null)
 			return Karta.TARIFNI_DALJINAR;
 		else
-		return nacinDolocanjaCene;
+			return nacinDolocanjaCene;
 	}
 
 	public Integer getTarifniRazredID() {
@@ -101,10 +110,10 @@ public class Karta {
 		return popustProcent;
 	}
 
-	public Integer getTipKarteID(){
+	public Integer getTipKarteID() {
 		return tipKarteID;
 	}
-	
+
 	public static List<String> getArrayList() {
 		List<String> l = new ArrayList<String>();
 		for (Karta v : kartaList) {

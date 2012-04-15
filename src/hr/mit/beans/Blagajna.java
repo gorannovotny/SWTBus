@@ -36,29 +36,7 @@ public class Blagajna {
 	
 
 	
-	public static String getObracun() {
-		double ukupno = 0;
-		StringBuffer retval = new StringBuffer("Tip                           Komada  Ukupno\n--------------------------------------------\n");
-		try {
-			PreparedStatement ps = DbUtil.getConnection2().prepareStatement("select obracunID,stupacID,VoznaKartaID,COUNT(*) Komada,SUM(Cena) cena from ptktprodaja  GROUP BY 1,2,3 ORDER BY 1,2,3;");
-			ResultSet rs = ps.executeQuery();
-			while(rs.next()){
-				int id = rs.getInt("VoznaKartaID");
-				String opis = rs.getString("Opis");
-				int komada = rs.getInt("Komada");
-				double cena =  rs.getDouble("cena");
-				retval.append(String.format("%-30s %5d %7.2f\n",opis,komada,cena));
-				if (id != Karta.ZAMJENSKA_KARTA) {
-					ukupno = ukupno + cena;
-				}
-			}
-			retval.append(String.format("--------------------------------------------\n%-36s %7.2f","Blagajna",ukupno));
-		} catch(SQLException e) {
-			e.printStackTrace();
-			
-		}
-		return retval.toString();
-	}
+
 	
 	
 	

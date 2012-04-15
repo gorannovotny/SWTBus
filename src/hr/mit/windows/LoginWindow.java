@@ -48,7 +48,8 @@ public class LoginWindow {
 		shlPrijava.setBackground(SWTResourceManager.getColor(SWT.COLOR_GRAY));
 		shlPrijava.setSize(450, 332);
 		shlPrijava.setBounds(0, 0, 800, 600);
-		shlPrijava.setMaximized(true);
+		// shlPrijava.setMaximized(true);
+		// shlPrijava.setFullScreen(true);
 		createContents();
 		shlPrijava.open();
 		shlPrijava.layout();
@@ -148,7 +149,7 @@ public class LoginWindow {
 		public void widgetSelected(SelectionEvent e) {
 			Starter.vozac = Vozac.getBySifra(Integer.parseInt(tVozac.getText()));
 			if (Stupac.getList().length > 0)
-			Starter.stupac = Stupac.get((Integer) comboPolazak.getData());
+				Starter.stupac = Stupac.get((Integer) comboPolazak.getData());
 			// TODO Starter.vozilo = Vozilo.get((Integer) tVozilo.getData());
 			if (Starter.vozac == null || Starter.stupac == null) {
 				MessageBox mb = new MessageBox(shlPrijava, SWT.OK | SWT.ICON_ERROR);

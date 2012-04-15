@@ -46,6 +46,15 @@ public class Stupac {
 			this.opis = opis2;
 		this.vremeOdhoda = DbUtil.getHHMM(vremeOdhoda);
 	}
+	
+	public static Stupac getByID(int id) {
+		for (Stupac v : stupacList) {
+			if (v.getId().equals(id))
+				return v;
+		}
+		return null;
+	}
+
 
 	public static String[] getList() {
 		String[] l = new String[stupacList.size()];

@@ -14,16 +14,16 @@ public class PrintUtils {
 	private static char[] barcode = { 29, 107, 72, 15 };
 	private static char[] duplo = { 27, 87, 2 };
 	public static void print(Vozac vozac, List<Stavka> stavkaList) {
-		try {
-			FileWriter out = new FileWriter("/dev/ttyS0");
-			out.write(reset);
-			out.write(filter(createString(vozac, stavkaList)));
-			out.flush();
-			out.close();
-		} catch (IOException e) {
-			e.printStackTrace();
-		}
-		//		System.out.println(createString(vozac, stavkaList));
+//		try {
+//			FileWriter out = new FileWriter("/dev/ttyS0");
+//			out.write(reset);
+//			out.write(filter(createString(vozac, stavkaList)));
+//			out.flush();
+//			out.close();
+//		} catch (IOException e) {
+//			e.printStackTrace();
+//		}
+				System.out.println(createString(vozac, stavkaList));
 	}
 
 	private static String createString(Vozac vozac, List<Stavka> stavkaList) {

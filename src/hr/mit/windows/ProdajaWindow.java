@@ -195,10 +195,12 @@ public class ProdajaWindow {
 	}
 
 	protected void createContents() {
-		shell = new Shell(SWT.SYSTEM_MODAL | SWT.ON_TOP);
+		// shell = new Shell(SWT.SYSTEM_MODAL | SWT.ON_TOP);
+		// shell.setMaximized(true);
+		shell = new Shell(SWT.NONE);
 		shell.setBackground(SWTResourceManager.getColor(SWT.COLOR_GRAY));
 		shell.setBounds(0, 0, 800, 600);
-		shell.setMaximized(true);
+		// shell.setFullScreen(true);
 
 		btnStupac = new Button(shell, SWT.NONE);
 		btnStupac.setBackground(SWTResourceManager.getColor(SWT.COLOR_GRAY));
