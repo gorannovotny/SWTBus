@@ -212,6 +212,10 @@ public class LoginWindow {
 			if (Stupac.getList().length > 0) {
 				comboPolazak.setText(Stupac.getList()[0]);
 				comboPolazak.setData(0);
+			} else {
+				comboPolazak.setText("");
+				comboPolazak.setData(null);
+
 			}
 		}
 	}
@@ -220,8 +224,10 @@ public class LoginWindow {
 		@Override
 		public void widgetDefaultSelected(SelectionEvent e) {
 			Integer index = (Integer) comboPolazak.getData();
-			Picker picker = new Picker(comboPolazak, Stupac.getArrayList(), index);
-			comboPolazak = picker.open();
+			if (index != null) {
+				Picker picker = new Picker(comboPolazak, Stupac.getArrayList(), index);
+				comboPolazak = picker.open();
+			}
 
 		}
 
