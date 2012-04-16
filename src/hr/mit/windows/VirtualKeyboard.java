@@ -19,6 +19,7 @@ public class VirtualKeyboard {
 
 	public VirtualKeyboard(Shell parent) {
 		this.shell = parent;
+
 	}
 
 	/**
@@ -36,10 +37,10 @@ public class VirtualKeyboard {
 			@Override
 			public void run() {
 				if (shell.getBackground().equals(SWTResourceManager.getColor(SWT.COLOR_WHITE)))
-						shell.setBackground(SWTResourceManager.getColor(SWT.COLOR_GRAY));
+					shell.setBackground(SWTResourceManager.getColor(SWT.COLOR_GRAY));
 				else
 					shell.setBackground(SWTResourceManager.getColor(SWT.COLOR_WHITE));
-							display.timerExec(400, this);
+				display.timerExec(400, this);
 			}
 		};
 
@@ -140,8 +141,10 @@ public class VirtualKeyboard {
 			} else if (b.getText().equals("\u2b05")) {
 				polje.setSelection(polje.getCharCount() - 1, polje.getCharCount());
 				polje.cut();
-			} else
+			} else {
 				polje.insert(b.getText());
+				polje.clearSelection();
+			}
 		}
 
 	}

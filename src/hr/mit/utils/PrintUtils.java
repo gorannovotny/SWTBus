@@ -3,8 +3,6 @@ package hr.mit.utils;
 import hr.mit.beans.Stavka;
 import hr.mit.beans.Vozac;
 
-import java.io.FileWriter;
-import java.io.IOException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.List;

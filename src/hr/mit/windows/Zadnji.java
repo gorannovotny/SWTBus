@@ -5,12 +5,12 @@ import hr.mit.beans.Stavka;
 import hr.mit.utils.PrintUtils;
 
 import org.eclipse.swt.SWT;
+import org.eclipse.swt.events.SelectionAdapter;
+import org.eclipse.swt.events.SelectionEvent;
+import org.eclipse.swt.widgets.Button;
 import org.eclipse.swt.widgets.Display;
 import org.eclipse.swt.widgets.Shell;
 import org.eclipse.swt.widgets.Text;
-import org.eclipse.swt.widgets.Button;
-import org.eclipse.swt.events.SelectionAdapter;
-import org.eclipse.swt.events.SelectionEvent;
 import org.eclipse.wb.swt.SWTResourceManager;
 
 public class Zadnji {

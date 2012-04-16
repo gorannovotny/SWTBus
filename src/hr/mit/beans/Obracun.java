@@ -4,15 +4,11 @@ import hr.mit.Starter;
 import hr.mit.utils.DbUtil;
 
 import java.math.BigDecimal;
-import java.sql.Date;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
-
-import org.eclipse.swt.SWT;
-import org.eclipse.swt.widgets.MessageBox;
 
 public class Obracun {
 

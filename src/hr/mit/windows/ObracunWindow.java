@@ -1,21 +1,18 @@
 package hr.mit.windows;
 
-import java.io.IOException;
-
-import hr.mit.beans.Blagajna;
 import hr.mit.beans.Obracun;
 
 import org.eclipse.swt.SWT;
+import org.eclipse.swt.events.SelectionAdapter;
 import org.eclipse.swt.events.SelectionEvent;
 import org.eclipse.swt.events.SelectionListener;
 import org.eclipse.swt.widgets.Button;
 import org.eclipse.swt.widgets.Display;
 import org.eclipse.swt.widgets.Label;
+import org.eclipse.swt.widgets.List;
 import org.eclipse.swt.widgets.MessageBox;
 import org.eclipse.swt.widgets.Shell;
 import org.eclipse.wb.swt.SWTResourceManager;
-import org.eclipse.swt.events.SelectionAdapter;
-import org.eclipse.swt.widgets.List;
 
 public class ObracunWindow {
 
@@ -37,7 +34,7 @@ public class ObracunWindow {
 		shell.setSize(629, 300);
 		shell.setBounds(0, 0, 800, 600);
 		// shell.setMaximized(true);
-		// shell.setFullScreen(true);
+		shell.setFullScreen(true);
 		createContents();
 		shell.open();
 		shell.layout();
@@ -56,6 +53,7 @@ public class ObracunWindow {
 		lblObracun.setText("Obračun");
 
 		list = new List(shell, SWT.BORDER);
+		list.setDragDetect(false);
 		list.addSelectionListener(new ListSelectionListener());
 		list.setFont(SWTResourceManager.getFont("Liberation Sans", 15, SWT.NORMAL));
 		list.setBounds(5, 120, 275, 400);
