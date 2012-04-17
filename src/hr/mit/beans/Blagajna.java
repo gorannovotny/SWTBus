@@ -18,12 +18,12 @@ public class Blagajna {
 				ps.setInt(1, stavka.getKarta().getId());
 				ps.setString(2,stavka.getBrojKarte());
 				
-				ps.setDouble(3,stavka.getCijena().doubleValue());
+				ps.setDouble(3,stavka.getProdajnaCijena().doubleValue());
 				ps.setDouble(4,stavka.getPopust().getPopust().doubleValue());
 				ps.setInt(5, vozac.getId());
 				ps.setInt(6, stavka.getStupac().getId());
-				ps.setInt(7, stavka.getOdPostaje().getZapSt());
-				ps.setInt(8, stavka.getDoPostaje().getZapSt());
+				ps.setInt(7, stavka.getOdPostaje().getId());
+				ps.setInt(8, stavka.getDoPostaje().getId());
 				ps.setInt(9, vozilo.getId());
 				ps.setInt(10,stavka.getKarta().getStVoznji());
 				ps.setInt(11,1); //Broj putnika

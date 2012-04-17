@@ -19,6 +19,7 @@ public class Karta {
 	private Integer kmPogoja;
 	private BigDecimal popustProcent;
 	private Integer tipKarteID;
+	private BigDecimal faktorCene;
 
 	public static Integer TARIFNI_DALJINAR = 1;
 	public static Integer FIKSNA_CIJENA = 2;
@@ -29,11 +30,11 @@ public class Karta {
 
 	static {
 		try {
-			String sql = "Select a.id,a.kratkiOpis,stVoznji,NacinDolocanjaCene,TarifniRazredID,FiksnaCena,KMPogoja,PopustProcent,TipKarteID from PTKTVozneKarte a ";
+			String sql = "Select a.id,a.kratkiOpis,stVoznji,NacinDolocanjaCene,TarifniRazredID,FiksnaCena,KMPogoja,PopustProcent,TipKarteID,FaktorCene from PTKTVozneKarte a ";
 			ResultSet rs = DbUtil.getConnection().createStatement().executeQuery(sql);
 			while (rs.next()) {
 				kartaList.add(new Karta(rs.getInt("ID"), rs.getString("kratkiOpis"), rs.getInt("stVoznji"), rs.getInt("NacinDolocanjaCene"), rs.getInt("TarifniRazredID"), rs.getDouble("FiksnaCena"),
-						rs.getInt("KmPogoja"), rs.getDouble("PopustProcent"), rs.getInt("TipKarteID")));
+						rs.getInt("KmPogoja"), rs.getDouble("PopustProcent"), rs.getInt("TipKarteID"),rs.getDouble("FaktorCene")));
 			}
 			rs.close();
 		} catch (SQLException e) {
@@ -43,7 +44,7 @@ public class Karta {
 		// Karta(Karta.ZAMJENSKA_KARTA,"Zamjenska karta",1,0,0,0,0,0.0,0));
 	}
 
-	public Karta(int id, String naziv, int stVoznji, int nacinDolocanjaCene, int tarifniRazredID, double FiksnaCena, int kmPogoja, double popustProcent, int tip) {
+	public Karta(int id, String naziv, int stVoznji, int nacinDolocanjaCene, int tarifniRazredID, double FiksnaCena, int kmPogoja, double popustProcent, int tip,double faktorCene) {
 		this.id = id;
 		this.naziv = naziv;
 		this.stVoznji = stVoznji;
@@ -53,6 +54,7 @@ public class Karta {
 		this.kmPogoja = kmPogoja;
 		this.popustProcent = new BigDecimal(popustProcent);
 		this.tipKarteID = tip;
+		this.faktorCene = new BigDecimal(faktorCene);
 	}
 
 	public static String[] getList() {
@@ -114,6 +116,10 @@ public class Karta {
 
 	public Integer getTipKarteID() {
 		return tipKarteID;
+	}
+
+	public BigDecimal getFaktorCene() {
+		return faktorCene;
 	}
 
 	public static List<String> getArrayList() {

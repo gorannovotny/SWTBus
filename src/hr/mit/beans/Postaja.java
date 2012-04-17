@@ -16,9 +16,10 @@ public class Postaja {
 	private String naziv;
 	private String vremeOdhoda;
 	private String vremePrihoda;
+	private Integer id;
 
 	public static void setStupac(Stupac stupac) {
-		String sql = "SELECT c.ZapSt,e.Naziv,f.VremeOdhoda,f.VremePrihoda from PTStupciVR a,PTVarijanteVR b,PTPostajeVarijantVR c,PTPostajeVR d,PTPostaje e,PTCasiVoznjeVR f where a.VarijantaVRID = b.ID and   c.VarijantaID = b.ID and   c.NodePostajeVRID = d.ID and   d.PostajaID = e.id and   a.id = ? AND f.StupacVRID = a.ID AND f.NodePostajeVarijanteVRID = c.ID AND e.Prodaja = 'D' ORDER BY 1";
+		String sql = "SELECT c.ZapSt,e.Naziv,f.VremeOdhoda,f.VremePrihoda,e.ID from PTStupciVR a,PTVarijanteVR b,PTPostajeVarijantVR c,PTPostajeVR d,PTPostaje e,PTCasiVoznjeVR f where a.VarijantaVRID = b.ID and   c.VarijantaID = b.ID and   c.NodePostajeVRID = d.ID and   d.PostajaID = e.id and   a.id = ? AND f.StupacVRID = a.ID AND f.NodePostajeVarijanteVRID = c.ID AND e.Prodaja = 'D' ORDER BY 1";
 		if (stupac.getSmjer().equals("+"))
 			sql = sql + " DESC";
 		try {
@@ -27,7 +28,7 @@ public class Postaja {
 			ResultSet rs = ps.executeQuery();
 			postajaList.clear();
 			while (rs.next()) {
-				postajaList.add(new Postaja(rs.getInt("ZapSt"), rs.getString("Naziv"), rs.getDouble("VremeOdhoda"), rs.getDouble("VremePrihoda")));
+				postajaList.add(new Postaja(rs.getInt("ZapSt"), rs.getString("Naziv"), rs.getDouble("VremeOdhoda"), rs.getDouble("VremePrihoda"),rs.getInt("id")));
 			}
 			rs.close();
 			ps.close();
@@ -59,11 +60,12 @@ public class Postaja {
 	}
 
 	
-	public Postaja(Integer zapSt, String naziv, double vOdhoda, double vPrihoda) {
+	public Postaja(Integer zapSt, String naziv, double vOdhoda, double vPrihoda,Integer id) {
 		this.zapSt = zapSt;
 		this.naziv = naziv;
 		this.vremeOdhoda = DbUtil.getHHMM(vOdhoda);
 		this.vremePrihoda = DbUtil.getHHMM(vPrihoda);
+		this.id = id;
 	}
 
 	public Integer getZapSt() {
@@ -82,4 +84,7 @@ public class Postaja {
 		return vremeOdhoda;
 	}
 
+	public Integer getId() {
+		return id;
+	}
 }

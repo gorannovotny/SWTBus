@@ -30,47 +30,23 @@ public class PrintUtils {
 		SimpleDateFormat sdf = new SimpleDateFormat("dd.MM.yyyy. HH:mm");
 		StringBuffer sb = new StringBuffer();
 		for (Stavka stavka : stavkaList) {
-			if (stavka.getKarta().getStVoznji().equals(1)) {
 				sb.append("AP d.d. Varazdin - u stecaju\nGospodarska 56\nOIB: 51631089795\n\nBroj racuna: 734234429\nPrijevoznik: AP d.d\n");
 				sb.append(stavkaList.get(0).getRelacija() + "\n \n");
 				sb.append("Vrsta karte       Popust  Cijena\n................................\n");
 				sb.append(stavka.getDesc() + "\n");
 				sb.append("................................\n");
-				double osnovica = Stavka.getUkupno().doubleValue();
-				sb.append(String.format("Osnovica PDV 25%%         %7.2f\n", osnovica * .75));
-				sb.append(String.format("PDV 25%%                  %7.2f\n", osnovica * 0.25));
-				sb.append(String.format("Za platiti               %7.2f\n", osnovica));
+				sb.append(String.format("Osnovica PDV 25%%         %7.2f\n", stavka.getNettoCijena().doubleValue()));
+				sb.append(String.format("PDV 25%%                  %7.2f\n", stavka.getIznosPDV().doubleValue()));
+				sb.append(String.format("Za platiti               %7.2f\n", stavka.getProdajnaCijena()));
 				sb.append("\n");
 				sb.append("Vozač : " + vozac.getSifra() + "\n");
 				sb.append(sdf.format(new Date()) + "\n");
 				sb.append("................................\n");
-			}
 			if (stavka.getKarta().getStVoznji().equals(2)) {
-				sb.append("AP d.d. Varazdin - u stecaju\nGospodarska 56\nOIB: 51631089795\n\nBroj racuna: 734234429\nPrijevoznik: AP d.d\n");
-				sb.append(stavka.getRelacija() + "\n \n");
-				sb.append("Vrsta karte       Popust  Cijena\n................................\n");
-				sb.append(stavka.getDesc() + "\n");
-				sb.append("................................\n \n");
-				double osnovica = Stavka.getUkupno().doubleValue();
-				sb.append(String.format("Osnovica PDV 25%%         %7.2f\n", osnovica * .75));
-				sb.append(String.format("PDV 25%%                  %7.2f\n", osnovica * 0.25));
-				sb.append(String.format("Za platiti               %7.2f\n", osnovica));
-				sb.append("\n");
-				sb.append("Vozač : " + vozac.getSifra() + "\n");
-				sb.append(sdf.format(new Date()) + "\n");
 				sb.append("................................\n");
-				sb.append("AP d.d. Varazdin - u stecaju\nGospodarska 56\nOIB: 51631089795\n\nBroj racuna: 734234429\nPrijevoznik: AP d.d\n");
-				sb.append(stavka.getRelacijaKontra() + "\n \n");
-				sb.append("Vrsta karte       Popust  Cijena\n................................\n");
-				sb.append(stavka.getDesc() + "\n");
-				sb.append("................................\n");
-				osnovica = Stavka.getUkupno().doubleValue();
-				sb.append(String.format("Osnovica PDV 25%%         %7.2f\n", osnovica * .75));
-				sb.append(String.format("PDV 25%%                  %7.2f\n", osnovica * 0.25));
-				sb.append(String.format("Za platiti               %7.2f\n", osnovica));
-				sb.append("\n");
-				sb.append("Vozač : " + vozac.getSifra() + "\n");
-				sb.append(sdf.format(new Date()) + "\n");
+ 				sb.append("Talon: "+ stavka.getRelacijaKontra()+"\n");
+				sb.append("Vrsta karte: "+ stavka.getKarta().getNaziv() + "\n");
+				sb.append("Broj karte: " + stavka.getBrojKarte() + "\n");
 				sb.append("................................\n");
 			}
 		}
