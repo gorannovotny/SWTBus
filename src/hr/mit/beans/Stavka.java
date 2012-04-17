@@ -17,8 +17,9 @@ public class Stavka {
 	private Popust popust;
 	private ProdajnoMjesto prodajnoMjesto;
 	private String brojKarte;
-	private BigDecimal cijena = BigDecimal.ZERO;
+	private CijenaKarte cijenaKarte;
 	private Stupac stupac;
+	private BigDecimal cijenaZamjenske;
 
 	public static void clear() {
 		stavkaList.clear();
@@ -30,7 +31,7 @@ public class Stavka {
 	
 	public static List<Stavka>  getStorno(List<Stavka> sl) {
 		for (Stavka s : sl) {
-			s.setCijena(s.getCijena().negate());
+			s.setCijena(s.getProdajnaCijena().negate());
 		}
 		return sl;
 	}
@@ -84,23 +85,24 @@ public class Stavka {
 	public static BigDecimal getUkupno() {
 		BigDecimal retval = BigDecimal.ZERO;
 		for (Stavka s : stavkaList) {
-			if (! s.getKarta().getId().equals(Karta.ZAMJENSKA_KARTA)) retval = retval.add(s.getCijena());
+			if (! s.getKarta().getId().equals(Karta.ZAMJENSKA_KARTA)) retval = retval.add(s.getProdajnaCijena());
 		}
 		return retval.setScale(2);
 	}
 
-	public Stavka(Stupac stupac) {
-		this.stupac = stupac;
-	}
+//	public Stavka(Stupac stupac) {
+//		this.stupac = stupac;
+//	}
 
 	public Stavka(Stupac stupac, Postaja odPostaje, Postaja doPostaje, Karta karta, Popust popust) {
+		this.stupac = stupac;
 		this.odPostaje = odPostaje;
 		this.doPostaje = doPostaje;
 		this.karta = karta;
 		this.popust = popust;
-		CijenaKarte c = new CijenaKarte(stupac, karta, odPostaje, doPostaje);
-		cijena = c.getUkupnaCijena();
-		cijena = cijena.subtract(cijena.multiply(popust.getPopust().movePointLeft(2)));
+		cijenaKarte = new CijenaKarte(stupac, karta, odPostaje, doPostaje);
+//		cijena = c.getUkupnaCijena();
+//		cijena = cijena.subtract(cijena.multiply(popust.getPopust().movePointLeft(2)));
 	}
 
 	public String getDesc() {
@@ -108,7 +110,7 @@ public class Stavka {
 		if (k.length() > 19)
 			k = k.substring(0, 19);
 
-		String out = String.format("%-19s %3.0f%% %7.2f", k, popust.getPopust().doubleValue(), getCijena().doubleValue());
+		String out = String.format("%-19s %3.0f%% %7.2f", k, popust.getPopust().doubleValue(), getProdajnaCijena().doubleValue());
 		return out;
 	}
 
@@ -120,16 +122,30 @@ public class Stavka {
 		return doPostaje.getNaziv() + " - " + odPostaje.getNaziv();
 	}
 
-	public BigDecimal getCijena() {
-		return cijena;
+	public BigDecimal getProdajnaCijena() {
+		if (getKarta().getId().equals(Karta.ZAMJENSKA_KARTA))
+			return cijenaZamjenske;
+		else return cijenaKarte.getCijena().multiply(BigDecimal.ONE.subtract(popust.getPopust().movePointLeft(2)));
 	}
 
+	public BigDecimal getIznosPDV() {
+		// Prodajna cijena / 1.25
+		// Treba dodati odnos ino i domaćih kilometara
+		return getProdajnaCijena().divide(new BigDecimal(1.25));
+	}
+	
+	public BigDecimal getNettoCijena() {
+		return getProdajnaCijena().subtract(getIznosPDV());
+		
+	}
+	
 	public Postaja getOdPostaje() {
 		return odPostaje;
 	}
 
 	public void setOdPostaje(Postaja odPostaje) {
 		this.odPostaje = odPostaje;
+		cijenaKarte = new CijenaKarte(stupac, karta, odPostaje, doPostaje);
 	}
 
 	public Postaja getDoPostaje() {
@@ -138,6 +154,7 @@ public class Stavka {
 
 	public void setDoPostaje(Postaja doPostaje) {
 		this.doPostaje = doPostaje;
+		cijenaKarte = new CijenaKarte(stupac, karta, odPostaje, doPostaje);
 	}
 
 	public Karta getKarta() {
@@ -146,6 +163,7 @@ public class Stavka {
 
 	public void setKarta(Karta karta) {
 		this.karta = karta;
+		cijenaKarte = new CijenaKarte(stupac, karta, odPostaje, doPostaje);
 	}
 
 	public Popust getPopust() {
@@ -177,7 +195,7 @@ public class Stavka {
 	}
 
 	public void setCijena(BigDecimal cijena) {
-		this.cijena = cijena;
+		this.cijenaZamjenske = cijena;
 	}
 
 }

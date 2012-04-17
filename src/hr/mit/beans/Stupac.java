@@ -46,15 +46,22 @@ public class Stupac {
 			this.opis = opis2;
 		this.vremeOdhoda = DbUtil.getHHMM(vremeOdhoda);
 	}
-	
-	public static Stupac getByID(int id) {
-		for (Stupac v : stupacList) {
-			if (v.getId().equals(id))
-				return v;
-		}
-		return null;
-	}
 
+	public static Stupac getByID(int id) {
+		String sql = "select a.ID,a.VozniRedID,a.VarijantaVRID,a.SmerVoznje,b.Opis1,b.Opis2,a.VremeOdhoda from PTStupciVR a,PTVozniRedi b WHERE a.VozniRedID = b.id AND a.ID = ? ORDER BY a.VremeOdhoda";
+		try {
+			PreparedStatement ps = DbUtil.getConnection().prepareStatement(sql);
+			ps.setInt(1, id);
+			ResultSet rs = ps.executeQuery();
+			if (rs.next()) {
+			 return new Stupac(rs.getInt("ID"), rs.getInt("VozniRedID"), rs.getString("SmerVoznje"), rs.getInt("VarijantaVRID"), rs.getString("Opis1"), rs.getString("Opis2"), rs
+					.getDouble("VremeOdhoda"));
+			} else return null;
+		} catch (SQLException e) {
+			throw new RuntimeException(e);
+		}
+
+	}
 
 	public static String[] getList() {
 		String[] l = new String[stupacList.size()];
@@ -69,11 +76,11 @@ public class Stupac {
 	public static List<String> getArrayList() {
 		List<String> l = new ArrayList<String>();
 		for (Stupac v : stupacList) {
-			l.add(v.getVremeOdhoda()+ " " + v.getSmjerOpis());
+			l.add(v.getVremeOdhoda() + " " + v.getSmjerOpis());
 		}
 		return l;
 	}
-	
+
 	public String getVremeOdhoda() {
 		return vremeOdhoda;
 	}
@@ -97,11 +104,12 @@ public class Stupac {
 	public String getSmjer() {
 		return smjer;
 	}
-	
+
 	public String getSmjerOpis() {
 		if (smjer.equals("-"))
-		return "Odl.";
-		else return "Dol.";
+			return "Odl.";
+		else
+			return "Dol.";
 	}
 
 }

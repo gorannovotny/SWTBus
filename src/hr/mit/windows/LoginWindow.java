@@ -148,12 +148,12 @@ public class LoginWindow {
 		@Override
 		public void widgetSelected(SelectionEvent e) {
 			Starter.vozac = Vozac.getBySifra(Integer.parseInt(tVozac.getText()));
+			Starter.vozilo = Vozilo.getBySifra(tVozilo.getText());
 			if (Stupac.getList().length > 0)
 				Starter.stupac = Stupac.get((Integer) comboPolazak.getData());
-			// TODO Starter.vozilo = Vozilo.get((Integer) tVozilo.getData());
-			if (Starter.vozac == null || Starter.stupac == null) {
+			if (Starter.vozac == null || Starter.stupac == null ||Starter.vozilo == null) {
 				MessageBox mb = new MessageBox(shlPrijava, SWT.OK | SWT.ICON_ERROR);
-				mb.setMessage("Morate prijaviti vozača i liniju!");
+				mb.setMessage("Morate prijaviti vozača,vozilo i liniju!");
 				mb.open();
 			} else {
 				ProdajaWindow pw = new ProdajaWindow();
@@ -179,9 +179,14 @@ public class LoginWindow {
 	protected class TVoziloModifyListener implements ModifyListener {
 		@Override
 		public void modifyText(ModifyEvent e) {
+			Vozilo v = null;
 			Text t = (Text) e.widget;
 			if (t.getText().matches("\\d+"))
-				lOpisVozilo.setText(Vozilo.getNaziv(Integer.parseInt(t.getText())));
+				v = Vozilo.getBySifra(t.getText());
+			if (v == null)
+				lOpisVozilo.setText("");
+			else
+				lOpisVozilo.setText("("+v.getRegSt() + ") " + v.getNaziv());
 		}
 	}
 
@@ -212,6 +217,10 @@ public class LoginWindow {
 			if (Stupac.getList().length > 0) {
 				comboPolazak.setText(Stupac.getList()[0]);
 				comboPolazak.setData(0);
+			} else {
+				comboPolazak.setText("");
+				comboPolazak.setData(null);
+
 			}
 		}
 	}
@@ -220,8 +229,10 @@ public class LoginWindow {
 		@Override
 		public void widgetDefaultSelected(SelectionEvent e) {
 			Integer index = (Integer) comboPolazak.getData();
-			Picker picker = new Picker(comboPolazak, Stupac.getArrayList(), index);
-			comboPolazak = picker.open();
+			if (index != null) {
+				Picker picker = new Picker(comboPolazak, Stupac.getArrayList(), index);
+				comboPolazak = picker.open();
+			}
 
 		}
 

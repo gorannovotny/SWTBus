@@ -82,12 +82,12 @@ public class ProdajaWindow {
 	 */
 	public boolean open() {
 		Postaja.setStupac(Starter.stupac);
-		stavka = new Stavka(Starter.stupac);
 		int random = new Random().nextInt(1000000000);
-		stavka.setBrojKarte(String.valueOf(random));
 
 		final Display display = Display.getDefault();
 		createContents();
+		stavka = new Stavka(Starter.stupac,Postaja.get((Integer) cOdPostaje.getData()),Postaja.get((Integer) cDoPostaje.getData()),Karta.get((Integer) cKarta.getData()),Popust.get((Integer) cPopust.getData()));
+		stavka.setBrojKarte(String.valueOf(random));
 		screenToStavka();
 		stavkaToScreen();
 		attachListeners();
@@ -150,15 +150,15 @@ public class ProdajaWindow {
 		} else {
 			textCijena.removeMouseListener(mouseListener);
 			textBrKarte.removeMouseListener(mouseListener);
-			CijenaKarte c = new CijenaKarte(stavka);
-			stavka.setCijena(c.getUkupnaCijena().multiply(BigDecimal.ONE.subtract(stavka.getPopust().getPopust().movePointLeft(2))).setScale(2));
+//			CijenaKarte c = new CijenaKarte(stavka);
+//			stavka.setCijena(c.getUkupnaCijena().multiply(BigDecimal.ONE.subtract(stavka.getPopust().getPopust().movePointLeft(2))).setScale(2));
 			cProdMjesto.setData(0);
 			cProdMjesto.setText(ProdajnoMjesto.getList()[0]);
 			cProdMjesto.setEnabled(false);
 			textBrKarte.setEnabled(false);
 			textCijena.setEnabled(false);
 			textBrKarte.setText(stavka.getBrojKarte());
-			textCijena.setText(stavka.getCijena().toString());
+			textCijena.setText(stavka.getProdajnaCijena().toString());
 			cPopust.setEnabled(true);
 		}
 		textRacun.setText(Stavka.getDescription());
@@ -305,7 +305,7 @@ public class ProdajaWindow {
 		textBrKarte = new Text(shell, SWT.BORDER | SWT.RIGHT);
 		textBrKarte.setFont(SWTResourceManager.getFont("Liberation Sans", 25, SWT.NORMAL));
 		textBrKarte.setBounds(335, 235, 295, 70);
-		textBrKarte.setText(stavka.getBrojKarte());
+//		textBrKarte.setText(stavka.getBrojKarte());
 		textBrKarte.setEnabled(false);
 
 		textCijena = new Text(shell, SWT.BORDER | SWT.RIGHT);
@@ -370,7 +370,7 @@ public class ProdajaWindow {
 		public void widgetSelected(SelectionEvent e) {
 			Stavka.add(stavka);
 			stavkaToScreen();
-			stavka = new Stavka(Starter.stupac);
+			stavka = new Stavka(Starter.stupac,Postaja.get((Integer) cOdPostaje.getData()),Postaja.get((Integer) cDoPostaje.getData()),Karta.get((Integer) cKarta.getData()),Popust.get((Integer) cPopust.getData()));
 			screenToStavka();
 		}
 	}
@@ -378,7 +378,7 @@ public class ProdajaWindow {
 	protected class PrintButtonListener extends SelectionAdapter {
 		@Override
 		public void widgetSelected(SelectionEvent e) {
-			Blagajna.save(Starter.vozac, Stavka.getList());
+			Blagajna.save(Starter.vozac,Starter.vozilo, Stavka.getList());
 			lBlagajna.setText("Blagajna: " + Obracun.getSaldo().toString());
 			PrintUtils.print(Starter.vozac, Stavka.getList());
 			Stavka.saveList();
@@ -474,7 +474,7 @@ public class ProdajaWindow {
 			keypad.open(t);
 			screenToStavka();
 			if (t.equals(textCijena))
-				t.setText(stavka.getCijena().toString());
+				t.setText(stavka.getProdajnaCijena().toString());
 		}
 	}
 

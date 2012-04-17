@@ -7,17 +7,19 @@ import java.sql.SQLException;
 import java.util.ArrayList;
 
 public class Vozilo {
-	static ArrayList<String> nazivList = new ArrayList<String>();
-	static ArrayList<Integer> idList = new ArrayList<Integer>();
-	
+	private static ArrayList<Vozilo> voziloList = new ArrayList<Vozilo>();
+
+	private Integer id;
+	private String sifra;
+	private String naziv;
+	private String regSt;
 	
 	static {
 		try {
-			String sql = "SELECT Sifra,Naziv,RegSt FROM PromVozila ORDER BY Sifra";
+			String sql = "SELECT id,Sifra,Naziv,RegSt FROM PromVozila ORDER BY Sifra";
 			ResultSet rs = DbUtil.getConnection().createStatement().executeQuery(sql);
 			while (rs.next()) {
-				nazivList.add(rs.getString(3)+" "+rs.getString(2));
-				idList.add(rs.getInt(1));
+				voziloList.add(new Vozilo(rs.getInt("id"),rs.getString("Sifra"),rs.getString("Naziv"),rs.getString("RegSt")));
 			}
 		} catch (SQLException e) {
 			e.printStackTrace();
@@ -25,24 +27,45 @@ public class Vozilo {
 		
 	}
 	
+	public Vozilo(Integer id, String sifra, String naziv, String regSt) {
+		super();
+		this.id = id;
+		this.sifra = sifra;
+		this.naziv = naziv;
+		this.regSt = regSt;
+	}
+
+	public Integer getId() {
+		return id;
+	}
+
+	public String getSifra() {
+		return sifra;
+	}
+
+	public String getNaziv() {
+		return naziv;
+	}
+
+	public String getRegSt() {
+		return regSt;
+	}
+
+	public static Vozilo getBySifra(String sifra) {
+		for (Vozilo v : voziloList) {
+			if (v.getSifra().equals(sifra)) return v;
+		}
+		return null;
+	}
+
 	public static String[] getList() {
-		return nazivList.toArray(new String[0]);
+		String[] l = new String[voziloList.size()];
+		int x= 0;
+		for (Vozilo v : voziloList) {
+			l[x] = v.getNaziv();
+			x++;
+		}
+		return l;
 	}
-
-
-	public static Integer getID(int selectionIndex) {
-		if (selectionIndex >= 0)
-			return idList.get(selectionIndex);
-		else
-			return new Integer(-1);
-	}
-	
-	public static String getNaziv(Integer sifra) {
-		int i = idList.indexOf(sifra);
-		if (i != -1) 
-		    return nazivList.get(i);
-		else return "";
-	}
-
 
 }

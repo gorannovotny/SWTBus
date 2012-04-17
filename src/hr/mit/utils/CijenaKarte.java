@@ -134,7 +134,7 @@ public class CijenaKarte {
 					ps.close();
 					if (cena != null) {
 					retval = new BigDecimal(cena);
-					retval = retval.multiply(new BigDecimal(karta.getStVoznji()));
+					retval = retval.multiply(karta.getFaktorCene());
 					}
 				} catch (SQLException e) {
 					// TODO Auto-generated catch block
@@ -146,7 +146,4 @@ public class CijenaKarte {
 	}
 
 
-	public BigDecimal getUkupnaCijena() {
-		return getCijena().multiply(BigDecimal.ONE.subtract(karta.getPopustProcent().movePointLeft(2)));
-	}
 }
