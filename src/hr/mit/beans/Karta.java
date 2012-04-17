@@ -23,7 +23,9 @@ public class Karta {
 	public static Integer TARIFNI_DALJINAR = 1;
 	public static Integer FIKSNA_CIJENA = 2;
 	public static Integer FIKSNI_KILOMETRI = 3;
+	
 	public static Integer ZAMJENSKA_KARTA = 99;
+	public static Integer POVRATNA_KARTA = 462;
 
 	static {
 		try {

@@ -378,7 +378,7 @@ public class ProdajaWindow {
 	protected class PrintButtonListener extends SelectionAdapter {
 		@Override
 		public void widgetSelected(SelectionEvent e) {
-			Blagajna.save(Starter.vozac, Stavka.getList());
+			Blagajna.save(Starter.vozac,Starter.vozilo, Stavka.getList());
 			lBlagajna.setText("Blagajna: " + Obracun.getSaldo().toString());
 			PrintUtils.print(Starter.vozac, Stavka.getList());
 			Stavka.saveList();
