@@ -1,5 +1,8 @@
 package hr.mit.windows;
 
+import java.io.File;
+import java.io.IOException;
+
 import hr.mit.Starter;
 import hr.mit.beans.Stupac;
 import hr.mit.beans.Vozac;
@@ -38,6 +41,7 @@ public class LoginWindow {
 	protected Label lOpisVozilo;
 	protected Label lOpisVozac;
 	protected Label lOpisLinije;
+	private Button btnUitaj;
 
 	/**
 	 * @wbp.parser.entryPoint
@@ -127,6 +131,12 @@ public class LoginWindow {
 		comboPolazak.setAlignment(SWT.LEFT);
 		comboPolazak.setBounds(165, 280, 200, 50);
 
+		btnUitaj = new Button(shlPrijava, SWT.NONE);
+		btnUitaj.addSelectionListener(new Button_1SelectionListener());
+		btnUitaj.setText("Učitaj bazu");
+		btnUitaj.setFont(SWTResourceManager.getFont("Liberation Sans", 20, SWT.NORMAL));
+		btnUitaj.setBounds(5, 486, 150, 50);
+
 		button = new Button(shlPrijava, SWT.ARROW | SWT.RIGHT);
 		button.setFont(SWTResourceManager.getFont("Liberation Sans", 30, SWT.NORMAL));
 		button.setBounds(700, 480, 60, 56);
@@ -151,7 +161,7 @@ public class LoginWindow {
 			Starter.vozilo = Vozilo.getBySifra(tVozilo.getText());
 			if (Stupac.getList().length > 0)
 				Starter.stupac = Stupac.get((Integer) comboPolazak.getData());
-			if (Starter.vozac == null || Starter.stupac == null ||Starter.vozilo == null) {
+			if (Starter.vozac == null || Starter.stupac == null || Starter.vozilo == null) {
 				MessageBox mb = new MessageBox(shlPrijava, SWT.OK | SWT.ICON_ERROR);
 				mb.setMessage("Morate prijaviti vozača,vozilo i liniju!");
 				mb.open();
@@ -186,7 +196,7 @@ public class LoginWindow {
 			if (v == null)
 				lOpisVozilo.setText("");
 			else
-				lOpisVozilo.setText("("+v.getRegSt() + ") " + v.getNaziv());
+				lOpisVozilo.setText("(" + v.getRegSt() + ") " + v.getNaziv());
 		}
 	}
 
@@ -238,6 +248,29 @@ public class LoginWindow {
 
 		@Override
 		public void widgetSelected(SelectionEvent e) {
+			widgetDefaultSelected(e);
+		}
+	}
+
+	private class Button_1SelectionListener extends SelectionAdapter {
+		@Override
+		public void widgetDefaultSelected(SelectionEvent e) {
+			try {
+				if (new File("/mnt/usb/baza.db").exists())
+					Runtime.getRuntime().exec("cp /mnt/usb/baza.db .");
+				else {
+					MessageBox mb = new MessageBox(shlPrijava, SWT.OK | SWT.ICON_ERROR);
+					mb.setMessage("Ne mogu pronaći bazu");
+					mb.open();
+				}
+			} catch (IOException e1) {
+				throw new RuntimeException(e1);
+			}
+		}
+
+		@Override
+		public void widgetSelected(SelectionEvent e) {
+			// TODO Auto-generated method stub
 			widgetDefaultSelected(e);
 		}
 	}

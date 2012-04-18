@@ -1,5 +1,8 @@
 package hr.mit.windows;
 
+import java.io.File;
+import java.io.IOException;
+
 import hr.mit.beans.Obracun;
 
 import org.eclipse.swt.SWT;
@@ -24,6 +27,8 @@ public class ObracunWindow {
 	private Label text;
 	private Button btnGaenje;
 	private List list;
+	private Button btnPrint;
+	private Button btnSnimi;
 
 	/**
 	 * @wbp.parser.entryPoint
@@ -31,7 +36,8 @@ public class ObracunWindow {
 	public boolean open(Shell parent) {
 		Display display = Display.getDefault();
 		shell = new Shell(parent, SWT.NONE);
-		shell.setSize(629, 300);
+		shell.setSize(629, 331);
+		// shell.setSize(629, 300);
 		shell.setBounds(0, 0, 800, 600);
 		// shell.setMaximized(true);
 		shell.setFullScreen(true);
@@ -66,7 +72,7 @@ public class ObracunWindow {
 
 		backButton = new Button(shell, SWT.NONE);
 		backButton.setFont(SWTResourceManager.getFont("Liberation Sans", 20, SWT.NORMAL));
-		backButton.setBounds(162, 540, 150, 50);
+		backButton.setBounds(5, 540, 150, 50);
 		backButton.setText("Povratak");
 		backButton.addSelectionListener(new SelectionListener() {
 			@Override
@@ -80,6 +86,12 @@ public class ObracunWindow {
 			}
 		});
 
+		btnSnimi = new Button(shell, SWT.NONE);
+		btnSnimi.addSelectionListener(new BtnSnimiSelectionListener());
+		btnSnimi.setText("Snimi");
+		btnSnimi.setFont(SWTResourceManager.getFont("Liberation Sans", 20, SWT.NORMAL));
+		btnSnimi.setBounds(162, 540, 150, 50);
+
 		btnGaenje = new Button(shell, SWT.NONE);
 		btnGaenje.addSelectionListener(new BtnGaenjeSelectionListener());
 		btnGaenje.setText("Gašenje");
@@ -90,6 +102,12 @@ public class ObracunWindow {
 		exitButton.setFont(SWTResourceManager.getFont("Liberation Sans", 20, SWT.NORMAL));
 		exitButton.setBounds(472, 540, 150, 50);
 		exitButton.setText("Obračun");
+
+		btnPrint = new Button(shell, SWT.NONE);
+		btnPrint.addSelectionListener(new BtnPrintSelectionListener());
+		btnPrint.setText("Print");
+		btnPrint.setFont(SWTResourceManager.getFont("Liberation Sans", 20, SWT.NORMAL));
+		btnPrint.setBounds(627, 540, 150, 50);
 
 		exitButton.addSelectionListener(new SelectionListener() {
 			@Override
@@ -102,6 +120,7 @@ public class ObracunWindow {
 				if (Obracun.imaZaObracun()) {
 					Obracun.closeObracun();
 					list.setItems(Obracun.getList());
+					list.select(0);
 				} else {
 					MessageBox mb = new MessageBox(shell, SWT.OK | SWT.ICON_INFORMATION);
 					mb.setMessage("Nema nijedne stavke za obračun");
@@ -134,6 +153,37 @@ public class ObracunWindow {
 		public void widgetSelected(SelectionEvent e) {
 			// TODO Auto-generated method stub
 			widgetDefaultSelected(e);
+		}
+	}
+
+	private class BtnSnimiSelectionListener extends SelectionAdapter {
+		@Override
+		public void widgetDefaultSelected(SelectionEvent e) {
+			try {
+				if (new File("/mnt/usb").exists())
+					Runtime.getRuntime().exec("cp prodaja.db /mnt/usb");
+				else {
+					MessageBox mb = new MessageBox(shell, SWT.OK | SWT.ICON_ERROR);
+					mb.setMessage("USB stick nije priključen");
+					mb.open();
+				}
+			} catch (IOException e1) {
+				throw new RuntimeException(e1);
+			}
+		}
+
+		@Override
+		public void widgetSelected(SelectionEvent e) {
+			// TODO Auto-generated method stub
+			widgetDefaultSelected(e);
+		}
+
+	}
+
+	private class BtnPrintSelectionListener extends SelectionAdapter {
+		@Override
+		public void widgetSelected(SelectionEvent e) {
+			Obracun.print(Obracun.get(list.getSelectionIndex()));
 		}
 	}
 }

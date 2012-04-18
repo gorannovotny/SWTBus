@@ -39,6 +39,12 @@ public class Vozac {
 		}
 		return null;
 	}
+	public static Vozac getByID(Integer ID) {
+		for (Vozac v : vozacList) {
+			if (v.getId().equals(ID)) return v;
+		}
+		return null;
+	}
 
 	public Integer getId() {
 		return id;

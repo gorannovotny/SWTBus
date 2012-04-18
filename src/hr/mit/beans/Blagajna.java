@@ -29,7 +29,7 @@ public class Blagajna {
 				ps.setInt(11,1); //Broj putnika
 				ps.setInt(12,1); //Broj karata
 				if (stavka.getKarta().getId().equals(Karta.ZAMJENSKA_KARTA)) {
-					ps.setInt(1, Karta.POVRATNA_KARTA);
+//					ps.setInt(1, Karta.POVRATNA_KARTA);
 					ps.setInt(13,1); //Status zamjenske karte
 				}
 				ps.setInt(14,stavka.getPopust().getId());

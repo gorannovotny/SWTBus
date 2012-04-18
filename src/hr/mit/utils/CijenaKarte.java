@@ -11,7 +11,6 @@ import java.sql.SQLException;
 
 public class CijenaKarte {
 	// BigDecimal cenaKarte;
-	BigDecimal znesekPopusta;
 	// Integer distancaCenika;
 	// Integer distancaLinije;
 	// Integer distancaRelacije;
@@ -142,7 +141,7 @@ public class CijenaKarte {
 				}
 			}
 		}
-		return retval;
+		return retval.multiply(BigDecimal.ONE.subtract(karta.getPopustProcent().movePointLeft(2)));
 	}
 
 

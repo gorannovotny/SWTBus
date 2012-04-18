@@ -109,8 +109,8 @@ public class Stavka {
 		String k = karta.getNaziv();
 		if (k.length() > 19)
 			k = k.substring(0, 19);
-
-		String out = String.format("%-19s %3.0f%% %7.2f", k, popust.getPopust().doubleValue(), getProdajnaCijena().doubleValue());
+		String out;
+			out = String.format("%-19s %3.0f%% %7.2f", k, popust.getPopust().doubleValue(), getProdajnaCijena().doubleValue());
 		return out;
 	}
 

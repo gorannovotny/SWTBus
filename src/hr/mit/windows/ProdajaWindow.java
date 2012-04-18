@@ -8,7 +8,6 @@ import hr.mit.beans.Popust;
 import hr.mit.beans.Postaja;
 import hr.mit.beans.ProdajnoMjesto;
 import hr.mit.beans.Stavka;
-import hr.mit.utils.CijenaKarte;
 import hr.mit.utils.PrintUtils;
 
 import java.math.BigDecimal;
@@ -31,6 +30,8 @@ import org.eclipse.swt.widgets.Label;
 import org.eclipse.swt.widgets.Shell;
 import org.eclipse.swt.widgets.Text;
 import org.eclipse.wb.swt.SWTResourceManager;
+import org.eclipse.swt.events.FocusAdapter;
+import org.eclipse.swt.events.FocusEvent;
 
 public class ProdajaWindow {
 
@@ -61,7 +62,7 @@ public class ProdajaWindow {
 	private Label lblBrojKarte;
 	private Label lblCijena;
 	private Label lblUkupno;
-	Button lBlagajna;
+	public Button lBlagajna;
 	private Button btnClear;
 
 	private TMouseListener mouseListener;
@@ -86,7 +87,8 @@ public class ProdajaWindow {
 
 		final Display display = Display.getDefault();
 		createContents();
-		stavka = new Stavka(Starter.stupac,Postaja.get((Integer) cOdPostaje.getData()),Postaja.get((Integer) cDoPostaje.getData()),Karta.get((Integer) cKarta.getData()),Popust.get((Integer) cPopust.getData()));
+		stavka = new Stavka(Starter.stupac, Postaja.get((Integer) cOdPostaje.getData()), Postaja.get((Integer) cDoPostaje.getData()), Karta.get((Integer) cKarta.getData()),
+				Popust.get((Integer) cPopust.getData()));
 		stavka.setBrojKarte(String.valueOf(random));
 		screenToStavka();
 		stavkaToScreen();
@@ -150,8 +152,8 @@ public class ProdajaWindow {
 		} else {
 			textCijena.removeMouseListener(mouseListener);
 			textBrKarte.removeMouseListener(mouseListener);
-//			CijenaKarte c = new CijenaKarte(stavka);
-//			stavka.setCijena(c.getUkupnaCijena().multiply(BigDecimal.ONE.subtract(stavka.getPopust().getPopust().movePointLeft(2))).setScale(2));
+			// CijenaKarte c = new CijenaKarte(stavka);
+			// stavka.setCijena(c.getUkupnaCijena().multiply(BigDecimal.ONE.subtract(stavka.getPopust().getPopust().movePointLeft(2))).setScale(2));
 			cProdMjesto.setData(0);
 			cProdMjesto.setText(ProdajnoMjesto.getList()[0]);
 			cProdMjesto.setEnabled(false);
@@ -305,7 +307,7 @@ public class ProdajaWindow {
 		textBrKarte = new Text(shell, SWT.BORDER | SWT.RIGHT);
 		textBrKarte.setFont(SWTResourceManager.getFont("Liberation Sans", 25, SWT.NORMAL));
 		textBrKarte.setBounds(335, 235, 295, 70);
-//		textBrKarte.setText(stavka.getBrojKarte());
+		// textBrKarte.setText(stavka.getBrojKarte());
 		textBrKarte.setEnabled(false);
 
 		textCijena = new Text(shell, SWT.BORDER | SWT.RIGHT);
@@ -370,7 +372,8 @@ public class ProdajaWindow {
 		public void widgetSelected(SelectionEvent e) {
 			Stavka.add(stavka);
 			stavkaToScreen();
-			stavka = new Stavka(Starter.stupac,Postaja.get((Integer) cOdPostaje.getData()),Postaja.get((Integer) cDoPostaje.getData()),Karta.get((Integer) cKarta.getData()),Popust.get((Integer) cPopust.getData()));
+			stavka = new Stavka(Starter.stupac, Postaja.get((Integer) cOdPostaje.getData()), Postaja.get((Integer) cDoPostaje.getData()), Karta.get((Integer) cKarta.getData()),
+					Popust.get((Integer) cPopust.getData()));
 			screenToStavka();
 		}
 	}
@@ -378,7 +381,7 @@ public class ProdajaWindow {
 	protected class PrintButtonListener extends SelectionAdapter {
 		@Override
 		public void widgetSelected(SelectionEvent e) {
-			Blagajna.save(Starter.vozac,Starter.vozilo, Stavka.getList());
+			Blagajna.save(Starter.vozac, Starter.vozilo, Stavka.getList());
 			lBlagajna.setText("Blagajna: " + Obracun.getSaldo().toString());
 			PrintUtils.print(Starter.vozac, Stavka.getList());
 			Stavka.saveList();
@@ -430,6 +433,7 @@ public class ProdajaWindow {
 					cProdMjesto.setData(1);
 					cProdMjesto.setText(ProdajnoMjesto.getList()[1]);
 					stavka.setProdajnoMjesto(ProdajnoMjesto.get(1));
+					textCijena.setText("0.00");
 				}
 			} else if (e.widget.equals(cPopust)) {
 				Integer index = (Integer) cPopust.getData();
@@ -483,6 +487,7 @@ public class ProdajaWindow {
 		public void widgetDefaultSelected(SelectionEvent e) {
 			ObracunWindow ow = new ObracunWindow();
 			exit = ow.open(shell);
+			lBlagajna.setText(Obracun.getSaldo().toString());
 			if (exit)
 				shell.dispose();
 		}
@@ -506,4 +511,5 @@ public class ProdajaWindow {
 			widgetDefaultSelected(e);
 		}
 	}
+
 }
