@@ -23,21 +23,11 @@ public class CijenaKarte {
 	private Integer odZapSt;
 	private Integer doZapSt;
 	private Karta karta;
-
-	
-	public CijenaKarte(Stavka stavka)  {
-		this.varijantaID = stavka.getStupac().getVarijantaID();
-		if (stavka.getOdPostaje().getZapSt() > stavka.getDoPostaje().getZapSt()) {
-			this.odZapSt = stavka.getDoPostaje().getZapSt();
-			this.doZapSt = stavka.getOdPostaje().getZapSt();
-
-		} else {
-			this.odZapSt = stavka.getOdPostaje().getZapSt();
-			this.doZapSt = stavka.getDoPostaje().getZapSt();
-		}
-		this.karta = stavka.getKarta();
-
-	}
+	private Integer distancaLinije;
+	private Integer distancaRelacije;
+	private Integer domDistanca;
+	private Integer inoDistanca;
+	private BigDecimal cijena;
 
 	public CijenaKarte(Stupac stupac, Karta karta, Postaja odPostaje, Postaja doPostaje) {
 		this.varijantaID = stupac.getVarijantaID();
@@ -50,45 +40,65 @@ public class CijenaKarte {
 			this.doZapSt = doPostaje.getZapSt();
 		}
 		this.karta = karta;
+		this.distancaLinije = izracunajDistancaLinije();
+		this.distancaRelacije = izracunajDistancaRelacije();
+		this.domDistanca = izracunajDomDistanca();
+		this.inoDistanca = izracunajInoDistanca();
+		this.cijena = izracunajCijena();
 	}
 
-	public Integer getDistancaLinije() throws SQLException {
+	private Integer izracunajDistancaLinije() {
 		String sql = "SELECT SUM(DistancaM) FROM PTPostajeVarijantVR WHERE VarijantaID = ? AND ZapSt NOT IN (SELECT MIN(ZapSt) FROM PTPostajeVarijantVR WHERE VarijantaID = ?)";
-		PreparedStatement ps = DbUtil.getConnection().prepareStatement(sql);
-		ps.setInt(1, varijantaID);
-		ps.setInt(2, varijantaID);
-		Integer retval = DbUtil.getSingleResult(ps);
-		ps.close();
+		Integer retval;
+		try {
+			PreparedStatement ps = DbUtil.getConnection().prepareStatement(sql);
+			ps.setInt(1, varijantaID);
+			ps.setInt(2, varijantaID);
+			retval = DbUtil.getSingleResult(ps);
+			ps.close();
+		} catch (SQLException e) {
+			throw new RuntimeException(e);
+		}
 		return retval;
 	}
 
-	public Integer getDistancaRelacije() throws SQLException {
+	private Integer izracunajDistancaRelacije() {
 		String sql = "SELECT SUM(DistancaM) FROM PTPostajeVarijantVR WHERE VarijantaID = ? AND ZapSt > ? AND ZapSt <= ?";
-		PreparedStatement ps = DbUtil.getConnection().prepareStatement(sql);
-		ps.setInt(1, varijantaID);
-		ps.setInt(2, odZapSt);
-		ps.setInt(3, doZapSt);
-		Integer retval = DbUtil.getSingleResult(ps);
-		ps.close();
+		Integer retval;
+		try {
+			PreparedStatement ps = DbUtil.getConnection().prepareStatement(sql);
+			ps.setInt(1, varijantaID);
+			ps.setInt(2, odZapSt);
+			ps.setInt(3, doZapSt);
+			retval = DbUtil.getSingleResult(ps);
+			ps.close();
+		} catch (SQLException e) {
+			throw new RuntimeException(e);
+		}
 		return retval;
 	}
 
-	public Integer getDomDistanca() throws SQLException {
+	private Integer izracunajDomDistanca() {
 		String sql = "SELECT SUM(a.DistancaM) FROM PTPostajeVarijantVR a,PTPostajeVR b,PTPostaje c WHERE b.ID = a.NodePostajeVRID AND c.ID = b.PostajaID AND a.VarijantaID = ? AND a.ZapSt > ? AND a.ZapSt <= ? AND c.Drzava = '191'";
-		PreparedStatement ps = DbUtil.getConnection().prepareStatement(sql);
-		ps.setInt(1, varijantaID);
-		ps.setInt(2, odZapSt);
-		ps.setInt(3, doZapSt);
-		Integer retval = DbUtil.getSingleResult(ps);
-		ps.close();
+		Integer retval;
+		try {
+			PreparedStatement ps = DbUtil.getConnection().prepareStatement(sql);
+			ps.setInt(1, varijantaID);
+			ps.setInt(2, odZapSt);
+			ps.setInt(3, doZapSt);
+			retval = DbUtil.getSingleResult(ps);
+			ps.close();
+		} catch (SQLException e) {
+			throw new RuntimeException(e);
+		}
 		return retval;
 	}
 
-	public Integer getInoDistanca() throws SQLException {
+	private Integer izracunajInoDistanca() {
 		return getDistancaRelacije() - getDomDistanca();
 	}
 
-	public Integer getDistancaCenika() throws SQLException {
+	private Integer getDistancaCenika() throws SQLException {
 		Integer retval;
 		if (karta.getNacinDolocanjaCene().equals(Karta.FIKSNI_KILOMETRI))
 			retval = karta.getKmPogoja() * 1000;
@@ -106,7 +116,7 @@ public class CijenaKarte {
 		return retval;
 	}
 
-	public BigDecimal getCijena() {
+	private BigDecimal izracunajCijena() {
 		BigDecimal retval = BigDecimal.ZERO;
 		if (karta.getNacinDolocanjaCene().equals(Karta.FIKSNA_CIJENA))
 			retval = karta.getFiksnaCena();
@@ -132,8 +142,8 @@ public class CijenaKarte {
 					Double cena = DbUtil.getSingleResultDouble(ps);
 					ps.close();
 					if (cena != null) {
-					retval = new BigDecimal(cena);
-					retval = retval.multiply(karta.getFaktorCene());
+						retval = new BigDecimal(cena);
+						retval = retval.multiply(karta.getFaktorCene());
 					}
 				} catch (SQLException e) {
 					// TODO Auto-generated catch block
@@ -144,5 +154,24 @@ public class CijenaKarte {
 		return retval.multiply(BigDecimal.ONE.subtract(karta.getPopustProcent().movePointLeft(2)));
 	}
 
+	public Integer getDistancaLinije() {
+		return distancaLinije;
+	}
+
+	public Integer getDistancaRelacije() {
+		return distancaRelacije;
+	}
+
+	public Integer getDomDistanca() {
+		return domDistanca;
+	}
+
+	public Integer getInoDistanca() {
+		return inoDistanca;
+	}
+
+	public BigDecimal getCijena() {
+		return cijena;
+	}
 
 }

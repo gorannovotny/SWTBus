@@ -313,7 +313,7 @@ public class ProdajaWindow {
 		textCijena = new Text(shell, SWT.BORDER | SWT.RIGHT);
 		textCijena.setFont(SWTResourceManager.getFont("Liberation Sans", 25, SWT.NORMAL));
 		textCijena.setBounds(635, 235, 155, 70);
-		textCijena.setText("3334,12");
+		// textCijena.setText("3334,12");
 
 		bAdd = new Button(shell, SWT.NONE);
 		bAdd.setFont(SWTResourceManager.getFont("Liberation Sans", 25, SWT.NORMAL));

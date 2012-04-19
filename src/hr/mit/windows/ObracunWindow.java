@@ -121,6 +121,7 @@ public class ObracunWindow {
 					Obracun.closeObracun();
 					list.setItems(Obracun.getList());
 					list.select(0);
+					text.setText(Obracun.getObracun(null));
 				} else {
 					MessageBox mb = new MessageBox(shell, SWT.OK | SWT.ICON_INFORMATION);
 					mb.setMessage("Nema nijedne stavke za obračun");
@@ -137,7 +138,17 @@ public class ObracunWindow {
 		public void widgetSelected(SelectionEvent e) {
 			shell.dispose();
 			exit = true;
-			// Runtime.getRuntime().exec("/sbin/shutdown now");
+			if (new File(".shutdown").exists()) {
+				try {
+					Runtime.getRuntime().exec("/sbin/shutdown now");
+				} catch (IOException e1) {
+					throw new RuntimeException(e1);
+				}
+			} else {
+				shell.dispose();
+				exit = true;
+
+			}
 		}
 	}
 

@@ -9,7 +9,7 @@ import java.util.List;
 public class Blagajna {
 	
 	public static void save(Vozac vozac,Vozilo vozilo,List<Stavka> stavkaList) {
-		String sql = "INSERT INTO PTKTProdaja (Firma,Datum,VoznaKartaID,Code,Cena,Popust,Vozac1ID,StupacID,OdPostajeID,DoPostajeID,VoziloID,BRVoznji,BrPutnika,BRKarata,StatusZK,popust1ID,PCenaKarte,NCenaKarte,ZaPlatiti) VALUES(5,DATETIME('now'),?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)";
+		String sql = "INSERT INTO PTKTProdaja (Firma,Datum,VoznaKartaID,Code,Cena,Popust,Vozac1ID,StupacID,OdPostajeID,DoPostajeID,VoziloID,BRVoznji,BrPutnika,BRKarata,StatusZK,popust1ID,PCenaKarte,NCenaKarte,ZaPlatiti,KmLinijeVR,KmDomaci,KmIno) VALUES(5,DATETIME('now'),?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)";
 		try {
 			DbUtil.getConnection2().setAutoCommit(false);
 			PreparedStatement ps = DbUtil.getConnection2().prepareStatement(sql);
@@ -29,14 +29,18 @@ public class Blagajna {
 				ps.setInt(11,1); //Broj putnika
 				ps.setInt(12,1); //Broj karata
 				if (stavka.getKarta().getId().equals(Karta.ZAMJENSKA_KARTA)) {
-//					ps.setInt(1, Karta.POVRATNA_KARTA);
 					ps.setInt(13,1); //Status zamjenske karte
+					ps.setDouble(17,0.0); // Za platiti
+				} else {
+					ps.setInt(13,0); //Status zamjenske karte
+					ps.setDouble(17,stavka.getProdajnaCijena().doubleValue()); // Za platiti
 				}
 				ps.setInt(14,stavka.getPopust().getId());
-//				ps.setDouble(15,stavka.getPCena());
-//				ps.setDouble(16, stavka.getNCena());
-//				ps.setDouble(17,stavka.getZaPlatiti());
-				
+				ps.setDouble(15,stavka.getProdajnaCijena().doubleValue());
+				ps.setDouble(16, stavka.getNettoCijena().doubleValue());
+				ps.setInt(18,stavka.getKmLinije());
+				ps.setInt(19,stavka.getKmDomaci());
+				ps.setInt(20, stavka.getKmIno());
 				ps.execute();
 			}
 			DbUtil.getConnection2().commit();

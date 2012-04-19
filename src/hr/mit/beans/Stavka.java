@@ -124,14 +124,14 @@ public class Stavka {
 
 	public BigDecimal getProdajnaCijena() {
 		if (getKarta().getId().equals(Karta.ZAMJENSKA_KARTA))
-			return cijenaZamjenske;
-		else return cijenaKarte.getCijena().multiply(BigDecimal.ONE.subtract(popust.getPopust().movePointLeft(2)));
+			return cijenaZamjenske.setScale(2);
+		else return cijenaKarte.getCijena().multiply(BigDecimal.ONE.subtract(popust.getPopust().movePointLeft(2))).setScale(2);
 	}
 
 	public BigDecimal getIznosPDV() {
-		// Prodajna cijena / 1.25
+		// Prodajna cijena  * 0.2 ( Za PDV 25%)
 		// Treba dodati odnos ino i domaćih kilometara
-		return getProdajnaCijena().divide(new BigDecimal(1.25));
+		return getProdajnaCijena().multiply(new BigDecimal(0.2));
 	}
 	
 	public BigDecimal getNettoCijena() {
@@ -196,6 +196,18 @@ public class Stavka {
 
 	public void setCijena(BigDecimal cijena) {
 		this.cijenaZamjenske = cijena;
+	}
+
+	public Integer getKmLinije() {
+		return cijenaKarte.getDistancaLinije() / 1000;
+	}
+
+	public Integer getKmDomaci(){
+		return cijenaKarte.getDomDistanca() / 1000;
+	}
+	
+	public Integer getKmIno() {
+			return cijenaKarte.getInoDistanca() / 1000;
 	}
 
 }

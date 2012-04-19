@@ -256,9 +256,10 @@ public class LoginWindow {
 		@Override
 		public void widgetDefaultSelected(SelectionEvent e) {
 			try {
-				if (new File("/mnt/usb/baza.db").exists())
+				if (new File("/mnt/usb/baza.db").exists()) {
 					Runtime.getRuntime().exec("cp /mnt/usb/baza.db .");
-				else {
+					System.exit(5);
+				} else {
 					MessageBox mb = new MessageBox(shlPrijava, SWT.OK | SWT.ICON_ERROR);
 					mb.setMessage("Ne mogu pronaći bazu");
 					mb.open();

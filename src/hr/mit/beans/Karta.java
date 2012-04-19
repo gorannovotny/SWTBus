@@ -30,7 +30,7 @@ public class Karta {
 
 	static {
 		try {
-			String sql = "Select a.id,a.kratkiOpis,stVoznji,NacinDolocanjaCene,TarifniRazredID,FiksnaCena,KMPogoja,PopustProcent,TipKarteID,FaktorCene from PTKTVozneKarte a ";
+			String sql = "Select a.id,a.kratkiOpis,stVoznji,NacinDolocanjaCene,TarifniRazredID,FiksnaCena,KMPogoja,PopustProcent,TipKarteID,FaktorCene from PTKTVozneKarte a  ORDER BY sifra";
 			ResultSet rs = DbUtil.getConnection().createStatement().executeQuery(sql);
 			while (rs.next()) {
 				kartaList.add(new Karta(rs.getInt("ID"), rs.getString("kratkiOpis"), rs.getInt("stVoznji"), rs.getInt("NacinDolocanjaCene"), rs.getInt("TarifniRazredID"), rs.getDouble("FiksnaCena"),

@@ -35,11 +35,6 @@ public class CijenaKarteTest {
 	}
 
 	@Test
-	public void testGetDistancaCenika() throws SQLException {
-		assertEquals(new Integer(23000),karta.getDistancaCenika());
-	}
-
-	@Test
 	public void testGetCijena() throws SQLException {
 		assertEquals(new BigDecimal(20.0),karta.getCijena());
 

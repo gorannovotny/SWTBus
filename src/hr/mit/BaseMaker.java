@@ -22,23 +22,24 @@ public class BaseMaker {
 			con2.setAutoCommit(false);
 			con3.setAutoCommit(false);
 
-//			doPTVozniRedi(con1, con2);
-//			doPTVarijanteVR(con1, con2);
-//			doPTStupciVR(con1, con2);
-//			doPTPostaje(con1, con2);
-//			doPTPostajeVR(con1, con2);
-//			doPTPostajeVarijantVR(con1, con2);
-//			doPTCasiVoznjeVR(con1, con2);
+			doPTVozniRedi(con1, con2);
+			doPTVarijanteVR(con1, con2);
+			doPTStupciVR(con1, con2);
+			doPTPostaje(con1, con2);
+			doPTPostajeVR(con1, con2);
+			doPTPostajeVarijantVR(con1, con2);
+			doPTCasiVoznjeVR(con1, con2);
 			doPTKTVozneKarte(con1, con2);
-//			doPTVozaci(con1, con2);
-//			doPTKTTarifniRazrediCenik(con1, con2);
-//			doPTKTVrstePopustov(con1, con2);
-//			doPTIzjemeCenikaVR(con1, con2);
-//			doPTKTProdaja(con1, con3);
-//			doPTKTTipiKarti(con1, con2);
-//			doPTKTPopusti(con1, con2);
-//			doPromVozila(con1, con2);
-//			doPTProdajnaMesta(con1, con2);
+			doPTVozaci(con1, con2);
+			doPTKTTarifniRazrediCenik(con1, con2);
+			doPTKTVrstePopustov(con1, con2);
+			doPTIzjemeCenikaVR(con1, con2);
+			doPTKTProdaja(con1, con3);
+			doPTKTTipiKarti(con1, con2);
+			doPTKTPopusti(con1, con2);
+			doPromVozila(con1, con2);
+			doPTProdajnaMesta(con1, con2);
+			doPTStupciVRMirovanja(con1, con2);
 		} catch (Exception e) {
 			e.printStackTrace();
 		} finally {
@@ -60,7 +61,7 @@ public class BaseMaker {
 				.executeUpdate(
 						"CREATE TABLE PTVozniRedi(ID INT NOT NULL,Firma INT NOT NULL,Sifra VARCHAR(12)  NOT NULL,OznakaLinije VARCHAR(40) ,PrivitakDozvole VARCHAR(20) ,Registracija VARCHAR(20) ,Opis1 VARCHAR(80)  ,Opis2 VARCHAR(80)  ,VeljaOd DATETIME,VeljaDo DATETIME,VrstaVR INT,KategorijaPrevoza INT,VrstaLinije INT,VrstaPrevoza INT,NacinPrevoza INT,VrstaPosadeID INT,OE INT,PrevoznikID INT,Kooperacija INT,Pool INT,DOSVRID INT,Stat1 INT,PRIMARY KEY (ID))");
 		PreparedStatement ps = con2.prepareStatement("INSERT INTO PTVozniRedi VALUES (?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)");
-		ResultSet rs = con1.createStatement().executeQuery("select * from ptvozniredi where VeljaOd< GETDATE() and veljaDo > GETDATE()");
+		ResultSet rs = con1.createStatement().executeQuery("select * from ptvozniredi where veljaDo > GETDATE()");
 		while (rs.next()) {
 			ps.setInt(1, rs.getInt(1));
 			ps.setInt(2, rs.getInt(2));
@@ -129,7 +130,7 @@ public class BaseMaker {
 		ResultSet rs = con1
 				.createStatement()
 				.executeQuery(
-						"SELECT * FROM PTStupciVR WHERE VarijantaVRID IN (select ID from PTVarijanteVR where VozniRedID IN (SELECT ID FROM PTVozniRedi WHERE VeljaOd< GETDATE() and veljaDo > GETDATE())) AND ID NOT IN (select StupacID from dbo.PTStupciVRMirovanja WHERE GETDATE() BETWEEN PTStupciVRMirovanja.OdDatuma AND PTStupciVRMirovanja.DoDatuma)");
+						"SELECT * FROM PTStupciVR WHERE VarijantaVRID IN (select ID from PTVarijanteVR where VozniRedID IN (SELECT ID FROM PTVozniRedi WHERE veljaDo > GETDATE())) ");
 		while (rs.next()) {
 			ps.setInt(1, rs.getInt(1));
 			ps.setInt(2, rs.getInt(2));
@@ -521,7 +522,7 @@ public class BaseMaker {
 				.executeUpdate(
 						"CREATE TABLE PTProdajnaMesta(ID INT NOT NULL ,Firma INT NOT NULL,Sifra INT NOT NULL, Oznaka VARCHAR(10),Naziv VARCHAR(50),Partner INT,Strm INT,OE INT,PostajaID INT,PRIMARY KEY (ID))");
 		PreparedStatement ps = con2.prepareStatement("INSERT INTO PTProdajnaMesta VALUES (?,?,?,?,?,?,?,?,?)");
-		ResultSet rs = con1.createStatement().executeQuery("SELECT * FROM PTProdajnaMesta");
+		ResultSet rs = con1.createStatement().executeQuery("SELECT * FROM PTProdajnaMesta WHERE Firma = 5");
 		while (rs.next()) {
 			ps.setInt(1, rs.getInt(1));
 			ps.setInt(2, rs.getInt(2));
@@ -540,4 +541,23 @@ public class BaseMaker {
 		System.out.println(String.format("%-20s -> %7d", "PTProdajnaMesta", i));
 	}
 
+	private static void doPTStupciVRMirovanja(Connection con1, Connection con2) throws SQLException {
+		int i = 0;
+		con2.createStatement().executeUpdate("drop table if exists PTStupciVRMirovanja;");
+		con2.createStatement().executeUpdate("CREATE TABLE PTStupciVRMirovanja(ID INT NOT NULL,StupacID INT NOT NULL,OdDatuma DATETIME,DoDatuma DATETIME,Opis VARCHAR(120),PRIMARY KEY (ID))");
+		PreparedStatement ps = con2.prepareStatement("INSERT INTO PTStupciVRMirovanja VALUES (?,?,?,?,?)");
+		ResultSet rs = con1.createStatement().executeQuery("SELECT * FROM PTStupciVRMirovanja WHERE DoDatuma > GETDATE()");
+		while (rs.next()) {
+			ps.setInt(1, rs.getInt(1));
+			ps.setInt(2, rs.getInt(2));
+			ps.setString(3, rs.getString(3));
+			ps.setString(4, rs.getString(4));
+			ps.setString(5, rs.getString(5));
+			ps.addBatch();
+			i++;
+		}
+		ps.executeBatch();
+		con2.commit();
+		System.out.println(String.format("%-20s -> %7d", "PTStupciVRMirovanja", i));
+	}
 }

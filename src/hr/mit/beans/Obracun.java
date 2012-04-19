@@ -3,6 +3,7 @@ package hr.mit.beans;
 import hr.mit.Starter;
 import hr.mit.utils.DbUtil;
 
+import java.io.File;
 import java.io.FileWriter;
 import java.io.IOException;
 import java.math.BigDecimal;
@@ -56,8 +57,8 @@ public class Obracun {
 		int x = 0;
 		for (Obracun v : obracunList) {
 			if (v.id != null)
-			l[x] = String.format("%5d %s", v.id, v.datum);
-			else 
+				l[x] = String.format("%5d %s", v.id, v.datum);
+			else
 				l[x] = "STANJE BLAGAJNE";
 			x++;
 		}
@@ -72,6 +73,10 @@ public class Obracun {
 		return id;
 	}
 
+	public String getUuid() {
+		return uuid;
+	}
+	
 	public static List<String> getArrayList() {
 		List<String> l = new ArrayList<String>();
 		updateList();
@@ -154,7 +159,7 @@ public class Obracun {
 				if (stupacID != rs.getInt("stupacID")) {
 					stupacID = rs.getInt("stupacID");
 					retval.append(Stupac.getByID(stupacID).getOpis() + " (" + stupacID.toString() + ")\n");
-					retval.append("--------------------------------\n");
+					retval.append("................................\n");
 				}
 				// retval.append("Tip                  Kom  Ukupno\n");
 				// retval.append("--------------------------------\n");
@@ -167,45 +172,49 @@ public class Obracun {
 					ukupno = ukupno + cena;
 				}
 			}
-//			if (stupacID != 0) {
-				retval.append("................................\n");
-				retval.append(String.format("%-24s %7.2f", "Blagajna", ukupno));
-//			}
+			// if (stupacID != 0) {
+			retval.append("................................\n");
+			retval.append(String.format("%-24s %7.2f", "Blagajna", ukupno));
+			// }
 		} catch (SQLException e) {
 			throw new RuntimeException(e);
 
 		}
 		return retval.toString();
 	}
+
 	public static void print(Obracun o) {
 		char[] reset = { 27, 64, 13 };
-		try {
-		FileWriter out = new FileWriter("/dev/ttyS0");
-		out.write(reset);
-		out.write(zaglavlje(o)+ getObracun(o.getId()));
-		out.write(" \n \n \n");
-		out.flush();
-		out.close();
-	} catch (IOException e) {
-		e.printStackTrace();
+		if (new File(".print").exists()) {
+			try {
+				FileWriter out = new FileWriter("/dev/ttyS0");
+				out.write(reset);
+				out.write(zaglavlje(o) + getObracun(o.getId()));
+				out.write(" \n \n \n");
+				out.flush();
+				out.close();
+			} catch (IOException e) {
+				e.printStackTrace();
+			}
+		} else
+			System.out.println(zaglavlje(o) + getObracun(o.getId()));
 	}
-//			System.out.println(zaglavlje(o)+ getObracun(o.getId()));
-}
 
 	public static Obracun getById(Integer id) {
 		for (Obracun v : obracunList) {
-			if (v.getId().equals(id)) return v;
+			if (v.getId().equals(id))
+				return v;
 		}
 		return null;
 	}
-	
+
 	private static String zaglavlje(Obracun o) {
 		StringBuffer sb = new StringBuffer();
-		sb.append("Obracun br. " + o.getId().toString() + "\n \n");
-		sb.append("Vozač: " + o.vozac.getNaziv() + "\n"); 
-		sb.append("Datum: " + o.datum + "\n \n"); 
-		return sb.toString(); 
+		sb.append("Obracun br. " + o.getId().toString() + "\n");
+		sb.append(o.getUuid()+"\n \n");
+		sb.append("Vozač: " + o.vozac.getNaziv() + "\n");
+		sb.append("Datum: " + o.datum + "\n \n");
+		return sb.toString();
 	}
-	
 
 }
