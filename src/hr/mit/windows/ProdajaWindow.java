@@ -200,6 +200,7 @@ public class ProdajaWindow {
 		// shell = new Shell(SWT.SYSTEM_MODAL | SWT.ON_TOP);
 		// shell.setMaximized(true);
 		shell = new Shell(SWT.NONE);
+		shell.setSize(450, 333);
 		shell.setBackground(SWTResourceManager.getColor(SWT.COLOR_GRAY));
 		shell.setBounds(0, 0, 800, 600);
 		// shell.setFullScreen(true);
@@ -350,11 +351,12 @@ public class ProdajaWindow {
 		btnPrint.setBounds(635, 385, 158, 155);
 
 		lClock = new CLabel(shell, SWT.LEFT);
+		lClock.setAlignment(SWT.RIGHT);
 		lClock.setBackground(SWTResourceManager.getColor(SWT.COLOR_GRAY));
 		// lClock.setForeground(SWTResourceManager.getColor(SWT.COLOR_WHITE));
 		// lClock.setBackground(SWTResourceManager.getColor(SWT.COLOR_BLACK));
 		lClock.setFont(SWTResourceManager.getFont("Liberation Sans", 20, SWT.NORMAL));
-		lClock.setBounds(670, 555, 112, 36);
+		lClock.setBounds(696, 546, 102, 52);
 		lClock.setText(new SimpleDateFormat("HH:mm:ss").format(new Date()));
 
 		lBlagajna = new Button(shell, SWT.LEFT);
@@ -364,7 +366,7 @@ public class ProdajaWindow {
 		// lBlagajna.setForeground(SWTResourceManager.getColor(192, 192, 192));
 		lBlagajna.setFont(SWTResourceManager.getFont("Liberation Sans", 20, SWT.NORMAL));
 		// lBlagajna.setBackground(SWTResourceManager.getColor(0, 0, 0));
-		lBlagajna.setBounds(5, 544, 785, 54);
+		lBlagajna.setBounds(5, 544, 685, 54);
 	}
 
 	protected class PlusButtonListener extends SelectionAdapter {

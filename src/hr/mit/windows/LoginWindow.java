@@ -8,6 +8,7 @@ import hr.mit.beans.Stupac;
 import hr.mit.beans.Vozac;
 import hr.mit.beans.Vozilo;
 import hr.mit.beans.VozniRed;
+import hr.mit.utils.FileChecksum;
 
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.events.ModifyEvent;
@@ -258,7 +259,13 @@ public class LoginWindow {
 			try {
 				if (new File("/mnt/usb/baza.db").exists()) {
 					Runtime.getRuntime().exec("cp /mnt/usb/baza.db .");
-					System.exit(5);
+					if (FileChecksum.check("/mnt/usb/baza.db") == FileChecksum.check("baza.db"))
+						System.exit(5);
+					else {
+						MessageBox mb = new MessageBox(shlPrijava, SWT.OK | SWT.ICON_ERROR);
+						mb.setMessage("Kopiranje nije uspjelo");
+						mb.open();
+					}
 				} else {
 					MessageBox mb = new MessageBox(shlPrijava, SWT.OK | SWT.ICON_ERROR);
 					mb.setMessage("Ne mogu pronaći bazu");

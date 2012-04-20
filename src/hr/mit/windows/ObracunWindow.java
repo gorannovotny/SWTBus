@@ -4,6 +4,7 @@ import java.io.File;
 import java.io.IOException;
 
 import hr.mit.beans.Obracun;
+import hr.mit.utils.FileChecksum;
 
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.events.SelectionAdapter;
@@ -171,9 +172,19 @@ public class ObracunWindow {
 		@Override
 		public void widgetDefaultSelected(SelectionEvent e) {
 			try {
-				if (new File("/mnt/usb").exists())
+				if (new File("/mnt/usb").exists()) {
 					Runtime.getRuntime().exec("cp prodaja.db /mnt/usb");
-				else {
+					if (FileChecksum.check("/mnt/usb/prodaja.db") == FileChecksum.check("prodaja.db")) {
+						MessageBox mb = new MessageBox(shell, SWT.OK | SWT.ICON_INFORMATION);
+						mb.setMessage("Datoteka prodaje iskopirana na USB");
+						mb.open();
+					}
+					else {
+						MessageBox mb = new MessageBox(shell, SWT.OK | SWT.ICON_ERROR);
+						mb.setMessage("Kopiranje nije uspjelo");
+						mb.open();
+					}
+				} else {
 					MessageBox mb = new MessageBox(shell, SWT.OK | SWT.ICON_ERROR);
 					mb.setMessage("USB stick nije priključen");
 					mb.open();
