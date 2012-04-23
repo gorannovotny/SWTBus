@@ -3,6 +3,7 @@ package hr.mit.beans;
 import hr.mit.utils.DbUtil;
 
 import java.sql.PreparedStatement;
+import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.List;
 
@@ -42,6 +43,11 @@ public class Blagajna {
 				ps.setInt(19,stavka.getKmDomaci());
 				ps.setInt(20, stavka.getKmIno());
 				ps.execute();
+				ResultSet genKey = ps.getGeneratedKeys();
+				if (genKey.next()) {
+					stavka.setBrojKarte(new Integer(genKey.getInt(1)).toString());
+				}
+				genKey.close();
 			}
 			DbUtil.getConnection2().commit();
 			DbUtil.getConnection2().setAutoCommit(true);

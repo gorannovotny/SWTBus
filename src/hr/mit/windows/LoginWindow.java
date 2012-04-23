@@ -259,8 +259,11 @@ public class LoginWindow {
 			try {
 				if (new File("/mnt/usb/baza.db").exists()) {
 					Runtime.getRuntime().exec("cp /mnt/usb/baza.db .");
-					if (FileChecksum.check("/mnt/usb/baza.db") == FileChecksum.check("baza.db"))
-						System.exit(5);
+					if (FileChecksum.check("/mnt/usb/baza.db") == FileChecksum.check("baza.db")) {
+						MessageBox mb = new MessageBox(shlPrijava, SWT.OK | SWT.ICON_INFORMATION);
+						mb.setMessage("Učitana nova baza. Restartam ...");
+						mb.open();
+						System.exit(5);}
 					else {
 						MessageBox mb = new MessageBox(shlPrijava, SWT.OK | SWT.ICON_ERROR);
 						mb.setMessage("Kopiranje nije uspjelo");

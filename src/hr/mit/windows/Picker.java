@@ -58,7 +58,7 @@ public class Picker extends Dialog {
 		upButton.setAlignment(SWT.CENTER);
 		upButton.setText("\u25B2");
 		upButton.addSelectionListener(new ButtonUpListener());
-		upButton.setBackground(SWTResourceManager.getColor(250, 250, 250));
+		upButton.setBackground(SWTResourceManager.getColor(100, 250, 100));
 
 		for (int i = 0; i < MAX_PICKS; i++) {
 			Button b = new Button(shell, SWT.NONE);
@@ -68,7 +68,7 @@ public class Picker extends Dialog {
 			b.setAlignment(c.getAlignment());
 			b.setText(items.get(pos));
 			b.setData(pos);
-			b.setBackground(SWTResourceManager.getColor(250, 250, 250));
+			b.setBackground(SWTResourceManager.getColor(100, 250, 100));
 			b.addSelectionListener(new ButtonSelectListener());
 			buttonList.add(b);
 			pos++;
@@ -82,7 +82,7 @@ public class Picker extends Dialog {
 		downButton.setSize(c.getSize());
 		downButton.setAlignment(SWT.CENTER);
 		downButton.setText("\u25BC");
-		downButton.setBackground(SWTResourceManager.getColor(250, 250, 250));
+		downButton.setBackground(SWTResourceManager.getColor(100, 250, 100));
 		if (pos - MAX_PICKS <= 0)
 			upButton.setEnabled(false);
 		if (pos >= items.size())

@@ -384,7 +384,7 @@ public class ProdajaWindow {
 		@Override
 		public void widgetSelected(SelectionEvent e) {
 			Blagajna.save(Starter.vozac, Starter.vozilo, Stavka.getList());
-			lBlagajna.setText("Blagajna: " + Obracun.getSaldo().toString());
+			lBlagajna.setText("Blagajna: " + Obracun.getSaldo().toString() + " Kn");
 			PrintUtils.print(Starter.vozac, Stavka.getList());
 			Stavka.saveList();
 			Stavka.clear();
@@ -489,7 +489,7 @@ public class ProdajaWindow {
 		public void widgetDefaultSelected(SelectionEvent e) {
 			ObracunWindow ow = new ObracunWindow();
 			exit = ow.open(shell);
-			lBlagajna.setText(Obracun.getSaldo().toString());
+			lBlagajna.setText("Blagajna: " + Obracun.getSaldo().toString() + " Kn");
 			if (exit)
 				shell.dispose();
 		}

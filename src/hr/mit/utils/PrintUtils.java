@@ -36,6 +36,7 @@ public class PrintUtils {
 		for (Stavka stavka : stavkaList) {
 			sb.append("AP d.d. Varazdin - u stecaju\nGospodarska 56\nOIB: 51631089795\n\nBroj racuna: 734234429\nPrijevoznik: AP d.d\n");
 			sb.append(stavkaList.get(0).getRelacija() + "\n \n");
+			sb.append("Broj karte: " + stavka.getBrojKarte() + "\n");
 			sb.append("Vrsta karte       Popust  Cijena\n................................\n");
 			sb.append(stavka.getDesc() + "\n");
 			sb.append("................................\n");
@@ -58,7 +59,7 @@ public class PrintUtils {
 		return sb.toString();
 	}
 
-	private static String filter(String in) {
+	public static String filter(String in) {
 		StringBuffer sb = new StringBuffer();
 		for (int i = 0; i < in.length(); i++) {
 			char a = in.charAt(i);

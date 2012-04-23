@@ -2,6 +2,7 @@ package hr.mit.beans;
 
 import hr.mit.Starter;
 import hr.mit.utils.DbUtil;
+import hr.mit.utils.PrintUtils;
 
 import java.io.File;
 import java.io.FileWriter;
@@ -189,7 +190,7 @@ public class Obracun {
 			try {
 				FileWriter out = new FileWriter("/dev/ttyS0");
 				out.write(reset);
-				out.write(zaglavlje(o) + getObracun(o.getId()));
+				out.write(PrintUtils.filter(zaglavlje(o) + getObracun(o.getId())));
 				out.write(" \n \n \n");
 				out.flush();
 				out.close();
@@ -210,7 +211,7 @@ public class Obracun {
 
 	private static String zaglavlje(Obracun o) {
 		StringBuffer sb = new StringBuffer();
-		sb.append("Obracun br. " + o.getId().toString() + "\n");
+		sb.append("Obračun br. " + o.getId().toString() + "\n");
 		sb.append(o.getUuid()+"\n \n");
 		sb.append("Vozač: " + o.vozac.getNaziv() + "\n");
 		sb.append("Datum: " + o.datum + "\n \n");

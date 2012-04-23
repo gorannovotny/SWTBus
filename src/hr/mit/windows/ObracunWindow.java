@@ -62,13 +62,13 @@ public class ObracunWindow {
 		list = new List(shell, SWT.BORDER);
 		list.setDragDetect(false);
 		list.addSelectionListener(new ListSelectionListener());
-		list.setFont(SWTResourceManager.getFont("Liberation Sans", 15, SWT.NORMAL));
-		list.setBounds(5, 120, 275, 400);
+		list.setFont(SWTResourceManager.getFont("Liberation Sans", 25, SWT.NORMAL));
+		list.setBounds(5, 120, 365, 400);
 		list.setItems(Obracun.getList());
 
 		text = new Label(shell, SWT.NONE);
 		text.setFont(SWTResourceManager.getFont("Liberation Mono", 15, SWT.NORMAL));
-		text.setBounds(290, 120, 500, 400);
+		text.setBounds(396, 120, 394, 400);
 		text.setText("");
 
 		backButton = new Button(shell, SWT.NONE);
