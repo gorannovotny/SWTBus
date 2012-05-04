@@ -41,8 +41,8 @@ public class LoginWindow {
 
 	protected Label lOpisVozilo;
 	protected Label lOpisVozac;
-	protected Label lOpisLinije;
-	private Button btnUitaj;
+	protected Button lOpisLinije;
+	private Button btnUcitaj;
 
 	/**
 	 * @wbp.parser.entryPoint
@@ -114,11 +114,13 @@ public class LoginWindow {
 		tLinija.setFont(SWTResourceManager.getFont("Liberation Sans", 30, SWT.NORMAL));
 		tLinija.setBounds(165, 230, 125, 50);
 
-		lOpisLinije = new Label(shlPrijava, SWT.NONE);
+		lOpisLinije = new Button(shlPrijava, SWT.NONE);
 		lOpisLinije.setBackground(SWTResourceManager.getColor(SWT.COLOR_GRAY));
 		lOpisLinije.setText("");
-		lOpisLinije.setFont(SWTResourceManager.getFont("Liberation Sans", 20, SWT.NORMAL));
-		lOpisLinije.setBounds(310, 240, 480, 30);
+		lOpisLinije.setAlignment(SWT.LEFT);
+		lOpisLinije.setFont(SWTResourceManager.getFont("Liberation Sans", 30, SWT.NORMAL));
+		lOpisLinije.setBounds(290, 230, 500, 50);
+		lOpisLinije.addSelectionListener(new SearchSelectionListener());
 
 		lblPolazak = new Label(shlPrijava, SWT.NONE);
 		lblPolazak.setBackground(SWTResourceManager.getColor(SWT.COLOR_GRAY));
@@ -132,11 +134,11 @@ public class LoginWindow {
 		comboPolazak.setAlignment(SWT.LEFT);
 		comboPolazak.setBounds(165, 280, 200, 50);
 
-		btnUitaj = new Button(shlPrijava, SWT.NONE);
-		btnUitaj.addSelectionListener(new Button_1SelectionListener());
-		btnUitaj.setText("Učitaj bazu");
-		btnUitaj.setFont(SWTResourceManager.getFont("Liberation Sans", 20, SWT.NORMAL));
-		btnUitaj.setBounds(5, 486, 150, 50);
+		btnUcitaj = new Button(shlPrijava, SWT.NONE);
+		btnUcitaj.addSelectionListener(new Button_1SelectionListener());
+		btnUcitaj.setText("Učitaj bazu");
+		btnUcitaj.setFont(SWTResourceManager.getFont("Liberation Sans", 20, SWT.NORMAL));
+		btnUcitaj.setBounds(5, 486, 150, 50);
 
 		button = new Button(shlPrijava, SWT.ARROW | SWT.RIGHT);
 		button.setFont(SWTResourceManager.getFont("Liberation Sans", 30, SWT.NORMAL));
@@ -222,7 +224,10 @@ public class LoginWindow {
 			Text t = (Text) e.widget;
 			if (t.getText().matches("\\d+")) {
 				id = Integer.parseInt(t.getText());
-				lOpisLinije.setText(VozniRed.getNaziv(id));
+				if (VozniRed.getByID(id) != null)
+					lOpisLinije.setText(VozniRed.getByID(id).getOpis());
+				else
+					lOpisLinije.setText("");
 				Stupac.setVozniRed(id);
 			}
 			if (Stupac.getList().length > 0) {
@@ -245,6 +250,20 @@ public class LoginWindow {
 				comboPolazak = picker.open();
 			}
 
+		}
+
+		@Override
+		public void widgetSelected(SelectionEvent e) {
+			widgetDefaultSelected(e);
+		}
+	}
+
+	private class SearchSelectionListener extends SelectionAdapter {
+		@Override
+		public void widgetDefaultSelected(SelectionEvent e) {
+			Picker picker = new Picker(lOpisLinije, VozniRed.getArrayList(), 0);
+			lOpisLinije = picker.open();
+			tLinija.setText(VozniRed.get((Integer) lOpisLinije.getData()).getId().toString());
 		}
 
 		@Override
