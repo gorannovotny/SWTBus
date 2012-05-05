@@ -350,15 +350,6 @@ public class ProdajaWindow {
 		btnPrint.setFont(SWTResourceManager.getFont("Liberation Sans", 25, SWT.NORMAL));
 		btnPrint.setBounds(635, 385, 158, 155);
 
-		lClock = new CLabel(shell, SWT.LEFT);
-		lClock.setAlignment(SWT.RIGHT);
-		lClock.setBackground(SWTResourceManager.getColor(SWT.COLOR_GRAY));
-		// lClock.setForeground(SWTResourceManager.getColor(SWT.COLOR_WHITE));
-		// lClock.setBackground(SWTResourceManager.getColor(SWT.COLOR_BLACK));
-		lClock.setFont(SWTResourceManager.getFont("Liberation Sans", 20, SWT.NORMAL));
-		lClock.setBounds(696, 546, 102, 52);
-		lClock.setText(new SimpleDateFormat("HH:mm:ss").format(new Date()));
-
 		lBlagajna = new Button(shell, SWT.LEFT);
 		lBlagajna.setBackground(SWTResourceManager.getColor(SWT.COLOR_GRAY));
 		lBlagajna.addSelectionListener(new LBlagajnaSelectionListener());
@@ -366,7 +357,16 @@ public class ProdajaWindow {
 		// lBlagajna.setForeground(SWTResourceManager.getColor(192, 192, 192));
 		lBlagajna.setFont(SWTResourceManager.getFont("Liberation Sans", 20, SWT.NORMAL));
 		// lBlagajna.setBackground(SWTResourceManager.getColor(0, 0, 0));
-		lBlagajna.setBounds(5, 544, 685, 54);
+		lBlagajna.setBounds(5, 544, 675, 54);
+
+		lClock = new CLabel(shell, SWT.LEFT);
+		lClock.setAlignment(SWT.RIGHT);
+		lClock.setBackground(SWTResourceManager.getColor(SWT.COLOR_GRAY));
+		// lClock.setForeground(SWTResourceManager.getColor(SWT.COLOR_WHITE));
+		// lClock.setBackground(SWTResourceManager.getColor(SWT.COLOR_BLACK));
+		lClock.setFont(SWTResourceManager.getFont("Liberation Sans", 20, SWT.NORMAL));
+		lClock.setBounds(685, 546, 113, 52);
+		lClock.setText(new SimpleDateFormat("HH:mm:ss").format(new Date()));
 	}
 
 	protected class PlusButtonListener extends SelectionAdapter {

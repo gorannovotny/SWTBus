@@ -122,18 +122,18 @@ public class Stavka {
 		return doPostaje.getNaziv() + " - " + odPostaje.getNaziv();
 	}
 
+	public BigDecimal getIznosPDV() {
+		// Prodajna cijena  * 0.2 ( Za PDV 25%)
+		// Treba dodati odnos ino i domaćih kilometara
+		return getProdajnaCijena().multiply(new BigDecimal(0.2));
+	}
+
 	public BigDecimal getProdajnaCijena() {
 		if (getKarta().getId().equals(Karta.ZAMJENSKA_KARTA))
 			return cijenaZamjenske.setScale(2);
 		else return cijenaKarte.getCijena().multiply(BigDecimal.ONE.subtract(popust.getPopust().movePointLeft(2))).setScale(2);
 	}
 
-	public BigDecimal getIznosPDV() {
-		// Prodajna cijena  * 0.2 ( Za PDV 25%)
-		// Treba dodati odnos ino i domaćih kilometara
-		return getProdajnaCijena().multiply(new BigDecimal(0.2));
-	}
-	
 	public BigDecimal getNettoCijena() {
 		return getProdajnaCijena().subtract(getIznosPDV());
 		
