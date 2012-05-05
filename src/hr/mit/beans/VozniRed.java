@@ -15,7 +15,7 @@ public class VozniRed {
 	
 	static {
 		try {
-			String sql = "SELECT ID,Opis1 FROM PTVozniRedi WHERE PTVozniRedi.VeljaDo > '2012-01-01 00:00:00' AND vrstaVR = 1 ORDER BY 2";
+			String sql = "SELECT ID,Opis1 FROM PTVozniRedi WHERE PTVozniRedi.VeljaDo > DATETIME('now') AND vrstaVR = 1 ORDER BY 2";
 			ResultSet rs = DbUtil.getConnection().createStatement().executeQuery(sql);
 			while (rs.next()) {
 				vrList.add(new VozniRed(rs.getInt(1),rs.getString(2)));

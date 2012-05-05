@@ -329,6 +329,8 @@ public class ProdajaWindow {
 		lblUkupno.setBounds(470, 310, 320, 70);
 
 		textRacun = new Text(shell, SWT.BORDER | SWT.MULTI);
+		textRacun.setEnabled(false);
+		textRacun.setEditable(false);
 		textRacun.setFont(SWTResourceManager.getFont("Liberation Mono", 14, SWT.NORMAL));
 		textRacun.setBounds(5, 385, 460, 155);
 

@@ -118,7 +118,7 @@ public class LoginWindow {
 		lOpisLinije.setBackground(SWTResourceManager.getColor(SWT.COLOR_GRAY));
 		lOpisLinije.setText("");
 		lOpisLinije.setAlignment(SWT.LEFT);
-		lOpisLinije.setFont(SWTResourceManager.getFont("Liberation Sans", 30, SWT.NORMAL));
+		lOpisLinije.setFont(SWTResourceManager.getFont("Liberation Sans", 12, SWT.NORMAL));
 		lOpisLinije.setBounds(290, 230, 500, 50);
 		lOpisLinije.addSelectionListener(new SearchSelectionListener());
 
@@ -282,8 +282,8 @@ public class LoginWindow {
 						MessageBox mb = new MessageBox(shlPrijava, SWT.OK | SWT.ICON_INFORMATION);
 						mb.setMessage("Učitana nova baza. Restartam ...");
 						mb.open();
-						System.exit(5);}
-					else {
+						System.exit(5);
+					} else {
 						MessageBox mb = new MessageBox(shlPrijava, SWT.OK | SWT.ICON_ERROR);
 						mb.setMessage("Kopiranje nije uspjelo");
 						mb.open();
