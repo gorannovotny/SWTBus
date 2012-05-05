@@ -62,7 +62,7 @@ public class ObracunWindow {
 		list = new List(shell, SWT.BORDER);
 		list.setDragDetect(false);
 		list.addSelectionListener(new ListSelectionListener());
-		list.setFont(SWTResourceManager.getFont("Liberation Sans", 25, SWT.NORMAL));
+		list.setFont(SWTResourceManager.getFont("Liberation Sans", 23, SWT.NORMAL));
 		list.setBounds(5, 120, 365, 400);
 		list.setItems(Obracun.getList());
 
@@ -178,8 +178,7 @@ public class ObracunWindow {
 						MessageBox mb = new MessageBox(shell, SWT.OK | SWT.ICON_INFORMATION);
 						mb.setMessage("Datoteka prodaje iskopirana na USB");
 						mb.open();
-					}
-					else {
+					} else {
 						MessageBox mb = new MessageBox(shell, SWT.OK | SWT.ICON_ERROR);
 						mb.setMessage("Kopiranje nije uspjelo");
 						mb.open();
