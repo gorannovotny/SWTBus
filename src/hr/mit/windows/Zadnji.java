@@ -78,6 +78,7 @@ public class Zadnji {
 		btnPrint.addSelectionListener(new BtnZatvoriSelectionListener());
 		btnPrint.setBounds(250, 200, 150, 75);
 		btnPrint.setText("Storno");
+		btnPrint.setEnabled(false);
 
 	}
 

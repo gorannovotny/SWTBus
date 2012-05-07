@@ -30,10 +30,8 @@ import org.eclipse.swt.widgets.Label;
 import org.eclipse.swt.widgets.Shell;
 import org.eclipse.swt.widgets.Text;
 import org.eclipse.wb.swt.SWTResourceManager;
-import org.eclipse.swt.events.FocusAdapter;
-import org.eclipse.swt.events.FocusEvent;
 
-public class ProdajaWindow {
+public class ProdajaWindow  {
 
 	protected Shell shell;
 
@@ -147,8 +145,10 @@ public class ProdajaWindow {
 			cPopust.setData(0);
 			cPopust.setText(Popust.getList()[0]);
 			cPopust.setEnabled(false);
-			textCijena.addMouseListener(mouseListener);
-			textBrKarte.addMouseListener(mouseListener);
+			if (! textCijena.isListening(SWT.MouseDown))
+				textCijena.addMouseListener(mouseListener);
+			if (! textBrKarte.isListening(SWT.MouseDown))
+				textBrKarte.addMouseListener(mouseListener);					
 		} else {
 			textCijena.removeMouseListener(mouseListener);
 			textBrKarte.removeMouseListener(mouseListener);

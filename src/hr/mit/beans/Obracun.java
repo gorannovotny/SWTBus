@@ -159,6 +159,7 @@ public class Obracun {
 			while (rs.next()) {
 				if (stupacID != rs.getInt("stupacID")) {
 					stupacID = rs.getInt("stupacID");
+					retval.append(" \n");
 					retval.append(Stupac.getByID(stupacID).getOpis() + " (" + stupacID.toString() + ")\n");
 					retval.append("................................\n");
 				}
@@ -174,6 +175,7 @@ public class Obracun {
 				}
 			}
 			// if (stupacID != 0) {
+			retval.append(" \n");
 			retval.append("................................\n");
 			retval.append(String.format("%-24s %7.2f", "Blagajna", ukupno));
 			// }
