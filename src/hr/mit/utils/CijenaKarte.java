@@ -174,4 +174,9 @@ public class CijenaKarte {
 		return cijena;
 	}
 
+	public static BigDecimal zaokruzi(BigDecimal iznos, BigDecimal r) {
+		int i = (int) ((iznos.floatValue() - 0.0001) / r.floatValue());
+		BigDecimal retval  = r.multiply(new BigDecimal(i+1)); 
+		return retval;
+	}
 }

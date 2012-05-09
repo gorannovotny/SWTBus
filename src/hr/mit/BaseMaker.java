@@ -40,6 +40,7 @@ public class BaseMaker {
 			doPromVozila(con1, con2);
 			doPTProdajnaMesta(con1, con2);
 			doPTStupciVRMirovanja(con1, con2);
+			doPTVerzija(con1, con2);
 		} catch (Exception e) {
 			e.printStackTrace();
 		} finally {
@@ -59,32 +60,33 @@ public class BaseMaker {
 		con2.createStatement().executeUpdate("drop table if exists PTVozniRedi;");
 		con2.createStatement()
 				.executeUpdate(
-						"CREATE TABLE PTVozniRedi(ID INT NOT NULL,Firma INT NOT NULL,Sifra VARCHAR(12)  NOT NULL,OznakaLinije VARCHAR(40) ,PrivitakDozvole VARCHAR(20) ,Registracija VARCHAR(20) ,Opis1 VARCHAR(80)  ,Opis2 VARCHAR(80)  ,VeljaOd DATETIME,VeljaDo DATETIME,VrstaVR INT,KategorijaPrevoza INT,VrstaLinije INT,VrstaPrevoza INT,NacinPrevoza INT,VrstaPosadeID INT,OE INT,PrevoznikID INT,Kooperacija INT,Pool INT,DOSVRID INT,Stat1 INT,PRIMARY KEY (ID))");
-		PreparedStatement ps = con2.prepareStatement("INSERT INTO PTVozniRedi VALUES (?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)");
-		ResultSet rs = con1.createStatement().executeQuery("select * from ptvozniredi where veljaDo > GETDATE()");
+						"CREATE TABLE PTVozniRedi(ID INT NOT NULL,Firma INT NOT NULL,Sifra VARCHAR(12)  NOT NULL,OznakaLinije VARCHAR(40) ,PrivitakDozvole VARCHAR(20) ,Registracija VARCHAR(20) ,Opis1 VARCHAR(80)  ,Opis2 VARCHAR(80)  ,VeljaOd DATETIME,VeljaDo DATETIME, SifraOznakeVR INT, VrstaVR INT,KategorijaPrevoza INT,VrstaLinije INT,VrstaPrevoza INT,NacinPrevoza INT,VrstaPosadeID INT,OE INT,PrevoznikID INT,Kooperacija INT,Pool INT,DOSVRID INT,Stat1 INT,PRIMARY KEY (ID))");
+		PreparedStatement ps = con2.prepareStatement("INSERT INTO PTVozniRedi VALUES (?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)");
+		ResultSet rs = con1.createStatement().executeQuery("select * from PtVozniredi where VrstaVR=1 and veljaDo > GETDATE()");
 		while (rs.next()) {
-			ps.setInt(1, rs.getInt(1));
-			ps.setInt(2, rs.getInt(2));
-			ps.setString(3, rs.getString(3));
-			ps.setString(4, rs.getString(4));
-			ps.setString(5, rs.getString(5));
-			ps.setString(6, rs.getString(6));
-			ps.setString(7, rs.getString(7));
-			ps.setString(8, rs.getString(8));
+			ps.setInt(1, rs.getInt("ID"));
+			ps.setInt(2, rs.getInt("Firma"));
+			ps.setString(3, rs.getString("Sifra"));
+			ps.setString(4, rs.getString("OznakaLinije"));
+			ps.setString(5, rs.getString("PrivitakDozvole"));
+			ps.setString(6, rs.getString("Registracija"));
+			ps.setString(7, rs.getString("Opis1"));
+			ps.setString(8, rs.getString("Opis2"));
 			ps.setString(9, rs.getString("VeljaOD"));
 			ps.setString(10, rs.getString("VeljaDo"));
-			ps.setInt(11, rs.getInt(11));
-			ps.setInt(12, rs.getInt(12));
-			ps.setInt(13, rs.getInt(13));
-			ps.setInt(14, rs.getInt(14));
-			ps.setInt(15, rs.getInt(15));
-			ps.setInt(16, rs.getInt(16));
-			ps.setInt(17, rs.getInt(17));
-			ps.setInt(18, rs.getInt(18));
-			ps.setInt(19, rs.getInt(19));
-			ps.setInt(20, rs.getInt(20));
-			ps.setInt(21, rs.getInt(21));
-			ps.setInt(22, rs.getInt(22));
+			ps.setInt(11, rs.getInt("SifraOznakeVR"));
+			ps.setInt(12, rs.getInt("VrstaVR"));
+			ps.setInt(13, rs.getInt("KategorijaPrevoza"));
+			ps.setInt(14, rs.getInt("VrstaLinije"));
+			ps.setInt(15, rs.getInt("VrstaPrevoza"));
+			ps.setInt(16, rs.getInt("NacinPrevoza"));
+			ps.setInt(17, rs.getInt("VrstaPosadeID"));
+			ps.setInt(18, rs.getInt("OE"));
+			ps.setInt(19, rs.getInt("PrevoznikID"));
+			ps.setInt(20, rs.getInt("Kooperacija"));
+			ps.setInt(21, rs.getInt("Pool"));
+			ps.setInt(22, rs.getInt("DOSVRID"));
+			ps.setInt(23, rs.getInt("Status"));
 			ps.addBatch();
 			i++;
 		}
@@ -102,14 +104,15 @@ public class BaseMaker {
 				.executeUpdate(
 						"CREATE TABLE PTVarijanteVR(ID INT NOT NULL,VozniRedID INT NOT NULL,Varijanta INT NOT NULL,Opis1 VARCHAR,Opis2 VARCHAR,DOSVarID INT,PRIMARY KEY (ID),FOREIGN KEY (VozniRedID) REFERENCES PTVozniRedi (ID))");
 		PreparedStatement ps = con2.prepareStatement("INSERT INTO PTVarijanteVR VALUES (?,?,?,?,?,?)");
-		ResultSet rs = con1.createStatement().executeQuery("select * from PTVarijanteVR where VozniRedID IN (SELECT ID FROM PTVozniRedi WHERE VeljaOd< GETDATE() and veljaDo > GETDATE())");
+		ResultSet rs = con1.createStatement().executeQuery(
+				"select * from PTVarijanteVR where VozniRedID IN (SELECT ID FROM PTVozniRedi WHERE VrstaVR=1 and VeljaOd< GETDATE() and veljaDo > GETDATE())");
 		while (rs.next()) {
-			ps.setInt(1, rs.getInt(1));
-			ps.setInt(2, rs.getInt(2));
-			ps.setInt(3, rs.getInt(3));
-			ps.setString(4, rs.getString(4));
-			ps.setString(5, rs.getString(5));
-			ps.setInt(6, rs.getInt(6));
+			ps.setInt(1, rs.getInt("ID"));
+			ps.setInt(2, rs.getInt("VozniRedID"));
+			ps.setInt(3, rs.getInt("Varijanta"));
+			ps.setString(4, rs.getString("Opis1"));
+			ps.setString(5, rs.getString("Opis2"));
+			ps.setInt(6, rs.getInt("DOSVarID"));
 			ps.addBatch();
 			i++;
 		}
@@ -127,30 +130,28 @@ public class BaseMaker {
 				.executeUpdate(
 						"CREATE TABLE PTStupciVR (ID INT NOT NULL,Firma INT NOT NULL,VozniRedID INT NOT NULL,VarijantaVRID INT NOT NULL,ZapSt VARCHAR NOT NULL,SmerVoznje VARCHAR,DneviVoznjeID INT,PrevoznikID INT,VrstaPrevoza INT,VrstaBusa INT,StBusov INT,NacinPrevoza INT,VrstaPosadeID INT,VremeOdhoda FLOAT,OE INT,VeljaOd DATETIME,VeljaDo DATETIME,StatusERR INT,DOSID INT,PRIMARY KEY (ID),FOREIGN KEY (VarijantaVRID) REFERENCES PTVarijanteVR (ID))");
 		PreparedStatement ps = con2.prepareStatement("INSERT INTO PTStupciVR VALUES (?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)");
-		ResultSet rs = con1
-				.createStatement()
-				.executeQuery(
-						"SELECT * FROM PTStupciVR WHERE VarijantaVRID IN (select ID from PTVarijanteVR where VozniRedID IN (SELECT ID FROM PTVozniRedi WHERE veljaDo > GETDATE())) ");
+		ResultSet rs = con1.createStatement().executeQuery(
+				"SELECT * FROM PTStupciVR WHERE VarijantaVRID IN (select ID from PTVarijanteVR where VozniRedID IN (SELECT ID FROM PTVozniRedi WHERE  VrstaVR=1 and veljaDo > GETDATE())) ");
 		while (rs.next()) {
-			ps.setInt(1, rs.getInt(1));
-			ps.setInt(2, rs.getInt(2));
-			ps.setInt(3, rs.getInt(3));
-			ps.setInt(4, rs.getInt(4));
-			ps.setString(5, rs.getString(5));
-			ps.setString(6, rs.getString(6));
-			ps.setInt(7, rs.getInt(7));
-			ps.setInt(8, rs.getInt(8));
-			ps.setInt(9, rs.getInt(9));
-			ps.setInt(10, rs.getInt(10));
-			ps.setInt(11, rs.getInt(11));
-			ps.setInt(12, rs.getInt(12));
-			ps.setInt(13, rs.getInt(13));
-			ps.setDouble(14, rs.getDouble(14));
-			ps.setInt(15, rs.getInt(15));
-			ps.setString(16, rs.getString(16));
-			ps.setString(17, rs.getString(17));
-			ps.setInt(18, rs.getInt(18));
-			ps.setInt(19, rs.getInt(19));
+			ps.setInt(1, rs.getInt("ID"));
+			ps.setInt(2, rs.getInt("Firma"));
+			ps.setInt(3, rs.getInt("VozniRedID"));
+			ps.setInt(4, rs.getInt("VarijantaVRID"));
+			ps.setString(5, rs.getString("ZapSt"));
+			ps.setString(6, rs.getString("SmerVoznje"));
+			ps.setInt(7, rs.getInt("DneviVoznjeID"));
+			ps.setInt(8, rs.getInt("PrevoznikID"));
+			ps.setInt(9, rs.getInt("VrstaPrevoza"));
+			ps.setInt(10, rs.getInt("VrstaBusa"));
+			ps.setInt(11, rs.getInt("StBusov"));
+			ps.setInt(12, rs.getInt("NacinPrevoza"));
+			ps.setInt(13, rs.getInt("VrstaPosadeID"));
+			ps.setDouble(14, rs.getDouble("VremeOdhoda"));
+			ps.setInt(15, rs.getInt("OE"));
+			ps.setString(16, rs.getString("VeljaOd"));
+			ps.setString(17, rs.getString("VeljaDo"));
+			ps.setInt(18, rs.getInt("StatusERR"));
+			ps.setInt(19, rs.getInt("DOSID"));
 			ps.addBatch();
 			i++;
 		}
@@ -171,17 +172,17 @@ public class BaseMaker {
 		ResultSet rs = con1
 				.createStatement()
 				.executeQuery(
-						"SELECT * FROM PTPostajeVarijantVR WHERE VarijantaID IN(select ID from PTVarijanteVR where VozniRedID IN (SELECT ID FROM PTVozniRedi WHERE VeljaOd< GETDATE() and veljaDo > GETDATE()))");
+						"SELECT * FROM PTPostajeVarijantVR WHERE VarijantaID IN(select ID from PTVarijanteVR where VozniRedID IN (SELECT ID FROM PTVozniRedi WHERE  VrstaVR=1 and VeljaOd< GETDATE() and veljaDo > GETDATE()))");
 		while (rs.next()) {
-			ps.setInt(1, rs.getInt(1));
-			ps.setInt(2, rs.getInt(2));
-			ps.setInt(3, rs.getInt(3));
-			ps.setInt(4, rs.getInt(4));
-			ps.setInt(5, rs.getInt(5));
-			ps.setInt(6, rs.getInt(6));
-			ps.setInt(7, rs.getInt(7));
-			ps.setString(8, rs.getString(8));
-			ps.setInt(9, rs.getInt(9));
+			ps.setInt(1, rs.getInt("ID"));
+			ps.setInt(2, rs.getInt("VarijantaID"));
+			ps.setInt(3, rs.getInt("NodePostajeVRID"));
+			ps.setInt(4, rs.getInt("ZapSt"));
+			ps.setInt(5, rs.getInt("KumDistancaM"));
+			ps.setInt(6, rs.getInt("DistancaM"));
+			ps.setInt(7, rs.getInt("Vozel"));
+			ps.setString(8, rs.getString("Staje"));
+			ps.setInt(9, rs.getInt("DOSID"));
 			ps.addBatch();
 			i++;
 		}
@@ -199,17 +200,18 @@ public class BaseMaker {
 				.executeUpdate(
 						"CREATE TABLE PTPostajeVR(ID INT NOT NULL,VozniRedID INT NOT NULL,ZapSt INT NOT NULL, Vozel INT NOT NULL,PostajaID INT NOT NULL,KumDistancaM INT,DistancaM INT,Staje CHAR,DosID INT,PRIMARY KEY (ID),FOREIGN KEY (PostajaID) REFERENCES PTPostaje (ID) ,FOREIGN KEY (VozniRedID) REFERENCES PTVozniRedi (ID))");
 		PreparedStatement ps = con2.prepareStatement("INSERT INTO PTPostajeVR VALUES (?,?,?,?,?,?,?,?,?)");
-		ResultSet rs = con1.createStatement().executeQuery("SELECT * FROM PTPostajeVR WHERE VozniRedID IN (SELECT ID FROM PTVozniRedi WHERE VeljaOd< GETDATE() and veljaDo > GETDATE())");
+		ResultSet rs = con1.createStatement()
+				.executeQuery("SELECT * FROM PTPostajeVR WHERE VozniRedID IN (SELECT ID FROM PTVozniRedi WHERE  VrstaVR=1 and VeljaOd< GETDATE() and veljaDo > GETDATE())");
 		while (rs.next()) {
-			ps.setInt(1, rs.getInt(1));
-			ps.setInt(2, rs.getInt(2));
-			ps.setInt(3, rs.getInt(3));
-			ps.setInt(4, rs.getInt(4));
-			ps.setInt(5, rs.getInt(5));
-			ps.setInt(6, rs.getInt(6));
-			ps.setInt(7, rs.getInt(7));
-			ps.setString(8, rs.getString(8));
-			ps.setInt(9, rs.getInt(9));
+			ps.setInt(1, rs.getInt("ID"));
+			ps.setInt(2, rs.getInt("VozniRedID"));
+			ps.setInt(3, rs.getInt("ZapSt"));
+			ps.setInt(4, rs.getInt("Vozel"));
+			ps.setInt(5, rs.getInt("PostajaID"));
+			ps.setInt(6, rs.getInt("KumDistancaM"));
+			ps.setInt(7, rs.getInt("DistancaM"));
+			ps.setString(8, rs.getString("Staje"));
+			ps.setInt(9, rs.getInt("DosID"));
 			ps.addBatch();
 			i++;
 		}
@@ -227,13 +229,13 @@ public class BaseMaker {
 		PreparedStatement ps = con2.prepareStatement("INSERT INTO PTPostaje VALUES (?,?,?,?,?,?,?)");
 		ResultSet rs = con1.createStatement().executeQuery("SELECT * FROM PTPostaje");
 		while (rs.next()) {
-			ps.setInt(1, rs.getInt(1));
-			ps.setString(2, rs.getString(2));
-			ps.setString(3, rs.getString(3));
-			ps.setInt(4, rs.getInt(4));
-			ps.setInt(5, rs.getInt(5));
-			ps.setInt(6, rs.getInt(6));
-			ps.setString(7, rs.getString(7));
+			ps.setInt(1, rs.getInt("ID"));
+			ps.setString(2, rs.getString("Sifra"));
+			ps.setString(3, rs.getString("Naziv"));
+			ps.setInt(4, rs.getInt("VrstaPostaje"));
+			ps.setInt(5, rs.getInt("Drzava"));
+			ps.setInt(6, rs.getInt("PGRID"));
+			ps.setString(7, rs.getString("Prodaja"));
 			ps.addBatch();
 			i++;
 		}
@@ -254,14 +256,14 @@ public class BaseMaker {
 		ResultSet rs = con1
 				.createStatement()
 				.executeQuery(
-						"SELECT * FROM PTCasiVoznjeVR WHERE StupacVRID IN(SELECT ID FROM PTStupciVR WHERE VarijantaVRID IN (select ID from PTVarijanteVR where VozniRedID IN (SELECT ID FROM PTVozniRedi WHERE VeljaOd< GETDATE() and veljaDo > GETDATE())))");
+						"SELECT * FROM PTCasiVoznjeVR WHERE StupacVRID IN(SELECT ID FROM PTStupciVR WHERE VarijantaVRID IN (select ID from PTVarijanteVR where VozniRedID IN (SELECT ID FROM PTVozniRedi WHERE  VrstaVR=1 and VeljaOd < GETDATE() and veljaDo > GETDATE())))");
 		while (rs.next()) {
-			ps.setInt(1, rs.getInt(1));
-			ps.setInt(2, rs.getInt(2));
-			ps.setInt(3, rs.getInt(3));
-			ps.setInt(4, rs.getInt(4));
-			ps.setDouble(5, rs.getDouble(5));
-			ps.setDouble(6, rs.getDouble(6));
+			ps.setInt(1, rs.getInt("ID"));
+			ps.setInt(2, rs.getInt("Firma"));
+			ps.setInt(3, rs.getInt("StupacVRID"));
+			ps.setInt(4, rs.getInt("NodePostajeVarijanteVRID"));
+			ps.setDouble(5, rs.getDouble("VremeOdhoda"));
+			ps.setDouble(6, rs.getDouble("VremePrihoda"));
 			ps.addBatch();
 			i++;
 		}
@@ -277,37 +279,37 @@ public class BaseMaker {
 		con2.createStatement().executeUpdate("drop table if exists PTKTVozneKarte");
 		con2.createStatement()
 				.executeUpdate(
-						"CREATE TABLE PTKTVozneKarte(ID INT NOT NULL , Firma INT NOT NULL,Sifra VARCHAR(10) NOT NULL,Oznaka VARCHAR(16) ,TipKarteID INT NOT NULL,TarifniRazredID INT,Opis VARCHAR(50) ,StVoznji INT,SmerVoznje INT,OdDanaM INT,DoDanaM INT,VeljaDniOdProdaje INT,Status INT,PrevoznikID INT,NacinDolocanjaCene INT,KMPogoja INT,FiksnaCena FLOAT(53),FaktorCene FLOAT(53),PopustProcent FLOAT(53),SifraValute INT,RoundN FLOAT(53),MobilnaProdaja INT,InternetProdaja INT,DOSID INT,CenaRezervacije FLOAT(53),KmRezervacije INT,kratkiOpis VARCHAR(20),PRIMARY KEY (ID))");
+						"CREATE TABLE PTKTVozneKarte(ID INT NOT NULL , Firma INT NOT NULL,Sifra VARCHAR(10) NOT NULL,Oznaka VARCHAR(16) ,TipKarteID INT NOT NULL,TarifniRazredID INT,Opis VARCHAR(50) ,StVoznji INT,SmerVoznje INT,OdDanaM INT,DoDanaM INT,VeljaDniOdProdaje INT,Status INT,PrevoznikID INT,NacinDolocanjaCene INT,KMPogoja INT,FiksnaCena FLOAT(53),FaktorCene FLOAT(53),PopustProcent FLOAT(53),SifraValute INT,RoundN FLOAT(53),MobilnaProdaja INT,InternetProdaja INT,DOSID INT,CenaRezervacije FLOAT(53),KmRezervacije INT,KratkiOpis VARCHAR(20),PRIMARY KEY (ID))");
 		PreparedStatement ps = con2.prepareStatement("INSERT INTO PTKTVozneKarte VALUES (?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)");
 		ResultSet rs = con1.createStatement().executeQuery("SELECT * FROM PTKTVozneKarte WHERE MobilnaProdaja = 1");
 		while (rs.next()) {
-			ps.setInt(1, rs.getInt(1));
-			ps.setInt(2, rs.getInt(2));
-			ps.setString(3, rs.getString(3));
-			ps.setString(4, rs.getString(4));
-			ps.setInt(5, rs.getInt(5));
-			ps.setInt(6, rs.getInt(6));
-			ps.setString(7, rs.getString(7));
-			ps.setInt(8, rs.getInt(8));
-			ps.setInt(9, rs.getInt(9));
-			ps.setInt(10, rs.getInt(10));
-			ps.setInt(11, rs.getInt(11));
-			ps.setInt(12, rs.getInt(12));
-			ps.setInt(13, rs.getInt(13));
-			ps.setInt(14, rs.getInt(14));
-			ps.setInt(15, rs.getInt(15));
-			ps.setInt(16, rs.getInt(16));
-			ps.setDouble(17, rs.getDouble(17));
-			ps.setDouble(18, rs.getDouble(18));
-			ps.setDouble(19, rs.getDouble(19));
-			ps.setInt(20, rs.getInt(20));
-			ps.setDouble(21, rs.getDouble(21));
-			ps.setInt(22, rs.getInt(22));
-			ps.setInt(23, rs.getInt(23));
-			ps.setInt(24, rs.getInt(24));
-			ps.setDouble(25, rs.getDouble(25));
-			ps.setInt(26, rs.getInt(26));
-			ps.setString(27, rs.getString(27));
+			ps.setInt(1, rs.getInt("ID"));
+			ps.setInt(2, rs.getInt("Firma"));
+			ps.setString(3, rs.getString("Sifra"));
+			ps.setString(4, rs.getString("Oznaka"));
+			ps.setInt(5, rs.getInt("TipKarteID"));
+			ps.setInt(6, rs.getInt("TarifniRazredID"));
+			ps.setString(7, rs.getString("Opis"));
+			ps.setInt(8, rs.getInt("StVoznji"));
+			ps.setInt(9, rs.getInt("SmerVoznje"));
+			ps.setInt(10, rs.getInt("OdDanaM"));
+			ps.setInt(11, rs.getInt("DoDanaM"));
+			ps.setInt(12, rs.getInt("VeljaDniOdProdaje"));
+			ps.setInt(13, rs.getInt("Status"));
+			ps.setInt(14, rs.getInt("PrevoznikID"));
+			ps.setInt(15, rs.getInt("NacinDolocanjaCene"));
+			ps.setInt(16, rs.getInt("KMPogoja"));
+			ps.setDouble(17, rs.getDouble("FiksnaCena"));
+			ps.setDouble(18, rs.getDouble("FaktorCene"));
+			ps.setDouble(19, rs.getDouble("PopustProcent"));
+			ps.setInt(20, rs.getInt("SifraValute"));
+			ps.setDouble(21, rs.getDouble("RoundN"));
+			ps.setInt(22, rs.getInt("MobilnaProdaja"));
+			ps.setInt(23, rs.getInt("InternetProdaja"));
+			ps.setInt(24, rs.getInt("DOSID"));
+			ps.setDouble(25, rs.getDouble("CenaRezervacije"));
+			ps.setInt(26, rs.getInt("KmRezervacije"));
+			ps.setString(27, rs.getString("KratkiOpis"));
 			ps.addBatch();
 			i++;
 		}
@@ -323,17 +325,19 @@ public class BaseMaker {
 	private static void doPTVozaci(Connection con1, Connection con2) throws SQLException {
 		int i = 0;
 		con2.createStatement().executeUpdate("drop table if exists PTVozaci;");
-		con2.createStatement().executeUpdate("CREATE TABLE PTVozaci(ID INT NOT NULL,PGRID INT NOT NULL,Sifra INT NOT NULL,Naziv VARCHAR,OsebaID INT,JeVozac INT,JeKondukter INT,PRIMARY KEY (ID))");
-		PreparedStatement ps = con2.prepareStatement("INSERT INTO PTVozaci VALUES (?,?,?,?,?,?,?)");
+		con2.createStatement().executeUpdate(
+				"CREATE TABLE PTVozaci(ID INT NOT NULL,PGRID INT NOT NULL,Sifra INT NOT NULL,Naziv VARCHAR,OsebaID INT,JeVozac INT,JeKondukter INT,MobilePassword VARCHAR  ,PRIMARY KEY (ID))");
+		PreparedStatement ps = con2.prepareStatement("INSERT INTO PTVozaci VALUES (?,?,?,?,?,?,?,?)");
 		ResultSet rs = con1.createStatement().executeQuery("SELECT * FROM PTVozaci");
 		while (rs.next()) {
-			ps.setInt(1, rs.getInt(1));
-			ps.setInt(2, rs.getInt(2));
-			ps.setInt(3, rs.getInt(3));
-			ps.setString(4, rs.getString(4));
-			ps.setInt(5, rs.getInt(5));
-			ps.setInt(6, rs.getInt(6));
-			ps.setInt(7, rs.getInt(7));
+			ps.setInt(1, rs.getInt("ID"));
+			ps.setInt(2, rs.getInt("PGRID"));
+			ps.setInt(3, rs.getInt("Sifra"));
+			ps.setString(4, rs.getString("Naziv"));
+			ps.setInt(5, rs.getInt("OsebaID"));
+			ps.setInt(6, rs.getInt("JeVozac"));
+			ps.setInt(7, rs.getInt("JeKondukter"));
+			ps.setString(8, rs.getString("MobilePassword"));
 			ps.addBatch();
 			i++;
 		}
@@ -355,12 +359,12 @@ public class BaseMaker {
 				.executeQuery(
 						"SELECT * FROM PTKTTarifniRazrediCenik a WHERE IDRazreda IN ( SELECT DISTINCT TarifniRazredID FROM PTKTVozneKarte WHERE MobilnaProdaja = 1) AND VeljaOD = (SELECT MAX(VeljaOd) FROM PTKTTarifniRazrediCenik b WHERE b.IDRazreda = a.IDRazreda AND b.OdKM = a.OdKM AND b.VeljaOd <= GETDATE())");
 		while (rs.next()) {
-			ps.setInt(1, rs.getInt(1));
-			ps.setInt(2, rs.getInt(2));
-			ps.setString(3, rs.getString(3));
-			ps.setInt(4, rs.getInt(4));
-			ps.setDouble(5, rs.getDouble(5));
-			ps.setInt(6, rs.getInt(6));
+			ps.setInt(1, rs.getInt("ID"));
+			ps.setInt(2, rs.getInt("IDRazreda"));
+			ps.setString(3, rs.getString("VeljaOd"));
+			ps.setInt(4, rs.getInt("OdKM"));
+			ps.setDouble(5, rs.getDouble("Cena"));
+			ps.setInt(6, rs.getInt("DOSID"));
 			ps.addBatch();
 			i++;
 		}
@@ -380,13 +384,13 @@ public class BaseMaker {
 		PreparedStatement ps = con2.prepareStatement("INSERT INTO PTKTVrstePopustov VALUES (?,?,?,?,?,?,?)");
 		ResultSet rs = con1.createStatement().executeQuery("SELECT * FROM PTKTVrstePopustov");
 		while (rs.next()) {
-			ps.setInt(1, rs.getInt(1));
-			ps.setInt(2, rs.getInt(2));
-			ps.setInt(3, rs.getInt(3));
-			ps.setString(4, rs.getString(4));
-			ps.setString(5, rs.getString(5));
-			ps.setInt(6, rs.getInt(6));
-			ps.setDouble(7, rs.getDouble(7));
+			ps.setInt(1, rs.getInt("ID"));
+			ps.setInt(2, rs.getInt("Firma"));
+			ps.setInt(3, rs.getInt("Sifra"));
+			ps.setString(4, rs.getString("Oznaka"));
+			ps.setString(5, rs.getString("Opis"));
+			ps.setInt(6, rs.getInt("NacinIzracuna"));
+			ps.setDouble(7, rs.getDouble("Vrednost"));
 			ps.addBatch();
 			i++;
 		}
@@ -406,16 +410,16 @@ public class BaseMaker {
 		PreparedStatement ps = con2.prepareStatement("INSERT INTO PTIzjemeCenikaVR VALUES (?,?,?,?,?,?,?,?,?,?)");
 		ResultSet rs = con1.createStatement().executeQuery("SELECT * FROM PTIzjemeCenikaVR");
 		while (rs.next()) {
-			ps.setInt(1, rs.getInt(1));
-			ps.setInt(2, rs.getInt(2));
-			ps.setInt(3, rs.getInt(3));
-			ps.setString(4, rs.getString(4));
-			ps.setInt(5, rs.getInt(5));
-			ps.setInt(6, rs.getInt(6));
-			ps.setInt(7, rs.getInt(7));
-			ps.setInt(8, rs.getInt(8));
-			ps.setInt(9, rs.getInt(9));
-			ps.setDouble(10, rs.getDouble(10));
+			ps.setInt(1, rs.getInt("ID"));
+			ps.setInt(2, rs.getInt("Firma"));
+			ps.setInt(3, rs.getInt("TarifniCenikID"));
+			ps.setString(4, rs.getString("VeljaOd"));
+			ps.setInt(5, rs.getInt("VozniRedID"));
+			ps.setInt(6, rs.getInt("VarijantaID"));
+			ps.setInt(7, rs.getInt("StupacID"));
+			ps.setInt(8, rs.getInt("Postaja1ID"));
+			ps.setInt(9, rs.getInt("Postaja2ID"));
+			ps.setDouble(10, rs.getDouble("Cena"));
 			ps.addBatch();
 			i++;
 		}
@@ -430,7 +434,7 @@ public class BaseMaker {
 		int i = 0;
 		con2.createStatement().executeUpdate("drop table if exists PTKTProdaja;");
 		con2.createStatement().executeUpdate("drop table if exists PTKTObracun;");
-			con2.createStatement()
+		con2.createStatement()
 				.executeUpdate(
 						"CREATE TABLE PTKTProdaja(ID INTEGER PRIMARY KEY ,Firma INT NOT NULL,DokumentProdajeID INT,VrsticaProdajeID INT,DokumentBlagajneID INT,BUSProdajaID INT,Datum DATETIME,Vreme DATETIME,VoznaKartaID INT,Code VARCHAR(20) ,BRVoznji INT,Cena FLOAT(53),Popust1ID INT,Popust2ID INT,Popust3ID INT,PCenaKarte FLOAT(53),NCenaKarte FLOAT(53),Popust FLOAT(53),ZaPlatiti FLOAT(53),PorezProcent INT,ProdajnoMestoID INT,PrevoznikID INT,VrstaPosadeID INT,Vozac1ID INT,Vozac2ID INT,Vozac3ID INT,Blagajnik INT,Blagajna INT,StupacID INT,OdPostajeID INT,DoPostajeID INT,VoziloID INT,Rezervacija INT,StatusZK INT,KmLinijeVR INT,KmDomaci INT,KmIno INT,BRPutnika INT,BRKarata INT,MobStrojID INT,ObracunID INT)");
 		con2.createStatement().executeUpdate("CREATE TABLE PTKTObracun(ID INTEGER PRIMARY KEY,Datum DATETIME,VozacID INT,GUID VARCHAR)");
@@ -447,15 +451,15 @@ public class BaseMaker {
 		PreparedStatement ps = con2.prepareStatement("INSERT INTO PTKTPopusti VALUES (?,?,?,?,?,?,?,?,?)");
 		ResultSet rs = con1.createStatement().executeQuery("SELECT * FROM PTKTPopusti");
 		while (rs.next()) {
-			ps.setInt(1, rs.getInt(1));
-			ps.setInt(2, rs.getInt(2));
-			ps.setInt(3, rs.getInt(3));
-			ps.setString(4, rs.getString(4));
-			ps.setInt(5, rs.getInt(5));
-			ps.setString(6, rs.getString(6));
-			ps.setInt(7, rs.getInt(7));
-			ps.setInt(8, rs.getInt(8));
-			ps.setDouble(9, rs.getDouble(9));
+			ps.setInt(1, rs.getInt("ID"));
+			ps.setInt(2, rs.getInt("PrevoznikID"));
+			ps.setInt(3, rs.getInt("TipKarteID"));
+			ps.setString(4, rs.getString("Opis"));
+			ps.setInt(5, rs.getInt("StupacID"));
+			ps.setString(6, rs.getString("VeljaOd"));
+			ps.setInt(7, rs.getInt("VrstaPopustaID"));
+			ps.setInt(8, rs.getInt("NacinIzracuna"));
+			ps.setDouble(9, rs.getDouble("Popust"));
 			ps.addBatch();
 			i++;
 		}
@@ -473,14 +477,14 @@ public class BaseMaker {
 		PreparedStatement ps = con2.prepareStatement("INSERT INTO PTKTTipiKarti VALUES (?,?,?,?,?,?,?,?)");
 		ResultSet rs = con1.createStatement().executeQuery("SELECT * FROM PTKTTipiKarti");
 		while (rs.next()) {
-			ps.setInt(1, rs.getInt(1));
-			ps.setInt(2, rs.getInt(2));
-			ps.setInt(3, rs.getInt(3));
-			ps.setString(4, rs.getString(4));
-			ps.setInt(5, rs.getInt(5));
-			ps.setString(6, rs.getString(6));
-			ps.setInt(7, rs.getInt(7));
-			ps.setInt(8, rs.getInt(8));
+			ps.setInt(1, rs.getInt("ID"));
+			ps.setInt(2, rs.getInt("PGRID"));
+			ps.setInt(3, rs.getInt("Sifra"));
+			ps.setString(4, rs.getString("Oznaka"));
+			ps.setInt(5, rs.getInt("Povratna"));
+			ps.setString(6, rs.getString("Opis"));
+			ps.setInt(7, rs.getInt("SkupinaKarte"));
+			ps.setInt(8, rs.getInt("KategorijaKarte"));
 			ps.addBatch();
 			i++;
 		}
@@ -498,15 +502,15 @@ public class BaseMaker {
 		PreparedStatement ps = con2.prepareStatement("INSERT INTO PromVozila (ID,Firma,Sifra,PGRID,Status,GUID,Naziv,RegSt,LastnikVA) VALUES (?,?,?,?,?,?,?,?,?)");
 		ResultSet rs = con1.createStatement().executeQuery("SELECT * FROM PromVozila");
 		while (rs.next()) {
-			ps.setInt(1, rs.getInt(1));
-			ps.setInt(2, rs.getInt(2));
-			ps.setInt(3, rs.getInt(3));
-			ps.setInt(4, rs.getInt(4));
-			ps.setInt(5, rs.getInt(5));
-			ps.setString(6, rs.getString(6));
-			ps.setString(7, rs.getString(7));
-			ps.setString(8, rs.getString(8));
-			ps.setString(9, rs.getString(9));
+			ps.setInt(1, rs.getInt("ID"));
+			ps.setInt(2, rs.getInt("Firma"));
+			ps.setInt(3, rs.getInt("Sifra"));
+			ps.setInt(4, rs.getInt("PGRID"));
+			ps.setInt(5, rs.getInt("Status"));
+			ps.setString(6, rs.getString("GUID"));
+			ps.setString(7, rs.getString("Naziv"));
+			ps.setString(8, rs.getString("RegSt"));
+			ps.setString(9, rs.getString("LastnikVA"));
 			ps.addBatch();
 			i++;
 		}
@@ -524,15 +528,15 @@ public class BaseMaker {
 		PreparedStatement ps = con2.prepareStatement("INSERT INTO PTProdajnaMesta VALUES (?,?,?,?,?,?,?,?,?)");
 		ResultSet rs = con1.createStatement().executeQuery("SELECT * FROM PTProdajnaMesta WHERE Firma = 5");
 		while (rs.next()) {
-			ps.setInt(1, rs.getInt(1));
-			ps.setInt(2, rs.getInt(2));
-			ps.setInt(3, rs.getInt(3));
-			ps.setString(4, rs.getString(4));
-			ps.setString(5, rs.getString(5));
-			ps.setInt(6, rs.getInt(6));
-			ps.setInt(7, rs.getInt(7));
-			ps.setInt(8, rs.getInt(8));
-			ps.setInt(9, rs.getInt(9));
+			ps.setInt(1, rs.getInt("ID"));
+			ps.setInt(2, rs.getInt("Firma"));
+			ps.setInt(3, rs.getInt("Sifra"));
+			ps.setString(4, rs.getString("Oznaka"));
+			ps.setString(5, rs.getString("Naziv"));
+			ps.setInt(6, rs.getInt("Partner"));
+			ps.setInt(7, rs.getInt("Strm"));
+			ps.setInt(8, rs.getInt("OE"));
+			ps.setInt(9, rs.getInt("PostajaID"));
 			ps.addBatch();
 			i++;
 		}
@@ -548,11 +552,11 @@ public class BaseMaker {
 		PreparedStatement ps = con2.prepareStatement("INSERT INTO PTStupciVRMirovanja VALUES (?,?,?,?,?)");
 		ResultSet rs = con1.createStatement().executeQuery("SELECT * FROM PTStupciVRMirovanja WHERE DoDatuma > GETDATE()");
 		while (rs.next()) {
-			ps.setInt(1, rs.getInt(1));
-			ps.setInt(2, rs.getInt(2));
-			ps.setString(3, rs.getString(3));
-			ps.setString(4, rs.getString(4));
-			ps.setString(5, rs.getString(5));
+			ps.setInt(1, rs.getInt("ID"));
+			ps.setInt(2, rs.getInt("StupacID"));
+			ps.setString(3, rs.getString("OdDatuma"));
+			ps.setString(4, rs.getString("DoDatuma"));
+			ps.setString(5, rs.getString("Opis"));
 			ps.addBatch();
 			i++;
 		}
@@ -560,4 +564,25 @@ public class BaseMaker {
 		con2.commit();
 		System.out.println(String.format("%-20s -> %7d", "PTStupciVRMirovanja", i));
 	}
+
+	private static void doPTVerzija(Connection con1, Connection con2) throws SQLException {
+		int i = 0;
+		con2.createStatement().executeUpdate("drop table if exists PTVersion;");
+		con2.createStatement().executeUpdate("CREATE TABLE PTVersion(VerzijaDateTime DATETIME,PRIMARY KEY (VerzijaDateTime))");
+		con2.createStatement().executeUpdate("INSERT INTO PTVersion VALUES (datetime('now'))");
+		i++;
+		con2.commit();
+		System.out.println(String.format("%-20s -> %7d", "PTVersion", i));
+	}
+
 }
+
+/*
+ * ptvozniredi con2.createStatement().executeUpdate("drop table if exists PTVozniRedi;"); con2.createStatement() .executeUpdate(
+ * "CREATE TABLE PTVozniRedi(ID INT NOT NULL,Firma INT NOT NULL,Sifra VARCHAR(12)  NOT NULL,OznakaLinije VARCHAR(40) ,PrivitakDozvole VARCHAR(20) ,Registracija VARCHAR(20) ,Opis1 VARCHAR(80)  ,Opis2 VARCHAR(80)  ,VeljaOd DATETIME,VeljaDo DATETIME,VrstaVR INT,KategorijaPrevoza INT,VrstaLinije INT,VrstaPrevoza INT,NacinPrevoza INT,VrstaPosadeID INT,OE INT,PrevoznikID INT,Kooperacija INT,Pool INT,DOSVRID INT,Stat1 INT,PRIMARY KEY (ID))"
+ * ); PreparedStatement ps = con2.prepareStatement("INSERT INTO PTVozniRedi VALUES (?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)"); ResultSet rs = con1.createStatement().executeQuery("select * from ptvozniredi where veljaDo > GETDATE()"); while (rs.next()) {
+ * 
+ * ps.setInt(1, rs.getInt(1)); ps.setInt(2, rs.getInt(2)); ps.setString(3, rs.getString(3)); ps.setString(4, rs.getString(4)); ps.setString(5, rs.getString(5)); ps.setString(6, rs.getString(6)); ps.setString(7, rs.getString(7)); ps.setString(8, rs.getString(8)); ps.setString(9,
+ * rs.getString("VeljaOD")); ps.setString(10, rs.getString("VeljaDo")); ps.setInt(11, rs.getInt(11)); ps.setInt(12, rs.getInt(12)); ps.setInt(13, rs.getInt(13)); ps.setInt(14, rs.getInt(14)); ps.setInt(15, rs.getInt(15)); ps.setInt(16, rs.getInt(16)); ps.setInt(17, rs.getInt(17)); ps.setInt(18,
+ * rs.getInt(18)); ps.setInt(19, rs.getInt(19)); ps.setInt(20, rs.getInt(20)); ps.setInt(21, rs.getInt(21)); ps.setInt(22, rs.getInt(22)); ps.addBatch(); i++;
+ */

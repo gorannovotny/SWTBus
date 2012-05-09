@@ -37,7 +37,7 @@ public class LoginWindow {
 	private Text tVozilo;
 	private Text tLinija;
 	protected Button comboPolazak;
-	private Button button;
+	private Button btnNastavak;
 
 	protected Label lOpisVozilo;
 	protected Label lOpisVozac;
@@ -140,9 +140,10 @@ public class LoginWindow {
 		btnUcitaj.setFont(SWTResourceManager.getFont("Liberation Sans", 20, SWT.NORMAL));
 		btnUcitaj.setBounds(5, 486, 150, 50);
 
-		button = new Button(shlPrijava, SWT.ARROW | SWT.RIGHT);
-		button.setFont(SWTResourceManager.getFont("Liberation Sans", 30, SWT.NORMAL));
-		button.setBounds(700, 480, 60, 56);
+		btnNastavak = new Button(shlPrijava, SWT.CENTER);
+		btnNastavak.setText("Nastavak");
+		btnNastavak.setFont(SWTResourceManager.getFont("Liberation Sans", 20, SWT.NORMAL));
+		btnNastavak.setBounds(638, 486, 150, 50);
 
 		tVozac.addModifyListener(new TVozacModifyListener());
 		tVozac.setText("117");
@@ -151,9 +152,9 @@ public class LoginWindow {
 		tVozilo.setText("557");
 		tVozilo.addMouseListener(new textMouseListener());
 		tLinija.addModifyListener(new TLinijaModifyListener());
-		tLinija.setText("22209");
+		tLinija.setText("24191");
 		tLinija.addMouseListener(new textMouseListener());
-		button.addSelectionListener(new ButtonSelectionListener());
+		btnNastavak.addSelectionListener(new ButtonSelectionListener());
 
 	}
 

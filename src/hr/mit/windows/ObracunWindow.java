@@ -174,6 +174,7 @@ public class ObracunWindow {
 			try {
 				if (new File("/mnt/usb").exists()) {
 					Runtime.getRuntime().exec("cp prodaja.db /mnt/usb");
+					Thread.sleep(1000);
 					if (FileChecksum.check("/mnt/usb/prodaja.db") == FileChecksum.check("prodaja.db")) {
 						MessageBox mb = new MessageBox(shell, SWT.OK | SWT.ICON_INFORMATION);
 						mb.setMessage("Datoteka prodaje iskopirana na USB");
@@ -188,7 +189,7 @@ public class ObracunWindow {
 					mb.setMessage("USB stick nije priključen");
 					mb.open();
 				}
-			} catch (IOException e1) {
+			} catch (Exception e1) {
 				throw new RuntimeException(e1);
 			}
 		}

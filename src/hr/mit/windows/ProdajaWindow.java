@@ -359,7 +359,7 @@ public class ProdajaWindow  {
 		// lBlagajna.setForeground(SWTResourceManager.getColor(192, 192, 192));
 		lBlagajna.setFont(SWTResourceManager.getFont("Liberation Sans", 20, SWT.NORMAL));
 		// lBlagajna.setBackground(SWTResourceManager.getColor(0, 0, 0));
-		lBlagajna.setBounds(5, 544, 675, 54);
+		lBlagajna.setBounds(5, 544, 460, 54);
 
 		lClock = new CLabel(shell, SWT.LEFT);
 		lClock.setAlignment(SWT.RIGHT);

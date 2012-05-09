@@ -77,7 +77,7 @@ public class Obracun {
 	public String getUuid() {
 		return uuid;
 	}
-	
+
 	public static List<String> getArrayList() {
 		List<String> l = new ArrayList<String>();
 		updateList();
@@ -160,7 +160,12 @@ public class Obracun {
 				if (stupacID != rs.getInt("stupacID")) {
 					stupacID = rs.getInt("stupacID");
 					retval.append(" \n");
-					retval.append(Stupac.getByID(stupacID).getOpis() + " (" + stupacID.toString() + ")\n");
+					String linija = Stupac.getByID(stupacID).getOpis() + " (" + stupacID.toString() + ")\n";
+					if (linija.length() > 32) {
+						retval.append(linija.substring(0, 32) + "\n");
+						retval.append(linija.substring(32));
+					} else
+						retval.append(linija);
 					retval.append("................................\n");
 				}
 				// retval.append("Tip                  Kom  Ukupno\n");
@@ -213,10 +218,18 @@ public class Obracun {
 
 	private static String zaglavlje(Obracun o) {
 		StringBuffer sb = new StringBuffer();
-		sb.append("Obračun br. " + o.getId().toString() + "\n");
-		sb.append(o.getUuid()+"\n \n");
-		sb.append("Vozač: " + o.vozac.getNaziv() + "\n");
-		sb.append("Datum: " + o.datum + "\n \n");
+		if (o.getId() == null) {
+			sb.append("Stanje blagajne\n");
+			sb.append("  \n");
+			sb.append("Vozač: " + o.vozac.getNaziv() + "\n");
+			sb.append("  \n");
+		} else {
+			sb.append("Obračun br. " + o.getId().toString() + "\n");
+			sb.append(o.getUuid() + "\n \n");
+			sb.append("Vozač: " + o.vozac.getNaziv() + "\n");
+			sb.append("Datum: " + o.datum + "\n \n");
+		}
+
 		return sb.toString();
 	}
 
