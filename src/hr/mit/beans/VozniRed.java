@@ -70,4 +70,27 @@ public class VozniRed {
 	public static VozniRed get(int index) {
 		return vrList.get(index);
 	}
+	/*
+SELECT a.ID,d.ZapSt,g.ZapSt,f.Naziv,i.Naziv,CASE WHEN a.SmerVoznje = '-' THEN c.Opis1 ELSE c.Opis2 END Opis
+FROM PTStupciVR a
+LEFT JOIN PTStupciVRMirovanja b ON b.StupacID = a.ID AND DATETIME('now') BETWEEN b.OdDatuma AND b.DoDatuma  
+INNER JOIN PTVarijanteVR c ON c.ID = a.VarijantaVRID
+
+INNER JOIN PTPostajeVarijantVR d ON d.VarijantaID = c.ID
+INNER JOIN PTPostajeVR e ON e.ID = d.NodePostajeVRID
+INNER JOIN PTPostaje f ON f.ID = e.PostajaID  
+
+INNER JOIN PTPostajeVarijantVR g ON g.VarijantaID = c.ID
+INNER JOIN PTPostajeVR h ON h.ID = g.NodePostajeVRID
+INNER JOIN PTPostaje i ON i.ID = h.PostajaID  
+
+
+WHERE b.ID IS null
+AND  DATETIME('now') BETWEEN a.VeljaOd AND a.VeljaDo
+AND f.Naziv = 'Varaždin' 
+AND i.Naziv = 'Turčin'
+AND 
+((d.ZapSt < g.ZapSt AND a.SmerVoznje = '-') OR (d.ZapSt > g.ZapSt AND a.SmerVoznje = '+') ) 
+group by 1
+	 */
 }
