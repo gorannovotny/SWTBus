@@ -43,6 +43,8 @@ public class LoginWindow {
 	protected Label lOpisVozac;
 	protected Button lOpisLinije;
 	private Button btnUcitaj;
+	private Text tLozinka;
+	private Label lLozinka;
 
 	/**
 	 * @wbp.parser.entryPoint
@@ -75,64 +77,64 @@ public class LoginWindow {
 		lblVozac = new Label(shlPrijava, SWT.NONE);
 		lblVozac.setBackground(SWTResourceManager.getColor(SWT.COLOR_GRAY));
 		lblVozac.setFont(SWTResourceManager.getFont("Liberation Sans", 30, SWT.NORMAL));
-		lblVozac.setBounds(5, 130, 160, 50);
+		lblVozac.setBounds(5, 110, 160, 50);
 		lblVozac.setText("Vozač");
 
 		tVozac = new Text(shlPrijava, SWT.BORDER);
 		tVozac.setFont(SWTResourceManager.getFont("Liberation Sans", 30, SWT.NORMAL));
-		tVozac.setBounds(165, 130, 125, 50);
+		tVozac.setBounds(165, 110, 125, 50);
 
 		lOpisVozac = new Label(shlPrijava, SWT.NONE);
 		lOpisVozac.setBackground(SWTResourceManager.getColor(SWT.COLOR_GRAY));
 		lOpisVozac.setText("");
 		lOpisVozac.setFont(SWTResourceManager.getFont("Liberation Sans", 20, SWT.NORMAL));
-		lOpisVozac.setBounds(310, 140, 480, 30);
+		lOpisVozac.setBounds(310, 120, 480, 30);
 
 		lblVozilo = new Label(shlPrijava, SWT.NONE);
 		lblVozilo.setBackground(SWTResourceManager.getColor(SWT.COLOR_GRAY));
 		lblVozilo.setFont(SWTResourceManager.getFont("Liberation Sans", 30, SWT.NORMAL));
-		lblVozilo.setBounds(5, 180, 160, 50);
+		lblVozilo.setBounds(5, 210, 160, 50);
 		lblVozilo.setText("Vozilo");
 
 		tVozilo = new Text(shlPrijava, SWT.BORDER);
 		tVozilo.setFont(SWTResourceManager.getFont("Liberation Sans", 30, SWT.NORMAL));
-		tVozilo.setBounds(165, 180, 125, 50);
+		tVozilo.setBounds(165, 210, 125, 50);
 
 		lOpisVozilo = new Label(shlPrijava, SWT.NONE);
 		lOpisVozilo.setBackground(SWTResourceManager.getColor(SWT.COLOR_GRAY));
-		lOpisVozilo.setBounds(310, 190, 480, 30);
+		lOpisVozilo.setBounds(310, 220, 480, 30);
 		lOpisVozilo.setFont(SWTResourceManager.getFont("Liberation Sans", 20, SWT.NORMAL));
 		lOpisVozilo.setText("");
 
 		lblLinija = new Label(shlPrijava, SWT.NONE);
 		lblLinija.setBackground(SWTResourceManager.getColor(SWT.COLOR_GRAY));
 		lblLinija.setFont(SWTResourceManager.getFont("Liberation Sans", 30, SWT.NORMAL));
-		lblLinija.setBounds(5, 230, 160, 50);
+		lblLinija.setBounds(5, 260, 160, 50);
 		lblLinija.setText("Linija");
 
 		tLinija = new Text(shlPrijava, SWT.BORDER);
 		tLinija.setFont(SWTResourceManager.getFont("Liberation Sans", 30, SWT.NORMAL));
-		tLinija.setBounds(165, 230, 125, 50);
+		tLinija.setBounds(165, 260, 125, 50);
 
 		lOpisLinije = new Button(shlPrijava, SWT.NONE);
 		lOpisLinije.setBackground(SWTResourceManager.getColor(SWT.COLOR_GRAY));
 		lOpisLinije.setText("");
 		lOpisLinije.setAlignment(SWT.LEFT);
 		lOpisLinije.setFont(SWTResourceManager.getFont("Liberation Sans", 12, SWT.NORMAL));
-		lOpisLinije.setBounds(290, 230, 500, 50);
+		lOpisLinije.setBounds(290, 260, 500, 50);
 		lOpisLinije.addSelectionListener(new SearchSelectionListener());
 
 		lblPolazak = new Label(shlPrijava, SWT.NONE);
 		lblPolazak.setBackground(SWTResourceManager.getColor(SWT.COLOR_GRAY));
 		lblPolazak.setFont(SWTResourceManager.getFont("Liberation Sans", 30, SWT.NORMAL));
-		lblPolazak.setBounds(5, 280, 160, 50);
+		lblPolazak.setBounds(5, 310, 160, 50);
 		lblPolazak.setText("Polazak");
 
 		comboPolazak = new Button(shlPrijava, SWT.READ_ONLY);
 		comboPolazak.addSelectionListener(new ComboPolazakSelectionListener());
 		comboPolazak.setFont(SWTResourceManager.getFont("Liberation Sans", 30, SWT.NORMAL));
 		comboPolazak.setAlignment(SWT.LEFT);
-		comboPolazak.setBounds(165, 280, 200, 50);
+		comboPolazak.setBounds(165, 310, 200, 50);
 
 		btnUcitaj = new Button(shlPrijava, SWT.NONE);
 		btnUcitaj.addSelectionListener(new Button_1SelectionListener());
@@ -153,6 +155,16 @@ public class LoginWindow {
 		tVozilo.addMouseListener(new textMouseListener());
 		tLinija.addModifyListener(new TLinijaModifyListener());
 		tLinija.setText("24191");
+		tLozinka = new Text(shlPrijava, SWT.BORDER);
+		tLozinka.setText("12345");
+		tLozinka.setFont(SWTResourceManager.getFont("Liberation Sans", 30, SWT.NORMAL));
+		tLozinka.setBounds(165, 160, 125, 50);
+		tLozinka.addMouseListener(new textMouseListener());
+		lLozinka = new Label(shlPrijava, SWT.NONE);
+		lLozinka.setText("Lozinka");
+		lLozinka.setFont(SWTResourceManager.getFont("Liberation Sans", 30, SWT.NORMAL));
+		lLozinka.setBackground(SWTResourceManager.getColor(SWT.COLOR_GRAY));
+		lLozinka.setBounds(5, 160, 160, 50);
 		tLinija.addMouseListener(new textMouseListener());
 		btnNastavak.addSelectionListener(new ButtonSelectionListener());
 
@@ -306,4 +318,15 @@ public class LoginWindow {
 		}
 	}
 
+	public static String xoraj(String pass) {
+		StringBuffer retval = new StringBuffer();
+		short[] kljuc = { 200,201,202,203,204,205,206 }; 
+		int j = 0;
+		for (int i = 0; i < pass.length(); i++) {
+			retval.append(pass.charAt(i)^kljuc[j]);
+			j++;
+			if (j >= kljuc.length) j = 0;
+		}
+		return retval.toString();
+	}
 }

@@ -12,24 +12,26 @@ public class Vozac {
 	private Integer id;
 	private Integer sifra;
 	private String naziv;
+	private String password;
 
 	static {
 		try {
-			String sql = "SELECT id,Sifra,Naziv FROM PTVozaci ORDER BY Naziv";
+			String sql = "SELECT id,Sifra,Naziv,MobilePassword FROM PTVozaci ORDER BY Naziv";
 			ResultSet rs = DbUtil.getConnection().createStatement().executeQuery(sql);
 			while (rs.next()) {
-				vozacList.add(new Vozac(rs.getInt(1),rs.getInt(2),rs.getString(3)));
+				vozacList.add(new Vozac(rs.getInt(1),rs.getInt(2),rs.getString(3),rs.getString(4)));
 			}
 		} catch (SQLException e) {
 			e.printStackTrace();
 		}
 	}
 	
-	public Vozac(Integer id, Integer sifra, String naziv) {
+	public Vozac(Integer id, Integer sifra, String naziv, String password) {
 		super();
 		this.id = id;
 		this.sifra = sifra;
 		this.naziv = naziv;
+		this.password = password;
 	}
 
 	

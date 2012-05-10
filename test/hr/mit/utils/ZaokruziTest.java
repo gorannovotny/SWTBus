@@ -2,6 +2,8 @@ package hr.mit.utils;
 
 import static org.junit.Assert.assertEquals;
 
+import hr.mit.windows.LoginWindow;
+
 import java.math.BigDecimal;
 
 import org.junit.Test;
@@ -27,6 +29,7 @@ public class ZaokruziTest {
 		r = new BigDecimal(0.5);
 		assertEquals(new BigDecimal(0.5), CijenaKarte.zaokruzi(iznos, r));
 
+		assertEquals("PERO", LoginWindow.xoraj("PERO"));
 	}
 
 }
