@@ -274,9 +274,10 @@ public class LoginWindow {
 	private class SearchSelectionListener extends SelectionAdapter {
 		@Override
 		public void widgetDefaultSelected(SelectionEvent e) {
-			Picker picker = new Picker(lOpisLinije, VozniRed.getArrayList(), 0);
-			lOpisLinije = picker.open();
-			tLinija.setText(VozniRed.get((Integer) lOpisLinije.getData()).getId().toString());
+			VRFinder vf = new VRFinder(shlPrijava);
+			VozniRed vr = vf.open();
+			tLinija.setText(vr.getId().toString());
+			lOpisLinije.setText(vr.getOpis());
 		}
 
 		@Override
@@ -320,12 +321,13 @@ public class LoginWindow {
 
 	public static String xoraj(String pass) {
 		StringBuffer retval = new StringBuffer();
-		short[] kljuc = { 200,201,202,203,204,205,206 }; 
+		short[] kljuc = { 200, 201, 202, 203, 204, 205, 206 };
 		int j = 0;
 		for (int i = 0; i < pass.length(); i++) {
-			retval.append(pass.charAt(i)^kljuc[j]);
+			retval.append(pass.charAt(i) ^ kljuc[j]);
 			j++;
-			if (j >= kljuc.length) j = 0;
+			if (j >= kljuc.length)
+				j = 0;
 		}
 		return retval.toString();
 	}
