@@ -41,10 +41,11 @@ public class LoginWindow {
 
 	protected Label lOpisVozilo;
 	protected Label lOpisVozac;
-	protected Button lOpisLinije;
+	protected Label lOpisLinije;
 	private Button btnUcitaj;
 	private Text tLozinka;
 	private Label lLozinka;
+	private Button btnSearch;
 
 	/**
 	 * @wbp.parser.entryPoint
@@ -116,13 +117,17 @@ public class LoginWindow {
 		tLinija.setFont(SWTResourceManager.getFont("Liberation Sans", 30, SWT.NORMAL));
 		tLinija.setBounds(165, 260, 125, 50);
 
-		lOpisLinije = new Button(shlPrijava, SWT.NONE);
+		btnSearch = new Button(shlPrijava, SWT.NONE);
+		btnSearch.setBounds(290, 263, 46, 46);
+		btnSearch.setText("\u2026");
+		btnSearch.addSelectionListener(new SearchSelectionListener());
+
+		lOpisLinije = new Label(shlPrijava, SWT.NONE);
 		lOpisLinije.setBackground(SWTResourceManager.getColor(SWT.COLOR_GRAY));
 		lOpisLinije.setText("");
 		lOpisLinije.setAlignment(SWT.LEFT);
-		lOpisLinije.setFont(SWTResourceManager.getFont("Liberation Sans", 12, SWT.NORMAL));
-		lOpisLinije.setBounds(290, 260, 500, 50);
-		lOpisLinije.addSelectionListener(new SearchSelectionListener());
+		lOpisLinije.setFont(SWTResourceManager.getFont("Liberation Sans", 14, SWT.NORMAL));
+		lOpisLinije.setBounds(345, 270, 445, 30);
 
 		lblPolazak = new Label(shlPrijava, SWT.NONE);
 		lblPolazak.setBackground(SWTResourceManager.getColor(SWT.COLOR_GRAY));
@@ -154,8 +159,8 @@ public class LoginWindow {
 		tVozilo.setText("557");
 		tVozilo.addMouseListener(new textMouseListener());
 		tLinija.addModifyListener(new TLinijaModifyListener());
-		tLinija.setText("24191");
-		tLozinka = new Text(shlPrijava, SWT.BORDER);
+		tLinija.setText("22209");
+		tLozinka = new Text(shlPrijava, SWT.BORDER | SWT.PASSWORD);
 		tLozinka.setText("12345");
 		tLozinka.setFont(SWTResourceManager.getFont("Liberation Sans", 30, SWT.NORMAL));
 		tLozinka.setBounds(165, 160, 125, 50);
@@ -276,8 +281,10 @@ public class LoginWindow {
 		public void widgetDefaultSelected(SelectionEvent e) {
 			VRFinder vf = new VRFinder(shlPrijava);
 			VozniRed vr = vf.open();
-			tLinija.setText(vr.getId().toString());
-			lOpisLinije.setText(vr.getOpis());
+			if (vr != null) {
+				tLinija.setText(vr.getId().toString());
+				lOpisLinije.setText(vr.getOpis());
+			}
 		}
 
 		@Override

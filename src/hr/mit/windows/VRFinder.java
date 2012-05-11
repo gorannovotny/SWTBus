@@ -16,6 +16,7 @@ import org.eclipse.swt.widgets.Shell;
 import org.eclipse.swt.widgets.Text;
 import org.eclipse.wb.swt.SWTResourceManager;
 import org.eclipse.swt.widgets.List;
+import org.eclipse.swt.widgets.Label;
 
 public class VRFinder {
 
@@ -26,6 +27,7 @@ public class VRFinder {
 	private Text tDoPostaje;
 	private Button btnDummy;
 	private int index;
+	private Label lblNewLabel;
 
 	/**
 	 * Create the dialog.
@@ -63,17 +65,25 @@ public class VRFinder {
 	 */
 	private void createContents() {
 		shell = new Shell(parent, SWT.APPLICATION_MODAL | SWT.ON_TOP);
-		shell.setSize(684, 300);
-		shell.setBounds(150, 150, 452, 300);
+		shell.setSize(760, 400);
+		shell.setBounds(20, 20, 760, 400);
 		tOdPostaje = new Text(shell, SWT.BORDER);
-		tOdPostaje.setBounds(10, 10, 210, 27);
+		tOdPostaje.setBounds(10, 60, 360, 50);
+		tOdPostaje.setFont(SWTResourceManager.getFont("Liberation Sans", 25, SWT.NORMAL));
 		tDoPostaje = new Text(shell, SWT.BORDER);
-		tDoPostaje.setBounds(225, 10, 210, 27);
+		tDoPostaje.setBounds(388, 60, 360, 50);
+		tDoPostaje.setFont(SWTResourceManager.getFont("Liberation Sans", 25, SWT.NORMAL));
 
 		btnDummy = new Button(shell, SWT.NONE);
 		btnDummy.addSelectionListener(new BtnDummySelectionListener());
-		btnDummy.setBounds(10, 42, 425, 26);
-		btnDummy.setText("New Button");
+		btnDummy.setBounds(10, 120, 738, 50);
+		btnDummy.setFont(SWTResourceManager.getFont("Liberation Sans", 20, SWT.NORMAL));
+		btnDummy.setAlignment(SWT.LEFT);
+		btnDummy.setText("Traži");
+		lblNewLabel = new Label(shell, SWT.NONE);
+		lblNewLabel.setFont(SWTResourceManager.getFont("Liberation Sans", 30, SWT.NORMAL));
+		lblNewLabel.setBounds(10, 10, 610, 44);
+		lblNewLabel.setText("Pretraga voznih redova");
 		tOdPostaje.addMouseListener(new textMouseListener());
 		tDoPostaje.addMouseListener(new textMouseListener());
 	}
@@ -83,7 +93,7 @@ public class VRFinder {
 			VozniRed.setupFinder(tOdPostaje.getText(), tDoPostaje.getText());
 			Picker picker = new Picker(btnDummy, VozniRed.getArrayList(), 0);
 			btnDummy = picker.open();
-			index = (Integer) btnDummy.getData();
+			if (btnDummy.getData() != null ) index = (Integer) btnDummy.getData();
 			shell.dispose();
 		}
 

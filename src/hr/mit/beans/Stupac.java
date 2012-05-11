@@ -19,7 +19,7 @@ public class Stupac {
 
 	public static void setVozniRed(Integer sifraVR) {
 		try {
-			String sql = "select a.ID,a.VozniRedID,a.VarijantaVRID,a.SmerVoznje,b.Opis1,b.Opis2,a.VremeOdhoda from PTStupciVR a,PTVarijanteVR b WHERE a.VarijantaVRID = b.id AND b.ID = ? AND a.id NOT IN (select StupacID from PTStupciVRMirovanja WHERE DATE('now') BETWEEN OdDatuma AND DoDatuma) ORDER BY a.VremeOdhoda";
+			String sql = "select a.ID,a.VozniRedID,a.VarijantaVRID,a.SmerVoznje,b.Opis1,b.Opis2,a.VremeOdhoda from PTStupciVR a,PTVarijanteVR b WHERE a.VarijantaVRID = b.id AND a.VozniRedID = ? AND a.id NOT IN (select StupacID from PTStupciVRMirovanja WHERE DATE('now') BETWEEN OdDatuma AND DoDatuma) ORDER BY a.VremeOdhoda";
 			PreparedStatement ps = DbUtil.getConnection().prepareStatement(sql);
 			ps.setInt(1, sifraVR);
 			ResultSet rs = ps.executeQuery();
