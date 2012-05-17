@@ -137,9 +137,11 @@ public class LoginWindow {
 
 		comboPolazak = new Button(shlPrijava, SWT.READ_ONLY);
 		comboPolazak.addSelectionListener(new ComboPolazakSelectionListener());
-		comboPolazak.setFont(SWTResourceManager.getFont("Liberation Sans", 30, SWT.NORMAL));
+//		comboPolazak.setFont(SWTResourceManager.getFont("Liberation Sans", 30, SWT.NORMAL));
+		comboPolazak.setFont(SWTResourceManager.getFont("Liberation Sans", 15, SWT.NORMAL));
 		comboPolazak.setAlignment(SWT.LEFT);
-		comboPolazak.setBounds(165, 310, 200, 50);
+//		comboPolazak.setBounds(165, 310, 200, 50);
+		comboPolazak.setBounds(165, 310, 600, 50);
 
 		btnUcitaj = new Button(shlPrijava, SWT.NONE);
 		btnUcitaj.addSelectionListener(new Button_1SelectionListener());

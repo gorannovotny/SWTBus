@@ -40,6 +40,8 @@ public class BaseMaker {
 			doPromVozila(con1, con2);
 			doPTProdajnaMesta(con1, con2);
 			doPTStupciVRMirovanja(con1, con2);
+			doPTPrevozniki(con1, con2);
+			doPTDneviVoznje(con1, con2);
 			doPTVerzija(con1, con2);
 		} catch (Exception e) {
 			e.printStackTrace();
@@ -496,9 +498,7 @@ public class BaseMaker {
 	private static void doPromVozila(Connection con1, Connection con2) throws SQLException {
 		int i = 0;
 		con2.createStatement().executeUpdate("drop table if exists PromVozila;");
-		con2.createStatement()
-				.executeUpdate(
-						"CREATE TABLE PromVozila(ID INT NOT NULL,Firma INT NOT NULL,Sifra INT NOT NULL,PGRID INT,Status INT,GUID VARCHAR(40),Naziv VARCHAR(40),RegSt VARCHAR(12),LastnikVA VARCHAR(3),LastnikAnalitika INT,VrstaID INT,ZnamkaID INT,TipID INT,ModelID INT,OblikaKaroserije INT,Namena INT,Barva VARCHAR(20),StSasije VARCHAR(30),DrzavaIzdelave INT,LetoIzdelave DATETIME,PrvaRegistracija DATETIME,StSedezev INT,StStojisc INT,StLezisc INT,TezaPraznega INT,MaxTeza INT,MaxHitrost INT,StOsovin INT,VrstaMotorja INT,EuroStandard INT,MocKW INT,Vrtljaji INT,ZapremninaMotorja INT,DimDolzina INT,DimSirina INT,DimVisina INT,DimVolumen INT,StKoles INT,DimezijeGumPrednje VARCHAR(20),DimenzijeGumZadnje VARCHAR(20),VrstaZavor INT,Vleka INT,Vitlo INT,Opomba VARCHAR, PRIMARY KEY (ID))");
+		con2.createStatement().executeUpdate("CREATE TABLE PromVozila(ID INT NOT NULL,Firma INT NOT NULL,Sifra INT NOT NULL,PGRID INT,Status INT,GUID VARCHAR(40),Naziv VARCHAR(40),RegSt VARCHAR(12),LastnikVA VARCHAR(3),LastnikAnalitika INT,VrstaID INT,ZnamkaID INT,TipID INT,ModelID INT,OblikaKaroserije INT,Namena INT,Barva VARCHAR(20),StSasije VARCHAR(30),DrzavaIzdelave INT,LetoIzdelave DATETIME,PrvaRegistracija DATETIME,StSedezev INT,StStojisc INT,StLezisc INT,TezaPraznega INT,MaxTeza INT,MaxHitrost INT,StOsovin INT,VrstaMotorja INT,EuroStandard INT,MocKW INT,Vrtljaji INT,ZapremninaMotorja INT,DimDolzina INT,DimSirina INT,DimVisina INT,DimVolumen INT,StKoles INT,DimezijeGumPrednje VARCHAR(20),DimenzijeGumZadnje VARCHAR(20),VrstaZavor INT,Vleka INT,Vitlo INT,Opomba VARCHAR, PRIMARY KEY (ID))");
 		PreparedStatement ps = con2.prepareStatement("INSERT INTO PromVozila (ID,Firma,Sifra,PGRID,Status,GUID,Naziv,RegSt,LastnikVA) VALUES (?,?,?,?,?,?,?,?,?)");
 		ResultSet rs = con1.createStatement().executeQuery("SELECT * FROM PromVozila");
 		while (rs.next()) {
@@ -563,6 +563,45 @@ public class BaseMaker {
 		ps.executeBatch();
 		con2.commit();
 		System.out.println(String.format("%-20s -> %7d", "PTStupciVRMirovanja", i));
+	}
+
+	private static void doPTPrevozniki(Connection con1, Connection con2) throws SQLException {
+		int i = 0;
+		con2.createStatement().executeUpdate("drop table if exists PTPrevozniki;");
+		con2.createStatement().executeUpdate("CREATE TABLE PTPrevozniki(ID INT NOT NULL,Firma INT NOT NULL,Sifra int not Null, Naziv VARCHAR(40),PRIMARY KEY (ID))");
+		PreparedStatement ps = con2.prepareStatement("INSERT INTO PTPrevozniki VALUES (?,?,?,?)");
+		ResultSet rs = con1.createStatement().executeQuery("SELECT * FROM PTPrevozniki");
+		while (rs.next()) {
+			ps.setInt(1, rs.getInt("ID"));
+			ps.setInt(2, rs.getInt("Firma"));
+			ps.setInt(3, rs.getInt("Sifra"));
+			ps.setString(4, rs.getString("Naziv"));
+			ps.addBatch();
+			i++;
+		}
+		ps.executeBatch();
+		con2.commit();
+		System.out.println(String.format("%-20s -> %7d", "PTPrevozniki", i));
+	}
+
+	private static void doPTDneviVoznje(Connection con1, Connection con2) throws SQLException {
+		int i = 0;
+		con2.createStatement().executeUpdate("drop table if exists PTDneviVoznje;");
+		con2.createStatement().executeUpdate("CREATE TABLE PTDneviVoznje(ID INT NOT NULL,PGrid INT NOT NULL,Sifra int not Null, VoziOb varchar(10), Naziv VARCHAR(80),PRIMARY KEY (ID))");
+		PreparedStatement ps = con2.prepareStatement("INSERT INTO PTDneviVoznje VALUES (?,?,?,?,?)");
+		ResultSet rs = con1.createStatement().executeQuery("SELECT * FROM PTDneviVoznje");
+		while (rs.next()) {
+			ps.setInt(1, rs.getInt("ID"));
+			ps.setInt(2, rs.getInt("Pgrid"));
+			ps.setInt(3, rs.getInt("Sifra"));
+			ps.setString(4, rs.getString("VoziOb"));
+			ps.setString(5, rs.getString("Naziv"));
+			ps.addBatch();
+			i++;
+		}
+		ps.executeBatch();
+		con2.commit();
+		System.out.println(String.format("%-20s -> %7d", "PTDneviVoznje", i));
 	}
 
 	private static void doPTVerzija(Connection con1, Connection con2) throws SQLException {

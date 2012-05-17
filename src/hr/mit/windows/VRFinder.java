@@ -77,11 +77,11 @@ public class VRFinder {
 		btnDummy = new Button(shell, SWT.NONE);
 		btnDummy.addSelectionListener(new BtnDummySelectionListener());
 		btnDummy.setBounds(10, 120, 738, 50);
-		btnDummy.setFont(SWTResourceManager.getFont("Liberation Sans", 20, SWT.NORMAL));
+		btnDummy.setFont(SWTResourceManager.getFont("Liberation Sans", 20, SWT.NORMAL)); //20
 		btnDummy.setAlignment(SWT.LEFT);
 		btnDummy.setText("Traži");
 		lblNewLabel = new Label(shell, SWT.NONE);
-		lblNewLabel.setFont(SWTResourceManager.getFont("Liberation Sans", 30, SWT.NORMAL));
+		lblNewLabel.setFont(SWTResourceManager.getFont("Liberation Sans", 30, SWT.NORMAL));//30
 		lblNewLabel.setBounds(10, 10, 610, 44);
 		lblNewLabel.setText("Pretraga voznih redova");
 		tOdPostaje.addMouseListener(new textMouseListener());

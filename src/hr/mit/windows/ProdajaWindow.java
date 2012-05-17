@@ -237,7 +237,7 @@ public class ProdajaWindow  {
 
 		cOdPostaje = new Button(shell, SWT.READ_ONLY);
 		cOdPostaje.setAlignment(SWT.LEFT);
-		cOdPostaje.setFont(SWTResourceManager.getFont("Liberation Sans", 25, SWT.NORMAL));
+		cOdPostaje.setFont(SWTResourceManager.getFont("Liberation Sans", 20, SWT.NORMAL));
 		// cOdPostaje.setBackground(SWTResourceManager.getColor(SWT.COLOR_LIST_SELECTION));
 		cOdPostaje.setBounds(5, 65, 390, 70);
 		cOdPostaje.setText(Postaja.getList()[0]);
@@ -245,7 +245,7 @@ public class ProdajaWindow  {
 
 		cDoPostaje = new Button(shell, SWT.READ_ONLY);
 		cDoPostaje.setAlignment(SWT.LEFT);
-		cDoPostaje.setFont(SWTResourceManager.getFont("Liberation Sans", 25, SWT.NORMAL));
+		cDoPostaje.setFont(SWTResourceManager.getFont("Liberation Sans", 20, SWT.NORMAL));
 		// cDoPostaje.setBackground(SWTResourceManager.getColor(SWT.COLOR_LIST_SELECTION));
 
 		cDoPostaje.setBounds(400, 65, 390, 70);
@@ -266,7 +266,7 @@ public class ProdajaWindow  {
 
 		cKarta = new Button(shell, SWT.READ_ONLY);
 		cKarta.setAlignment(SWT.LEFT);
-		cKarta.setFont(SWTResourceManager.getFont("Liberation Sans", 25, SWT.NORMAL));
+		cKarta.setFont(SWTResourceManager.getFont("Liberation Sans", 22, SWT.NORMAL));
 		cKarta.setBounds(5, 150, 390, 70);
 		cKarta.setText(Karta.getList()[0]);
 		Popust.setKartaStupac(Karta.get(0), Starter.stupac);
@@ -299,7 +299,7 @@ public class ProdajaWindow  {
 		lblCijena.setBounds(640, 220, 94, 15);
 
 		cProdMjesto = new Button(shell, SWT.READ_ONLY);
-		cProdMjesto.setFont(SWTResourceManager.getFont("Liberation Sans", 25, SWT.NORMAL));
+		cProdMjesto.setFont(SWTResourceManager.getFont("Liberation Sans", 22, SWT.NORMAL));
 		cProdMjesto.setBounds(5, 235, 325, 70);
 		cProdMjesto.setAlignment(SWT.LEFT);
 		cProdMjesto.setData(0);
