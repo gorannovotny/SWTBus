@@ -144,6 +144,7 @@ public class Obracun {
 		String sql = "select stupacID,VoznaKartaID,COUNT(*) Komada,SUM(Cena) cena from ptktprodaja";
 		StringBuffer retval;
 		PreparedStatement ps;
+		String linija = "";
 		try {
 			if (id != null) {
 				sql = sql + " WHERE obracunID = ? GROUP BY 1,2 ORDER BY 1,2";
@@ -160,7 +161,12 @@ public class Obracun {
 				if (stupacID != rs.getInt("stupacID")) {
 					stupacID = rs.getInt("stupacID");
 					retval.append(" \n");
-					String linija = Stupac.getByID(stupacID).getOpis() + " (" + stupacID.toString() + ")\n";
+					if (Stupac.getByID(stupacID) != null) {
+						linija = Stupac.get(0).getOpis() + " (" + stupacID.toString() + ")\n";
+					} else {
+						linija = "Nema linije broj: (" + stupacID.toString() + ")\n";
+					}
+
 					if (linija.length() > 32) {
 						retval.append(linija.substring(0, 32) + "\n");
 						retval.append(linija.substring(32));
