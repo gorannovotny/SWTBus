@@ -2,6 +2,7 @@ package hr.mit.windows;
 
 import hr.mit.Starter;
 import hr.mit.beans.Stavka;
+import hr.mit.beans.Stupac;
 import hr.mit.beans.VozniRed;
 import hr.mit.utils.PrintUtils;
 
@@ -47,7 +48,7 @@ public class VRFinder {
 	/**
 	 * @wbp.parser.entryPoint
 	 */
-	public VozniRed open() {
+	public Integer open() {
 		createContents();
 		shell.open();
 		shell.layout();
@@ -57,7 +58,7 @@ public class VRFinder {
 				display.sleep();
 			}
 		}
-		return VozniRed.get(index);
+		return index;
 	}
 
 	/**
@@ -90,8 +91,8 @@ public class VRFinder {
 
 	private class BtnDummySelectionListener extends SelectionAdapter {
 		public void widgetDefaultSelected(SelectionEvent e) {
-			VozniRed.setupFinder(tOdPostaje.getText(), tDoPostaje.getText());
-			Picker picker = new Picker(btnDummy, VozniRed.getArrayList(), 0);
+			Stupac.setupFinder(tOdPostaje.getText(), tDoPostaje.getText());
+			Picker picker = new Picker(btnDummy, Stupac.getArrayList(), 0);
 			btnDummy = picker.open();
 			if (btnDummy.getData() != null ) index = (Integer) btnDummy.getData();
 			shell.dispose();

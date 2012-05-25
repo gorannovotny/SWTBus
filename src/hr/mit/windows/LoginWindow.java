@@ -282,10 +282,13 @@ public class LoginWindow {
 		@Override
 		public void widgetDefaultSelected(SelectionEvent e) {
 			VRFinder vf = new VRFinder(shlPrijava);
-			VozniRed vr = vf.open();
-			if (vr != null) {
-				tLinija.setText(vr.getId().toString());
-				lOpisLinije.setText(vr.getOpis());
+			int index = vf.open();
+			Stupac st = Stupac.get(index);
+			if (st != null) {
+				tLinija.setText(st.getVozniRedID().toString());
+				lOpisLinije.setText(st.getOpis());
+				comboPolazak.setText(st.getVremeOdhoda());
+				comboPolazak.setData(index);
 			}
 		}
 
