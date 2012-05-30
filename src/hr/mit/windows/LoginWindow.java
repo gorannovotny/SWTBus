@@ -9,6 +9,7 @@ import hr.mit.beans.Vozac;
 import hr.mit.beans.Vozilo;
 import hr.mit.beans.VozniRed;
 import hr.mit.utils.FileChecksum;
+import hr.mit.utils.DbUtil;
 
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.events.ModifyEvent;
@@ -33,6 +34,8 @@ public class LoginWindow {
 	private Label lblVozilo;
 	private Label lblLinija;
 	private Label lblPolazak;
+	private Label lblVerzijaBaze;
+	private Label lblVerzijaPrograma;
 	private Text tVozac;
 	private Text tVozilo;
 	private Text tLinija;
@@ -143,6 +146,18 @@ public class LoginWindow {
 //		comboPolazak.setBounds(165, 310, 200, 50);
 		comboPolazak.setBounds(165, 310, 600, 50);
 
+		lblVerzijaBaze = new Label(shlPrijava, SWT.NONE);
+		lblVerzijaBaze.setBackground(SWTResourceManager.getColor(SWT.COLOR_GRAY));
+		lblVerzijaBaze.setFont(SWTResourceManager.getFont("Liberation Sans", 14, SWT.NORMAL));
+		lblVerzijaBaze.setBounds(5, 405+140, 260, 20);
+		lblVerzijaBaze.setText("Podaci: "+DbUtil.getDbVersionInfo());
+
+		lblVerzijaPrograma = new Label(shlPrijava, SWT.NONE);
+		lblVerzijaPrograma.setBackground(SWTResourceManager.getColor(SWT.COLOR_GRAY));
+		lblVerzijaPrograma.setFont(SWTResourceManager.getFont("Liberation Sans", 14, SWT.NORMAL));
+		lblVerzijaPrograma.setBounds(5, 425+140, 260, 25);
+		lblVerzijaPrograma.setText("Verzija programa: "+DbUtil.getVersionInfo());
+
 		btnUcitaj = new Button(shlPrijava, SWT.NONE);
 		btnUcitaj.addSelectionListener(new Button_1SelectionListener());
 		btnUcitaj.setText("Učitaj bazu");
@@ -165,7 +180,7 @@ public class LoginWindow {
 		tLozinka = new Text(shlPrijava, SWT.BORDER | SWT.PASSWORD);
 		tLozinka.setText("12345");
 		tLozinka.setFont(SWTResourceManager.getFont("Liberation Sans", 30, SWT.NORMAL));
-		tLozinka.setBounds(165, 160, 125, 50);
+		tLozinka.setBounds(165, 160, 175, 50);
 		tLozinka.addMouseListener(new textMouseListener());
 		lLozinka = new Label(shlPrijava, SWT.NONE);
 		lLozinka.setText("Lozinka");

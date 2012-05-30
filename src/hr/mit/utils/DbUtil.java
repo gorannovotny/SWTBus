@@ -1,5 +1,8 @@
 package hr.mit.utils;
 
+import hr.mit.beans.Vozac;
+import hr.mit.beans.VozniRed;
+
 import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.PreparedStatement;
@@ -7,6 +10,7 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
+import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
 
@@ -80,7 +84,25 @@ public class DbUtil {
 		rs.close();
 		return retval;
 	}
+	public static String getVersionInfo(){		
+		return  "2012/06.01";
+	}
 
+	public static String getDbVersionInfo() {
+		String  StrInfo="??";
+		try {
+			String sql = "SELECT VerzijaDateTime from PTVersion order by 1 desc limit 1";
+			ResultSet rs = DbUtil.getConnection().createStatement().executeQuery(sql);
+			while (rs.next()) {
+				StrInfo = rs.getString(1);
+			}
+		} catch (SQLException e) {
+			e.printStackTrace();
+		}
+		return StrInfo;	
+		}
+	
+	
 	//***** to bu promjenjiva iz kalendar pickera !
 	public static java.util.Date getNaDan(){
 		java.util.Date Danas = new java.util.Date(); ;
