@@ -29,7 +29,6 @@ public class ZaokruziTest {
 		r = new BigDecimal(0.5);
 		assertEquals(new BigDecimal(0.5), CijenaKarte.zaokruzi(iznos, r));
 
-		assertEquals("PERO", LoginWindow.xoraj("PERO"));
 	}
 
 }

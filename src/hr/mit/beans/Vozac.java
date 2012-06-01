@@ -60,6 +60,10 @@ public class Vozac {
 		return naziv;
 	}
 	
+	public String getPassword() {
+		return password;
+	}
+
 	public static String[] getList() {
 		String[] l = new String[vozacList.size()];
 		int x= 0;

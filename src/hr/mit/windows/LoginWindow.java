@@ -203,7 +203,12 @@ public class LoginWindow {
 				MessageBox mb = new MessageBox(shlPrijava, SWT.OK | SWT.ICON_ERROR);
 				mb.setMessage("Morate prijaviti vozača,vozilo i liniju!");
 				mb.open();
-			} else {
+			} else if  (! Starter.vozac.getPassword().equals(DbUtil.md5hash(tLozinka.getText()))) {
+				MessageBox mb = new MessageBox(shlPrijava, SWT.OK | SWT.ICON_ERROR);
+				mb.setMessage("Neispravna lozinka!");
+				mb.open();
+			}
+			else {
 				ProdajaWindow pw = new ProdajaWindow();
 				boolean exit = pw.open();
 				if (exit)
@@ -346,16 +351,5 @@ public class LoginWindow {
 		}
 	}
 
-	public static String xoraj(String pass) {
-		StringBuffer retval = new StringBuffer();
-		short[] kljuc = { 200, 201, 202, 203, 204, 205, 206 };
-		int j = 0;
-		for (int i = 0; i < pass.length(); i++) {
-			retval.append(pass.charAt(i) ^ kljuc[j]);
-			j++;
-			if (j >= kljuc.length)
-				j = 0;
-		}
-		return retval.toString();
-	}
+
 }

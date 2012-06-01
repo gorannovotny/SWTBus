@@ -3,6 +3,9 @@ package hr.mit.utils;
 import hr.mit.beans.Vozac;
 import hr.mit.beans.VozniRed;
 
+import java.io.UnsupportedEncodingException;
+import java.security.MessageDigest;
+import java.security.NoSuchAlgorithmException;
 import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.PreparedStatement;
@@ -13,7 +16,6 @@ import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
-
 
 public class DbUtil {
 	static Connection con;
@@ -26,8 +28,7 @@ public class DbUtil {
 	public static int getPGRID() {
 		return 0;
 	}
-	
-	
+
 	public static Connection getConnection() {
 		if (con == null) {
 			try {
@@ -84,12 +85,13 @@ public class DbUtil {
 		rs.close();
 		return retval;
 	}
-	public static String getVersionInfo(){		
-		return  "2012/06.01";
+
+	public static String getVersionInfo() {
+		return "2012/06.01";
 	}
 
 	public static String getDbVersionInfo() {
-		String  StrInfo="??";
+		String StrInfo = "??";
 		try {
 			String sql = "SELECT VerzijaDateTime from PTVersion order by 1 desc limit 1";
 			ResultSet rs = DbUtil.getConnection().createStatement().executeQuery(sql);
@@ -99,58 +101,82 @@ public class DbUtil {
 		} catch (SQLException e) {
 			e.printStackTrace();
 		}
-		return StrInfo;	
-		}
-	
-	
-	//***** to bu promjenjiva iz kalendar pickera !
-	public static java.util.Date getNaDan(){
-		java.util.Date Danas = new java.util.Date(); ;
-		return  Danas;
+		return StrInfo;
 	}
-	
+
+	// ***** to bu promjenjiva iz kalendar pickera !
+	public static java.util.Date getNaDan() {
+		java.util.Date Danas = new java.util.Date();
+		;
+		return Danas;
+	}
+
 	public static java.sql.Date JavaDateToSqlDate(java.util.Date utilDate) {
 		return new java.sql.Date(utilDate.getTime());
-		}
+	}
 
-
-	public static String JavaDateToSQLLiteDateStr(Date DanUra) 
-	{
-//		DateFormat df = new SimpleDateFormat("yyyy-MM-dd HH:mm");
+	public static String JavaDateToSQLLiteDateStr(Date DanUra) {
+		// DateFormat df = new SimpleDateFormat("yyyy-MM-dd HH:mm");
 		DateFormat df = new SimpleDateFormat("yyyy-MM-dd 00:00:00");
 		String DatumStr = df.format(DanUra);
 		return (DatumStr);
 	}
-	
-	
+
 	public static String getDayOfWeekStr(java.util.Date Danas) {
-        Calendar c = Calendar.getInstance();
-        c.setTime(Danas);
-        int dayOfWeek = c.get(Calendar.DAY_OF_WEEK);
-        String DT = "";
-       //** pripremimo datum tjedna *** 
-       switch (dayOfWeek) {
-          case 1: DT = "%7%";
-          		  break;
-          case 2: DT = "%1%"; 
-          	      break;
-          case 3: DT = "%2%"; 
-          		  break;
-          case 4: DT = "%3%"; 
-          		  break;
-          case 5: DT = "%4%"; 
-          		  break;
-          case 6: DT = "%5%"; 
-          		  break;
-          case 7: DT = "%6%"; 
-       }
-	 return DT;	
+		Calendar c = Calendar.getInstance();
+		c.setTime(Danas);
+		int dayOfWeek = c.get(Calendar.DAY_OF_WEEK);
+		String DT = "";
+		// ** pripremimo datum tjedna ***
+		switch (dayOfWeek) {
+		case 1:
+			DT = "%7%";
+			break;
+		case 2:
+			DT = "%1%";
+			break;
+		case 3:
+			DT = "%2%";
+			break;
+		case 4:
+			DT = "%3%";
+			break;
+		case 5:
+			DT = "%4%";
+			break;
+		case 6:
+			DT = "%5%";
+			break;
+		case 7:
+			DT = "%6%";
+		}
+		return DT;
 	}
-	
-	
+
 	public static String getHHMM(Double time) {
 		Integer hours = (int) (time * 24);
-		Integer mins = (int) ((time * 24 - hours)*60);
+		Integer mins = (int) ((time * 24 - hours) * 60);
 		return String.format("%02d", hours) + ":" + String.format("%02d", mins);
 	}
+
+	public static String md5hash(String text) {
+		try {
+			MessageDigest md = MessageDigest.getInstance("MD5");
+			md.update(text.getBytes("CP1250"));
+			return bytesToHex(md.digest());
+		} catch (Exception e) {
+			throw new RuntimeException(e);
+		}
+	}
+
+	private static String bytesToHex(byte[] b) {
+		char hexDigit[] = { '0', '1', '2', '3', '4', '5', '6', '7', '8', '9', 'A', 'B', 'C', 'D', 'E', 'F' };
+		StringBuffer buf = new StringBuffer();
+		for (int j = 0; j < b.length; j++) {
+			buf.append(hexDigit[(b[j] >> 4) & 0x0f]);
+			buf.append(hexDigit[b[j] & 0x0f]);
+		}
+		return buf.toString();
+	}
+
 }
