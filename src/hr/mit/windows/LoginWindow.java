@@ -178,7 +178,7 @@ public class LoginWindow {
 		tLinija.addModifyListener(new TLinijaModifyListener());
 		tLinija.setText("22209");
 		tLozinka = new Text(shlPrijava, SWT.BORDER | SWT.PASSWORD);
-		tLozinka.setText("12345");
+		tLozinka.setText("TEST");
 		tLozinka.setFont(SWTResourceManager.getFont("Liberation Sans", 30, SWT.NORMAL));
 		tLozinka.setBounds(165, 160, 175, 50);
 		tLozinka.addMouseListener(new textMouseListener());
@@ -301,14 +301,22 @@ public class LoginWindow {
 	private class SearchSelectionListener extends SelectionAdapter {
 		@Override
 		public void widgetDefaultSelected(SelectionEvent e) {
+			Stupac st = null;
 			VRFinder vf = new VRFinder(shlPrijava);
-			int index = vf.open();
-			Stupac st = Stupac.get(index);
+			Integer index = vf.open();
+			if (index != null && index < Stupac.getList().length)
+			st = Stupac.get(index);
 			if (st != null) {
 				tLinija.setText(st.getVozniRedID().toString());
 				lOpisLinije.setText(st.getOpis());
 				comboPolazak.setText(st.getVremeOdhoda());
 				comboPolazak.setData(index);
+			} else {
+				tLinija.setText("");
+				lblLinija.setText("");
+				comboPolazak.setText("");
+				comboPolazak.setData(null);
+
 			}
 		}
 

@@ -28,7 +28,7 @@ public class Postaja {
 			ResultSet rs = ps.executeQuery();
 			postajaList.clear();
 			while (rs.next()) {
-				postajaList.add(new Postaja(rs.getInt("ZapSt"), rs.getString("Naziv"), rs.getDouble("VremeOdhoda"), rs.getDouble("VremePrihoda"),rs.getInt("id")));
+				postajaList.add(new Postaja(rs.getInt("ZapSt"), rs.getString("Naziv"), rs.getDouble("VremeOdhoda"), rs.getDouble("VremePrihoda"), rs.getInt("id")));
 			}
 			rs.close();
 			ps.close();
@@ -47,6 +47,22 @@ public class Postaja {
 		return l;
 	}
 
+	public static Postaja getByID(Integer id) {
+		String sql = "select a.ID,a.Naziv from PTPostaje a WHERE a.ID = ?";
+		try {
+			PreparedStatement ps = DbUtil.getConnection().prepareStatement(sql);
+			ps.setInt(1, id);
+			ResultSet rs = ps.executeQuery();
+			if (rs.next()) {
+				return new Postaja(id, rs.getString(2), 0.0, 0.0, id);
+			} else
+				return null;
+		} catch (SQLException e) {
+			throw new RuntimeException(e);
+		}
+
+	}
+
 	public static Postaja get(int index) {
 		return postajaList.get(index);
 	}
@@ -59,8 +75,7 @@ public class Postaja {
 		return l;
 	}
 
-	
-	public Postaja(Integer zapSt, String naziv, double vOdhoda, double vPrihoda,Integer id) {
+	public Postaja(Integer zapSt, String naziv, double vOdhoda, double vPrihoda, Integer id) {
 		this.zapSt = zapSt;
 		this.naziv = naziv;
 		this.vremeOdhoda = DbUtil.getHHMM(vOdhoda);

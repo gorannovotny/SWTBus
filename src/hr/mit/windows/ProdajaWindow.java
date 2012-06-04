@@ -208,9 +208,11 @@ public class ProdajaWindow  {
 		btnStupac = new Button(shell, SWT.NONE);
 		btnStupac.setBackground(SWTResourceManager.getColor(SWT.COLOR_GRAY));
 		btnStupac.setAlignment(SWT.LEFT);
-		btnStupac.setFont(SWTResourceManager.getFont("Liberation Sans", 15, SWT.NORMAL));
+		 
+		 
+		btnStupac.setFont(SWTResourceManager.getFont("Liberation Sans", 14, SWT.NORMAL));
 		btnStupac.setBounds(5, 0, 785, 50);
-		btnStupac.setText("Vozač: " + Starter.vozac.getNaziv() + "\t\tRelacija: " + Starter.stupac.getOpis() + "@" + Starter.stupac.getVremeOdhoda());
+		btnStupac.setText(Starter.vozac.getNaziv() + " \t\t- " + Starter.stupac.getOpis() + "@" + Starter.stupac.getVremeOdhoda());
 		btnStupac.addSelectionListener(new SelectionAdapter() {
 			@Override
 			public void widgetDefaultSelected(SelectionEvent e) {

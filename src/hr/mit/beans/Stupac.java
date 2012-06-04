@@ -8,6 +8,8 @@ import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
 
+import org.eclipse.swt.widgets.Text;
+
 public class Stupac {
 	private static ArrayList<Stupac> stupacList = new ArrayList<Stupac>();
 
@@ -142,9 +144,9 @@ public class Stupac {
 	}
 	
 	
-	public static void setupFinder(String pos1, String pos2) {
-        
-    	try {
+	public static void setupFinder(Text t1, Text t2) {
+        String pos1,pos2;
+        	try {
     		stupacList.clear();
             int OdPostajeID = 0;
             int DoPostajeID = 0;
@@ -154,6 +156,8 @@ public class Stupac {
 //            java.sql.Date  SqlNaDan = DbUtil.JavaDateTimeToSqlDateTime(Danas);
 //          java.util.Date Danas = new java.util.Date();
 //          java.sql.Date  SqlNaDan = new java.sql.Date(Danas.getTime());
+            pos1 = t1.getText();
+            pos2 = t2.getText();
             pos1= pos1.replace('Ž','_');
             pos1= pos1.replace('Š','_');
             pos1= pos1.replace('Č','_');
@@ -166,27 +170,19 @@ public class Stupac {
             pos2= pos2.replace('Ć','_');
             pos2= pos2.replace('Đ','_');
             // najdemo za postaju 1 najblizega
-		    String sql = "Select ID from PTPostaje WHERE Upper(Naziv) like Upper(?) and PGrid=? order by Naziv limit 2"; 
+		    String sql = "Select ID from PTPostaje WHERE Upper(Naziv) like Upper(?) and PGrid=? order by Naziv limit 1"; 
 			PreparedStatement ps = DbUtil.getConnection().prepareStatement(sql);
 			ps.setString(1,pos1 + "%");
 			ps.setInt(2,DbUtil.getPGRID());
-			ResultSet rs = ps.executeQuery();
-			while (rs.next()) {
-				OdPostajeID = rs.getInt(1);
-				break;
-			}
-		    sql = "Select ID from PTPostaje WHERE Upper(Naziv) like Upper(?) and PGrid=? order by Naziv limit 2"; 
-			ps = DbUtil.getConnection().prepareStatement(sql);
+			OdPostajeID = DbUtil.getSingleResult(ps);
 			ps.setString(1,pos2 + "%");
 			ps.setInt(2,DbUtil.getPGRID());
-			rs = ps.executeQuery();
-			while (rs.next()) {
-				DoPostajeID = rs.getInt(1);
-				break;
-			}
+			DoPostajeID = DbUtil.getSingleResult(ps);
 			if ((OdPostajeID == 0) && (DoPostajeID==0)) 
 				 return; 
 		
+			t1.setText(Postaja.getByID(OdPostajeID).getNaziv());
+			t2.setText(Postaja.getByID(DoPostajeID).getNaziv());
         sql="select distinct VR.ID, CASE WHEN STP.SmerVoznje='-' THEN VARVR.Opis1 WHEN STP.SmerVoznje='+' THEN VARVR.Opis2 END as Relacija" +
         	", STP.VremeOdhoda, STP.ID as StupacID, STP.SmerVoznje,STP.VarijantaVRID"+ // , PRV.Naziv as Prevoznik"+ 
             " from PTStupciVR STP"+ 
@@ -216,7 +212,7 @@ public class Stupac {
 			ps.setInt(6,     OdPostajeID);
 			ps.setString(7,  DT);
 			
-			rs = ps.executeQuery();
+			ResultSet rs = ps.executeQuery();
 			while (rs.next()) {
 				stupacList.add(new Stupac(rs.getInt("StupacID"), rs.getInt("ID"), rs.getString("SmerVoznje"), rs.getInt("VarijantaVRID"), rs.getString("Relacija"), rs.getString("Relacija"), rs
 						.getDouble("VremeOdhoda")));

@@ -21,6 +21,7 @@ public class PrintUtils {
 				FileWriter out = new FileWriter("/dev/ttyS0");
 				out.write(reset);
 				out.write(filter(createString(vozac, stavkaList)));
+	
 				out.flush();
 				out.close();
 			} catch (IOException e) {
@@ -59,7 +60,7 @@ public class PrintUtils {
 		return sb.toString();
 	}
 
-	public static String filter(String in) {
+	public static char[] filter(String in) {
 		StringBuffer sb = new StringBuffer();
 		for (int i = 0; i < in.length(); i++) {
 			char a = in.charAt(i);
@@ -85,7 +86,7 @@ public class PrintUtils {
 				a = 'D';
 			sb.append(a);
 		}
-		return sb.toString();
+		return sb.toString().toCharArray();
 	}
 
 }

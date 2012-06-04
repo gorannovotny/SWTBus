@@ -13,6 +13,7 @@ import org.eclipse.swt.events.SelectionAdapter;
 import org.eclipse.swt.events.SelectionEvent;
 import org.eclipse.swt.widgets.Button;
 import org.eclipse.swt.widgets.Display;
+import org.eclipse.swt.widgets.MessageBox;
 import org.eclipse.swt.widgets.Shell;
 import org.eclipse.swt.widgets.Text;
 import org.eclipse.wb.swt.SWTResourceManager;
@@ -65,9 +66,9 @@ public class VRFinder {
 	 * Create contents of the dialog.
 	 */
 	private void createContents() {
-		shell = new Shell(parent, SWT.APPLICATION_MODAL | SWT.ON_TOP);
+		shell = new Shell(parent, SWT.APPLICATION_MODAL);
 		shell.setSize(760, 400);
-		shell.setBounds(20, 20, 760, 400);
+		shell.setBounds(20, 20, 760, 440);
 		tOdPostaje = new Text(shell, SWT.BORDER);
 		tOdPostaje.setBounds(10, 60, 360, 50);
 		tOdPostaje.setFont(SWTResourceManager.getFont("Liberation Sans", 25, SWT.NORMAL));
@@ -77,7 +78,7 @@ public class VRFinder {
 
 		btnDummy = new Button(shell, SWT.NONE);
 		btnDummy.addSelectionListener(new BtnDummySelectionListener());
-		btnDummy.setBounds(10, 120, 738, 50);
+		btnDummy.setBounds(10, 160, 738, 50);
 		btnDummy.setFont(SWTResourceManager.getFont("Liberation Sans", 20, SWT.NORMAL)); //20
 		btnDummy.setAlignment(SWT.LEFT);
 		btnDummy.setText("Traži");
@@ -90,14 +91,28 @@ public class VRFinder {
 	}
 
 	private class BtnDummySelectionListener extends SelectionAdapter {
-		public void widgetDefaultSelected(SelectionEvent e) {
-			Stupac.setupFinder(tOdPostaje.getText(), tDoPostaje.getText());
-			Picker picker = new Picker(btnDummy, Stupac.getArrayList(), 0);
-			btnDummy = picker.open();
-			if (btnDummy.getData() != null ) index = (Integer) btnDummy.getData();
-			shell.dispose();
-		}
+//		public void widgetDefaultSelected(SelectionEvent e) {
+//			Stupac.setupFinder(tOdPostaje.getText(), tDoPostaje.getText());
+//			Picker picker = new Picker(btnDummy, Stupac.getArrayList(), 0);
+//			btnDummy = picker.open();
+//			if (btnDummy.getData() != null ) index = (Integer) btnDummy.getData();
+//			shell.dispose();
+//		}
 
+		public void widgetDefaultSelected(SelectionEvent e) {
+			Stupac.setupFinder(tOdPostaje, tDoPostaje);
+			if (Stupac.getList().length == 0){ 
+			      MessageBox mb = new MessageBox(shell, SWT.OK | SWT.ICON_ERROR);
+			      mb.setMessage("Nema rezultata pretraživanja !");
+			     mb.open();
+			} else {
+			   Picker picker = new Picker(btnDummy, Stupac.getArrayList(), 0);
+			   btnDummy = picker.open();
+			   if (btnDummy.getData() != null ) index = (Integer) btnDummy.getData(); 
+			}
+			   shell.dispose();
+		}
+		
 		public void widgetSelected(SelectionEvent e) {
 			widgetDefaultSelected(e);
 		}

@@ -20,7 +20,7 @@ public class ZaokruziTest {
 		iznos = new BigDecimal(10.1);
 		assertEquals(new BigDecimal(11), CijenaKarte.zaokruzi(iznos, r));
 		iznos = new BigDecimal(10.1);
-		r = new BigDecimal(0.5);
+		r = new BigDecimal(0.5);		
 		assertEquals(new BigDecimal(10.5), CijenaKarte.zaokruzi(iznos, r));
 		iznos = new BigDecimal(0.0);
 		r = new BigDecimal(0.5);
