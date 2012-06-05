@@ -160,34 +160,34 @@ public class Obracun {
 			while (rs.next()) {
 				if (stupacID != rs.getInt("stupacID")) {
 					stupacID = rs.getInt("stupacID");
-					retval.append(" \n");
+					retval.append(" \r");
 					if (Stupac.getByID(stupacID) != null) {
-						linija = Stupac.get(0).getOpis() + " (" + stupacID.toString() + ")\n";
+						linija = Stupac.get(0).getOpis() + " (" + stupacID.toString() + ")\r";
 					} else {
-						linija = "Nema linije broj: (" + stupacID.toString() + ")\n";
+						linija = "Nema linije broj: (" + stupacID.toString() + ")\r";
 					}
 
 					if (linija.length() > 32) {
-						retval.append(linija.substring(0, 32) + "\n");
+						retval.append(linija.substring(0, 32) + "\r");
 						retval.append(linija.substring(32));
 					} else
 						retval.append(linija);
-					retval.append("................................\n");
+					retval.append("................................\r");
 				}
-				// retval.append("Tip                  Kom  Ukupno\n");
-				// retval.append("--------------------------------\n");
+				// retval.append("Tip                  Kom  Ukupno\r");
+				// retval.append("--------------------------------\r");
 				int kartaId = rs.getInt("VoznaKartaID");
 				String opis = Karta.getByID(kartaId).getNaziv();
 				int komada = rs.getInt("Komada");
 				double cena = rs.getDouble("cena");
-				retval.append(String.format("%-20s %3d %7.2f\n", opis, komada, cena));
+				retval.append(String.format("%-20s %3d %7.2f\r", opis, komada, cena));
 				if (kartaId != Karta.ZAMJENSKA_KARTA) {
 					ukupno = ukupno + cena;
 				}
 			}
 			// if (stupacID != 0) {
-			retval.append(" \n");
-			retval.append("................................\n");
+			retval.append(" \r");
+			retval.append("................................\r");
 			retval.append(String.format("%-24s %7.2f", "Blagajna", ukupno));
 			// }
 		} catch (SQLException e) {
@@ -204,7 +204,7 @@ public class Obracun {
 				FileWriter out = new FileWriter("/dev/ttyS0");
 				out.write(reset);
 				out.write(PrintUtils.filter(zaglavlje(o) + getObracun(o.getId())));
-				out.write(" \n \n \n");
+				out.write(" \r \r \r");
 				out.flush();
 				out.close();
 			} catch (IOException e) {
@@ -225,15 +225,15 @@ public class Obracun {
 	private static String zaglavlje(Obracun o) {
 		StringBuffer sb = new StringBuffer();
 		if (o.getId() == null) {
-			sb.append("Stanje blagajne\n");
-			sb.append("  \n");
-			sb.append("Vozač: " + o.vozac.getNaziv() + "\n");
-			sb.append("  \n");
+			sb.append("Stanje blagajne\r");
+			sb.append("  \r");
+			sb.append("Vozač: " + o.vozac.getNaziv() + "\r");
+			sb.append("  \r");
 		} else {
-			sb.append("Obračun br. " + o.getId().toString() + "\n");
-			sb.append(o.getUuid() + "\n \n");
-			sb.append("Vozač: " + o.vozac.getNaziv() + "\n");
-			sb.append("Datum: " + o.datum + "\n \n");
+			sb.append("Obračun br. " + o.getId().toString() + "\r");
+			sb.append(o.getUuid() + "\r \r");
+			sb.append("Vozač: " + o.vozac.getNaziv() + "\r");
+			sb.append("Datum: " + o.datum + "\r \r");
 		}
 
 		return sb.toString();

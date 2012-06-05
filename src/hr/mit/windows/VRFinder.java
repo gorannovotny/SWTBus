@@ -28,7 +28,7 @@ public class VRFinder {
 	private Text tOdPostaje;
 	private Text tDoPostaje;
 	private Button btnDummy;
-	private int index;
+	private Stupac stupac;
 	private Label lblNewLabel;
 
 	/**
@@ -49,7 +49,7 @@ public class VRFinder {
 	/**
 	 * @wbp.parser.entryPoint
 	 */
-	public Integer open() {
+	public Stupac open() {
 		createContents();
 		shell.open();
 		shell.layout();
@@ -59,7 +59,7 @@ public class VRFinder {
 				display.sleep();
 			}
 		}
-		return index;
+		return stupac;
 	}
 
 	/**
@@ -79,11 +79,11 @@ public class VRFinder {
 		btnDummy = new Button(shell, SWT.NONE);
 		btnDummy.addSelectionListener(new BtnDummySelectionListener());
 		btnDummy.setBounds(10, 160, 738, 50);
-		btnDummy.setFont(SWTResourceManager.getFont("Liberation Sans", 20, SWT.NORMAL)); //20
+		btnDummy.setFont(SWTResourceManager.getFont("Liberation Sans", 20, SWT.NORMAL)); // 20
 		btnDummy.setAlignment(SWT.LEFT);
 		btnDummy.setText("Traži");
 		lblNewLabel = new Label(shell, SWT.NONE);
-		lblNewLabel.setFont(SWTResourceManager.getFont("Liberation Sans", 30, SWT.NORMAL));//30
+		lblNewLabel.setFont(SWTResourceManager.getFont("Liberation Sans", 30, SWT.NORMAL));// 30
 		lblNewLabel.setBounds(10, 10, 610, 44);
 		lblNewLabel.setText("Pretraga voznih redova");
 		tOdPostaje.addMouseListener(new textMouseListener());
@@ -91,28 +91,20 @@ public class VRFinder {
 	}
 
 	private class BtnDummySelectionListener extends SelectionAdapter {
-//		public void widgetDefaultSelected(SelectionEvent e) {
-//			Stupac.setupFinder(tOdPostaje.getText(), tDoPostaje.getText());
-//			Picker picker = new Picker(btnDummy, Stupac.getArrayList(), 0);
-//			btnDummy = picker.open();
-//			if (btnDummy.getData() != null ) index = (Integer) btnDummy.getData();
-//			shell.dispose();
-//		}
-
 		public void widgetDefaultSelected(SelectionEvent e) {
 			Stupac.setupFinder(tOdPostaje, tDoPostaje);
-			if (Stupac.getList().length == 0){ 
-			      MessageBox mb = new MessageBox(shell, SWT.OK | SWT.ICON_ERROR);
-			      mb.setMessage("Nema rezultata pretraživanja !");
-			     mb.open();
+			if (Stupac.getList().length == 0) {
+				MessageBox mb = new MessageBox(shell, SWT.OK | SWT.ICON_ERROR);
+				mb.setMessage("Nema rezultata pretraživanja !");
+				mb.open();
 			} else {
-			   Picker picker = new Picker(btnDummy, Stupac.getArrayList(), 0);
-			   btnDummy = picker.open();
-			   if (btnDummy.getData() != null ) index = (Integer) btnDummy.getData(); 
+				Picker picker = new Picker(btnDummy, Stupac.getArrayList(), 0);
+				btnDummy = picker.open();
+				if (btnDummy.getData() != null)
+					stupac = Stupac.get((Integer) btnDummy.getData());
 			}
-			   shell.dispose();
+			shell.dispose();
 		}
-		
 		public void widgetSelected(SelectionEvent e) {
 			widgetDefaultSelected(e);
 		}

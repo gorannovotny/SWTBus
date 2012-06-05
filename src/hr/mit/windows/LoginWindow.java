@@ -198,7 +198,7 @@ public class LoginWindow {
 			Starter.vozac = Vozac.getBySifra(Integer.parseInt(tVozac.getText()));
 			Starter.vozilo = Vozilo.getBySifra(tVozilo.getText());
 			if (Stupac.getList().length > 0)
-				Starter.stupac = Stupac.get((Integer) comboPolazak.getData());
+				Starter.stupac = Stupac.get((Integer)comboPolazak.getData());
 			if (Starter.vozac == null || Starter.stupac == null || Starter.vozilo == null) {
 				MessageBox mb = new MessageBox(shlPrijava, SWT.OK | SWT.ICON_ERROR);
 				mb.setMessage("Morate prijaviti vozača,vozilo i liniju!");
@@ -289,9 +289,7 @@ public class LoginWindow {
 				Picker picker = new Picker(comboPolazak, Stupac.getArrayList(), index);
 				comboPolazak = picker.open();
 			}
-
 		}
-
 		@Override
 		public void widgetSelected(SelectionEvent e) {
 			widgetDefaultSelected(e);
@@ -301,16 +299,14 @@ public class LoginWindow {
 	private class SearchSelectionListener extends SelectionAdapter {
 		@Override
 		public void widgetDefaultSelected(SelectionEvent e) {
-			Stupac st = null;
 			VRFinder vf = new VRFinder(shlPrijava);
-			Integer index = vf.open();
-			if (index != null && index < Stupac.getList().length)
-			st = Stupac.get(index);
+			Stupac st = vf.open();
 			if (st != null) {
 				tLinija.setText(st.getVozniRedID().toString());
 				lOpisLinije.setText(st.getOpis());
-				comboPolazak.setText(st.getVremeOdhoda());
-				comboPolazak.setData(index);
+				comboPolazak.setText(st.getVremeOdhoda() + " " + st.getOpis());
+				Stupac.setVozniRed(st.getVozniRedID());
+				comboPolazak.setData(Stupac.getIndex(st));
 			} else {
 				tLinija.setText("");
 				lblLinija.setText("");

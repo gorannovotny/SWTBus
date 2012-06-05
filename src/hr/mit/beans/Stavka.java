@@ -52,12 +52,12 @@ public class Stavka {
 		StringBuffer sb = new StringBuffer("");
 		if (oldStavkaList != null && oldStavkaList.size() != 0) {
 			sb.append(oldStavkaList.get(0).getRelacija());
-			sb.append("\n");
+			sb.append("\r");
 			sb.append("----------------------------------------");
-			sb.append("\n");
+			sb.append("\r");
 			for (Stavka s : oldStavkaList) {
 				sb.append(s.getDesc());
-				sb.append("\n");
+				sb.append("\r");
 			}
 		}
 		return sb.toString();
@@ -67,12 +67,12 @@ public class Stavka {
 		StringBuffer sb = new StringBuffer("");
 		if (stavkaList.size() != 0) {
 			sb.append(stavkaList.get(0).getRelacija());
-			sb.append("\n");
+			sb.append("\r");
 			sb.append("----------------------------------------");
-			sb.append("\n");
+			sb.append("\r");
 			for (Stavka s : stavkaList) {
 				sb.append(s.getDesc());
-				sb.append("\n");
+				sb.append("\r");
 			}
 		}
 		return sb.toString();

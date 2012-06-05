@@ -224,5 +224,14 @@ public class Stupac {
 		}
 	}
 
+	public static Integer getIndex(Stupac st) {
+		Integer x = 0;
+		for (Stupac v : stupacList) {
+			if (v.getId().equals(st.getId())) break;
+			x++;
+		}
+		return x;
+	}
+
 
 }
