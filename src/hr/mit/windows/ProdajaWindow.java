@@ -96,7 +96,7 @@ public class ProdajaWindow  {
 		Runnable r = new Runnable() {
 			@Override
 			public void run() {
-				lClock.setText(new SimpleDateFormat("HH:mm:ss").format(new Date()));
+				lClock.setText(new SimpleDateFormat("dd.MM.yy\nHH:mm:ss").format(new Date()));
 				display.timerExec(1000, this);
 			}
 		};
@@ -370,7 +370,7 @@ public class ProdajaWindow  {
 		// lClock.setBackground(SWTResourceManager.getColor(SWT.COLOR_BLACK));
 		lClock.setFont(SWTResourceManager.getFont("Liberation Sans", 20, SWT.NORMAL));
 		lClock.setBounds(685, 546, 113, 52);
-		lClock.setText(new SimpleDateFormat("HH:mm:ss").format(new Date()));
+		lClock.setText(new SimpleDateFormat("dd.MM.yy\nHH:mm:ss").format(new Date()));
 	}
 
 	protected class PlusButtonListener extends SelectionAdapter {

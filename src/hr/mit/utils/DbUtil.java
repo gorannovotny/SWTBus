@@ -87,7 +87,7 @@ public class DbUtil {
 	}
 
 	public static String getVersionInfo() {
-		return "2012/06.07";
+		return "2012/06.08";
 	}
 
 	public static String getDbVersionInfo() {
