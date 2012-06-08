@@ -11,6 +11,7 @@ import hr.mit.beans.VozniRed;
 import hr.mit.utils.FileChecksum;
 import hr.mit.utils.DbUtil;
 
+
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.events.ModifyEvent;
 import org.eclipse.swt.events.ModifyListener;
@@ -41,6 +42,7 @@ public class LoginWindow {
 	private Text tLinija;
 	protected Button comboPolazak;
 	private Button btnNastavak;
+	private Button btnGasenje;
 
 	protected Label lOpisVozilo;
 	protected Label lOpisVozac;
@@ -169,6 +171,12 @@ public class LoginWindow {
 		btnNastavak.setFont(SWTResourceManager.getFont("Liberation Sans", 20, SWT.NORMAL));
 		btnNastavak.setBounds(638, 486, 150, 50);
 
+		btnGasenje = new Button(shlPrijava, SWT.NONE);
+		btnGasenje.addSelectionListener(new BtnGasenjeSelectionListener());
+		btnGasenje.setText("Gašenje");
+		btnGasenje.setFont(SWTResourceManager.getFont("Liberation Sans", 20, SWT.NORMAL));
+		btnGasenje.setBounds(317, 486, 150, 50);
+		
 		tVozac.addModifyListener(new TVozacModifyListener());
 		tVozac.setText("117");
 		tVozac.addMouseListener(new textMouseListener());
@@ -191,6 +199,24 @@ public class LoginWindow {
 		btnNastavak.addSelectionListener(new ButtonSelectionListener());
 
 	}
+	
+	private class BtnGasenjeSelectionListener extends SelectionAdapter {
+		@Override
+		public void widgetSelected(SelectionEvent e) {
+			shlPrijava.dispose();
+			if (new File(".shutdown").exists()) {
+				try {
+					Runtime.getRuntime().exec("/sbin/shutdown now");
+				} catch (IOException e1) {
+					throw new RuntimeException(e1);
+				}
+			} else {
+				shlPrijava.dispose();
+
+			}
+		}
+	}
+	
 
 	protected class ButtonSelectionListener extends SelectionAdapter {
 		@Override
