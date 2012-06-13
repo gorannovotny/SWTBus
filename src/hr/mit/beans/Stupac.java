@@ -148,8 +148,8 @@ public class Stupac {
         String pos1,pos2;
         	try {
     		stupacList.clear();
-            int OdPostajeID = 0;
-            int DoPostajeID = 0;
+            Integer OdPostajeID = 0;
+            Integer DoPostajeID = 0;
 
             java.util.Date Danas    = DbUtil.getNaDan();
             String DT = DbUtil.getDayOfWeekStr(Danas);
@@ -178,7 +178,7 @@ public class Stupac {
 			ps.setString(1,pos2 + "%");
 			ps.setInt(2,DbUtil.getPGRID());
 			DoPostajeID = DbUtil.getSingleResult(ps);
-			if ((OdPostajeID == 0) && (DoPostajeID==0)) 
+			if ((OdPostajeID == null) || (DoPostajeID==null)) 
 				 return; 
 		
 			t1.setText(Postaja.getByID(OdPostajeID).getNaziv());
