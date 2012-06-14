@@ -33,14 +33,12 @@ public class LoginWindow {
 	private Label lblPrijava;
 	private Label lblVozac;
 	private Label lblVozilo;
-	private Label lblLinija;
 	private Label lblPolazak;
 	private Label lblVerzijaBaze;
 	private Label lblVerzijaPrograma;
 	private Text tVozac;
 	private Text tVozilo;
 	private Text tLinija;
-	protected Button comboPolazak;
 	private Button btnNastavak;
 	private Button btnGasenje;
 
@@ -61,8 +59,6 @@ public class LoginWindow {
 		shlPrijava.setBackground(SWTResourceManager.getColor(SWT.COLOR_GRAY));
 		shlPrijava.setSize(450, 332);
 		shlPrijava.setBounds(0, 0, 800, 600);
-		// shlPrijava.setMaximized(true);
-		// shlPrijava.setFullScreen(true);
 		createContents();
 		shlPrijava.open();
 		shlPrijava.layout();
@@ -112,12 +108,6 @@ public class LoginWindow {
 		lOpisVozilo.setFont(SWTResourceManager.getFont("Liberation Sans", 20, SWT.NORMAL));
 		lOpisVozilo.setText("");
 
-		lblLinija = new Label(shlPrijava, SWT.NONE);
-		lblLinija.setBackground(SWTResourceManager.getColor(SWT.COLOR_GRAY));
-		lblLinija.setFont(SWTResourceManager.getFont("Liberation Sans", 30, SWT.NORMAL));
-		lblLinija.setBounds(5, 260, 160, 50);
-		lblLinija.setText("Linija");
-
 		tLinija = new Text(shlPrijava, SWT.BORDER);
 		tLinija.setFont(SWTResourceManager.getFont("Liberation Sans", 30, SWT.NORMAL));
 		tLinija.setBounds(165, 260, 125, 50);
@@ -125,7 +115,7 @@ public class LoginWindow {
 		btnSearch = new Button(shlPrijava, SWT.NONE);
 		btnSearch.setBounds(290, 263, 46, 46);
 		btnSearch.setText("\u2026");
-		btnSearch.addSelectionListener(new SearchSelectionListener());
+		btnSearch.addSelectionListener(new SearchStupacButtonListener());
 
 		lOpisLinije = new Label(shlPrijava, SWT.NONE);
 		lOpisLinije.setBackground(SWTResourceManager.getColor(SWT.COLOR_GRAY));
@@ -137,16 +127,8 @@ public class LoginWindow {
 		lblPolazak = new Label(shlPrijava, SWT.NONE);
 		lblPolazak.setBackground(SWTResourceManager.getColor(SWT.COLOR_GRAY));
 		lblPolazak.setFont(SWTResourceManager.getFont("Liberation Sans", 30, SWT.NORMAL));
-		lblPolazak.setBounds(5, 310, 160, 50);
+		lblPolazak.setBounds(5, 260, 160, 50);
 		lblPolazak.setText("Polazak");
-
-		comboPolazak = new Button(shlPrijava, SWT.READ_ONLY);
-		comboPolazak.addSelectionListener(new ComboPolazakSelectionListener());
-//		comboPolazak.setFont(SWTResourceManager.getFont("Liberation Sans", 30, SWT.NORMAL));
-		comboPolazak.setFont(SWTResourceManager.getFont("Liberation Sans", 15, SWT.NORMAL));
-		comboPolazak.setAlignment(SWT.LEFT);
-//		comboPolazak.setBounds(165, 310, 200, 50);
-		comboPolazak.setBounds(165, 310, 600, 50);
 
 		lblVerzijaBaze = new Label(shlPrijava, SWT.NONE);
 		lblVerzijaBaze.setBackground(SWTResourceManager.getColor(SWT.COLOR_GRAY));
@@ -161,7 +143,7 @@ public class LoginWindow {
 		lblVerzijaPrograma.setText("Verzija programa: "+DbUtil.getVersionInfo());
 
 		btnUcitaj = new Button(shlPrijava, SWT.NONE);
-		btnUcitaj.addSelectionListener(new Button_1SelectionListener());
+		btnUcitaj.addSelectionListener(new UcitajBazuButtonListener());
 		btnUcitaj.setText("Učitaj bazu");
 		btnUcitaj.setFont(SWTResourceManager.getFont("Liberation Sans", 20, SWT.NORMAL));
 		btnUcitaj.setBounds(5, 486, 150, 50);
@@ -184,7 +166,7 @@ public class LoginWindow {
 		tVozilo.setText("557");
 		tVozilo.addMouseListener(new textMouseListener());
 		tLinija.addModifyListener(new TLinijaModifyListener());
-		tLinija.setText("22209");
+		tLinija.setText("51555");
 		tLozinka = new Text(shlPrijava, SWT.BORDER | SWT.PASSWORD);
 		tLozinka.setText("TEST");
 		tLozinka.setFont(SWTResourceManager.getFont("Liberation Sans", 30, SWT.NORMAL));
@@ -196,7 +178,7 @@ public class LoginWindow {
 		lLozinka.setBackground(SWTResourceManager.getColor(SWT.COLOR_GRAY));
 		lLozinka.setBounds(5, 160, 160, 50);
 		tLinija.addMouseListener(new textMouseListener());
-		btnNastavak.addSelectionListener(new ButtonSelectionListener());
+		btnNastavak.addSelectionListener(new NextButtonListener());
 
 	}
 	
@@ -218,13 +200,13 @@ public class LoginWindow {
 	}
 	
 
-	protected class ButtonSelectionListener extends SelectionAdapter {
+	protected class NextButtonListener extends SelectionAdapter {
 		@Override
 		public void widgetSelected(SelectionEvent e) {
 			Starter.vozac = Vozac.getBySifra(Integer.parseInt(tVozac.getText()));
 			Starter.vozilo = Vozilo.getBySifra(tVozilo.getText());
 			if (Stupac.getList().length > 0)
-				Starter.stupac = Stupac.get((Integer)comboPolazak.getData());
+				Starter.stupac = Stupac.getByID(new Integer(tLinija.getText()));
 			if (Starter.vozac == null || Starter.stupac == null || Starter.vozilo == null) {
 				MessageBox mb = new MessageBox(shlPrijava, SWT.OK | SWT.ICON_ERROR);
 				mb.setMessage("Morate prijaviti vozača,vozilo i liniju!");
@@ -290,65 +272,35 @@ public class LoginWindow {
 			Text t = (Text) e.widget;
 			if (t.getText().matches("\\d+")) {
 				id = Integer.parseInt(t.getText());
-				if (VozniRed.getByID(id) != null)
-					lOpisLinije.setText(VozniRed.getByID(id).getOpis());
+				if (Stupac.getByID(id) != null)
+					lOpisLinije.setText(Stupac.getByID(id).getDescription());
 				else
 					lOpisLinije.setText("");
-				Stupac.setVozniRed(id);
-			}
-			if (Stupac.getList().length > 0) {
-				comboPolazak.setText(Stupac.getList()[0]);
-				comboPolazak.setData(0);
-			} else {
-				comboPolazak.setText("");
-				comboPolazak.setData(null);
-
 			}
 		}
 	}
 
-	private class ComboPolazakSelectionListener extends SelectionAdapter {
-		@Override
-		public void widgetDefaultSelected(SelectionEvent e) {
-			Integer index = (Integer) comboPolazak.getData();
-			if (index != null) {
-				Picker picker = new Picker(comboPolazak, Stupac.getArrayList(), index);
-				comboPolazak = picker.open();
-			}
-		}
-		@Override
-		public void widgetSelected(SelectionEvent e) {
-			widgetDefaultSelected(e);
-		}
-	}
 
-	private class SearchSelectionListener extends SelectionAdapter {
+	private class SearchStupacButtonListener extends SelectionAdapter {
 		@Override
 		public void widgetDefaultSelected(SelectionEvent e) {
 			VRFinder vf = new VRFinder(shlPrijava);
 			Stupac st = vf.open();
 			if (st != null) {
-				tLinija.setText(st.getVozniRedID().toString());
-				lOpisLinije.setText(st.getOpis());
-				comboPolazak.setText(st.getVremeOdhoda() + " " + st.getOpis());
-				Stupac.setVozniRed(st.getVozniRedID());
-				comboPolazak.setData(Stupac.getIndex(st));
+				tLinija.setText(st.getId().toString());
+				lOpisLinije.setText(st.getDescription());
 			} else {
 				tLinija.setText("");
-				lblLinija.setText("");
-				comboPolazak.setText("");
-				comboPolazak.setData(null);
-
+				lOpisLinije.setText("");
 			}
 		}
-
 		@Override
 		public void widgetSelected(SelectionEvent e) {
 			widgetDefaultSelected(e);
 		}
 	}
 
-	private class Button_1SelectionListener extends SelectionAdapter {
+	private class UcitajBazuButtonListener extends SelectionAdapter {
 		@Override
 		public void widgetDefaultSelected(SelectionEvent e) {
 			try {

@@ -23,7 +23,7 @@ public class VRFinder {
 	private Text tOdPostaje;
 	private Text tDoPostaje;
 	private Button btnDummy;
-	private Stupac stupac;
+	private Stupac stupac = null;
 	private Label lblNewLabel;
 
 	/**
@@ -92,6 +92,7 @@ public class VRFinder {
 				MessageBox mb = new MessageBox(shell, SWT.OK | SWT.ICON_ERROR);
 				mb.setMessage("Nema rezultata pretraživanja !");
 				mb.open();
+				stupac = null;
 			} else {
 				Picker picker = new Picker(btnDummy, Stupac.getArrayList(), 0);
 				btnDummy = picker.open();

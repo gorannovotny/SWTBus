@@ -20,7 +20,7 @@ public class Stupac {
 	private String  opis;
 	private String  vremeOdhoda;
 
-	public static void setVozniRed(Integer sifraVR) {
+	private static void setVozniRed(Integer sifraVR) {
 		try {
 			//String sql = "select a.ID,a.VozniRedID,a.VarijantaVRID,a.SmerVoznje,b.Opis1,b.Opis2,a.VremeOdhoda from PTStupciVR a,PTVarijanteVR b WHERE a.VarijantaVRID = b.id AND a.VozniRedID = ? AND a.id NOT IN (select StupacID from PTStupciVRMirovanja WHERE DATE('now') BETWEEN OdDatuma AND DoDatuma) ORDER BY a.VremeOdhoda";
 		      java.util.Date Danas    = DbUtil.getNaDan();
@@ -111,6 +111,10 @@ public class Stupac {
 	public String getVremeOdhoda() {
 		return vremeOdhoda;
 	}
+	
+	public String getDescription(){
+		return vremeOdhoda + " " + opis;
+	}
 
 	public static Stupac get(int index) {
 		return stupacList.get(index);
@@ -148,8 +152,8 @@ public class Stupac {
         String pos1,pos2;
         	try {
     		stupacList.clear();
-            Integer OdPostajeID = 0;
-            Integer DoPostajeID = 0;
+            Integer OdPostajeID = null;
+            Integer DoPostajeID = null;
 
             java.util.Date Danas    = DbUtil.getNaDan();
             String DT = DbUtil.getDayOfWeekStr(Danas);
