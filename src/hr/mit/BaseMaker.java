@@ -22,6 +22,7 @@ public class BaseMaker {
 			con2.setAutoCommit(false);
 			con3.setAutoCommit(false);
 
+			doSkValute(con1, con2);
 			doPTVozniRedi(con1, con2);
 			doPTVarijanteVR(con1, con2);
 			doPTStupciVR(con1, con2);
@@ -350,6 +351,27 @@ public class BaseMaker {
 		ps.close();
 	}
 
+	private static void doSkValute(Connection con1, Connection con2) throws SQLException {
+		int i = 0;
+		con2.createStatement().executeUpdate("drop table if exists SkValute;");
+		con2.createStatement().executeUpdate(
+				"CREATE TABLE SkValute(SifraValute INT NOT NULL,OznakaValute VARCHAR(3),NazivValute VARCHAR(30) ,PRIMARY KEY (SifraValute))");
+		PreparedStatement ps = con2.prepareStatement("INSERT INTO SkValute VALUES (?,?,?)");
+		ResultSet rs = con1.createStatement().executeQuery("SELECT * FROM SKValute");
+		while (rs.next()) {
+			ps.setInt(1, rs.getInt("SifraValute"));
+			ps.setString(2, rs.getString("OznakaValute"));
+			ps.setString(3, rs.getString("NazivValute"));
+			ps.addBatch();
+			i++;
+		}
+		ps.executeBatch();
+		con2.commit();
+		System.out.println(String.format("%20s -> %7d", "SkValute", i));
+		rs.close();
+		ps.close();
+	}
+
 	private static void doPTKTTarifniRazrediCenik(Connection con1, Connection con2) throws SQLException {
 		int i = 0;
 		con2.createStatement().executeUpdate("drop table if exists PTKTTarifniRazrediCenik;");
@@ -438,7 +460,7 @@ public class BaseMaker {
 		con2.createStatement().executeUpdate("drop table if exists PTKTObracun;");
 		con2.createStatement()
 				.executeUpdate(
-						"CREATE TABLE PTKTProdaja(ID INTEGER PRIMARY KEY ,Firma INT NOT NULL,DokumentProdajeID INT,VrsticaProdajeID INT,DokumentBlagajneID INT,BUSProdajaID INT,Datum DATETIME,Vreme DATETIME,VoznaKartaID INT,Code VARCHAR(20) ,BRVoznji INT,Cena FLOAT(53),Popust1ID INT,Popust2ID INT,Popust3ID INT,PCenaKarte FLOAT(53),NCenaKarte FLOAT(53),Popust FLOAT(53),ZaPlatiti FLOAT(53),PorezProcent INT,ProdajnoMestoID INT,PrevoznikID INT,VrstaPosadeID INT,Vozac1ID INT,Vozac2ID INT,Vozac3ID INT,Blagajnik INT,Blagajna INT,StupacID INT,OdPostajeID INT,DoPostajeID INT,VoziloID INT,Rezervacija INT,StatusZK INT,KmLinijeVR INT,KmDomaci INT,KmIno INT,BRPutnika INT,BRKarata INT,MobStrojID INT,ObracunID INT)");
+						"CREATE TABLE PTKTProdaja(ID INTEGER PRIMARY KEY ,Firma INT NOT NULL,DokumentProdajeID INT,VrsticaProdajeID INT,DokumentBlagajneID INT,BUSProdajaID INT,Datum DATETIME,Vreme DATETIME,VoznaKartaID INT,Code VARCHAR(20) ,BRVoznji INT, SifraValute INT, Cena FLOAT(53),Popust1ID INT,Popust2ID INT,Popust3ID INT,PCenaKarte FLOAT(53),NCenaKarte FLOAT(53),Popust FLOAT(53),ZaPlatiti FLOAT(53),PorezProcent INT,ProdajnoMestoID INT,PrevoznikID INT,VrstaPosadeID INT,Vozac1ID INT,Vozac2ID INT,Vozac3ID INT,Blagajnik INT,Blagajna INT,StupacID INT,OdPostajeID INT,DoPostajeID INT,VoziloID INT,Rezervacija INT,StatusZK INT,KmLinijeVR INT,KmDomaci INT,KmIno INT,BRPutnika INT,BRKarata INT,MobStrojID INT,ObracunID INT)");
 		con2.createStatement().executeUpdate("CREATE TABLE PTKTObracun(ID INTEGER PRIMARY KEY,Datum DATETIME,VozacID INT,GUID VARCHAR)");
 		con2.commit();
 		System.out.println(String.format("%-20s -> %7d", "PTKTProdaja", i));
