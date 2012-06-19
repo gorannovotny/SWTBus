@@ -151,7 +151,8 @@ public class CijenaKarte {
 				}
 			}
 		}
-		return retval.multiply(BigDecimal.ONE.subtract(karta.getPopustProcent().movePointLeft(2)));
+//		return retval.multiply(BigDecimal.ONE.subtract(karta.getPopustProcent().movePointLeft(2)));
+		return retval;
 	}
 
 	public Integer getDistancaLinije() {
