@@ -162,7 +162,7 @@ public class Obracun {
 					stupacID = rs.getInt("stupacID");
 					retval.append(" \r");
 					if (Stupac.getByID(stupacID) != null) {
-						linija = Stupac.get(0).getOpis() + " (" + stupacID.toString() + ")\r";
+						linija = Stupac.getByID(stupacID).getOpis() + " (" + stupacID.toString() + ")\r";
 					} else {
 						linija = "Nema linije broj: (" + stupacID.toString() + ")\r";
 					}

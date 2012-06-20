@@ -205,8 +205,7 @@ public class LoginWindow {
 		public void widgetSelected(SelectionEvent e) {
 			Starter.vozac = Vozac.getBySifra(Integer.parseInt(tVozac.getText()));
 			Starter.vozilo = Vozilo.getBySifra(tVozilo.getText());
-			if (Stupac.getList().length > 0)
-				Starter.stupac = Stupac.getByID(new Integer(tLinija.getText()));
+			Starter.stupac = Stupac.getByID(new Integer(tLinija.getText()));
 			if (Starter.vozac == null || Starter.stupac == null || Starter.vozilo == null) {
 				MessageBox mb = new MessageBox(shlPrijava, SWT.OK | SWT.ICON_ERROR);
 				mb.setMessage("Morate prijaviti vozača,vozilo i liniju!");
