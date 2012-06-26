@@ -31,7 +31,7 @@ import org.eclipse.swt.widgets.Shell;
 import org.eclipse.swt.widgets.Text;
 import org.eclipse.wb.swt.SWTResourceManager;
 
-public class ProdajaWindow  {
+public class ProdajaWindow {
 
 	protected Shell shell;
 
@@ -69,6 +69,7 @@ public class ProdajaWindow  {
 	private Button btnZadnji;
 
 	protected List<Stavka> oldRacun;
+	private Button btnZk;
 
 	public ProdajaWindow() {
 
@@ -138,17 +139,18 @@ public class ProdajaWindow  {
 	}
 
 	protected void stavkaToScreen() {
-		if (stavka.getKarta().getId().equals(Karta.ZAMJENSKA_KARTA)) {
+		// if (stavka.getKarta().getId().equals(Karta.ZAMJENSKA_KARTA)) {
+		if (btnZk.getSelection()) {
 			cProdMjesto.setEnabled(true);
 			textBrKarte.setEnabled(true);
 			textCijena.setEnabled(true);
 			cPopust.setData(0);
 			cPopust.setText(Popust.getList()[0]);
 			cPopust.setEnabled(false);
-			if (! textCijena.isListening(SWT.MouseDown))
+			if (!textCijena.isListening(SWT.MouseDown))
 				textCijena.addMouseListener(mouseListener);
-			if (! textBrKarte.isListening(SWT.MouseDown))
-				textBrKarte.addMouseListener(mouseListener);					
+			if (!textBrKarte.isListening(SWT.MouseDown))
+				textBrKarte.addMouseListener(mouseListener);
 		} else {
 			textCijena.removeMouseListener(mouseListener);
 			textBrKarte.removeMouseListener(mouseListener);
@@ -192,6 +194,7 @@ public class ProdajaWindow  {
 		cKarta.addSelectionListener(c);
 		cPopust.addSelectionListener(c);
 		cProdMjesto.addSelectionListener(c);
+		btnZk.addSelectionListener(c);
 
 		bAdd.addSelectionListener(new PlusButtonListener());
 	}
@@ -208,8 +211,7 @@ public class ProdajaWindow  {
 		btnStupac = new Button(shell, SWT.NONE);
 		btnStupac.setBackground(SWTResourceManager.getColor(SWT.COLOR_GRAY));
 		btnStupac.setAlignment(SWT.LEFT);
-		 
-		 
+
 		btnStupac.setFont(SWTResourceManager.getFont("Liberation Sans", 14, SWT.NORMAL));
 		btnStupac.setBounds(5, 0, 785, 50);
 		btnStupac.setText(Starter.vozac.getNaziv() + " \t\t- " + Starter.stupac.getOpis() + "@" + Starter.stupac.getVremeOdhoda());
@@ -300,9 +302,16 @@ public class ProdajaWindow  {
 		lblCijena.setFont(SWTResourceManager.getFont("Liberation Sans", 10, SWT.NORMAL));
 		lblCijena.setBounds(640, 220, 94, 15);
 
+		btnZk = new Button(shell, SWT.TOGGLE);
+		btnZk.addSelectionListener(new BtnZkSelectionListener());
+		btnZk.setText("ZK");
+		btnZk.setFont(SWTResourceManager.getFont("Liberation Sans", 22, SWT.BOLD));
+		btnZk.setAlignment(SWT.CENTER);
+		btnZk.setBounds(5, 235, 70, 70);
+
 		cProdMjesto = new Button(shell, SWT.READ_ONLY);
 		cProdMjesto.setFont(SWTResourceManager.getFont("Liberation Sans", 22, SWT.NORMAL));
-		cProdMjesto.setBounds(5, 235, 325, 70);
+		cProdMjesto.setBounds(80, 235, 250, 70);
 		cProdMjesto.setAlignment(SWT.LEFT);
 		cProdMjesto.setData(0);
 		cProdMjesto.setText(ProdajnoMjesto.getList()[0]);
@@ -435,7 +444,9 @@ public class ProdajaWindow  {
 				Popust.setKartaStupac(Karta.get((Integer) cKarta.getData()), Starter.stupac);
 				cPopust.setData(0);
 				cPopust.setText(Popust.getList()[0]);
-				if (stavka.getKarta().getId().equals(Karta.ZAMJENSKA_KARTA)) {
+				// if (stavka.getKarta().getId().equals(Karta.ZAMJENSKA_KARTA))
+				// {
+				if (btnZk.getSelection()) {
 					cProdMjesto.setData(1);
 					cProdMjesto.setText(ProdajnoMjesto.getList()[1]);
 					stavka.setProdajnoMjesto(ProdajnoMjesto.get(1));
@@ -512,6 +523,25 @@ public class ProdajaWindow  {
 		}
 
 		@Override
+		public void widgetSelected(SelectionEvent e) {
+			// TODO Auto-generated method stub
+			widgetDefaultSelected(e);
+		}
+	}
+
+	private class BtnZkSelectionListener extends SelectionAdapter {
+		@Override
+		public void widgetDefaultSelected(SelectionEvent e) {
+			Button b = (Button) e.widget;
+			if (b.getSelection()) {
+				b.setBackground(SWTResourceManager.getColor(SWT.COLOR_RED));
+				b.setForeground(SWTResourceManager.getColor(SWT.COLOR_RED));
+			} else {
+				b.setBackground(SWTResourceManager.getColor(SWT.COLOR_WIDGET_BACKGROUND));
+				b.setForeground(SWTResourceManager.getColor(SWT.COLOR_WIDGET_FOREGROUND));
+			}
+		}
+
 		public void widgetSelected(SelectionEvent e) {
 			// TODO Auto-generated method stub
 			widgetDefaultSelected(e);

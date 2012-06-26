@@ -1,16 +1,14 @@
 package hr.mit.windows;
 
-import java.io.File;
-import java.io.IOException;
-
 import hr.mit.Starter;
 import hr.mit.beans.Stupac;
 import hr.mit.beans.Vozac;
 import hr.mit.beans.Vozilo;
-import hr.mit.beans.VozniRed;
-import hr.mit.utils.FileChecksum;
 import hr.mit.utils.DbUtil;
+import hr.mit.utils.FileChecksum;
 
+import java.io.File;
+import java.io.IOException;
 
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.events.ModifyEvent;
@@ -133,14 +131,14 @@ public class LoginWindow {
 		lblVerzijaBaze = new Label(shlPrijava, SWT.NONE);
 		lblVerzijaBaze.setBackground(SWTResourceManager.getColor(SWT.COLOR_GRAY));
 		lblVerzijaBaze.setFont(SWTResourceManager.getFont("Liberation Sans", 14, SWT.NORMAL));
-		lblVerzijaBaze.setBounds(5, 405+140, 260, 20);
-		lblVerzijaBaze.setText("Podaci: "+DbUtil.getDbVersionInfo());
+		lblVerzijaBaze.setBounds(5, 405 + 140, 260, 20);
+		lblVerzijaBaze.setText("Podaci: " + DbUtil.getDbVersionInfo());
 
 		lblVerzijaPrograma = new Label(shlPrijava, SWT.NONE);
 		lblVerzijaPrograma.setBackground(SWTResourceManager.getColor(SWT.COLOR_GRAY));
 		lblVerzijaPrograma.setFont(SWTResourceManager.getFont("Liberation Sans", 14, SWT.NORMAL));
-		lblVerzijaPrograma.setBounds(5, 425+140, 260, 25);
-		lblVerzijaPrograma.setText("Verzija programa: "+DbUtil.getVersionInfo());
+		lblVerzijaPrograma.setBounds(5, 425 + 140, 260, 25);
+		lblVerzijaPrograma.setText("Verzija programa: " + DbUtil.getVersionInfo());
 
 		btnUcitaj = new Button(shlPrijava, SWT.NONE);
 		btnUcitaj.addSelectionListener(new UcitajBazuButtonListener());
@@ -158,7 +156,7 @@ public class LoginWindow {
 		btnGasenje.setText("Gašenje");
 		btnGasenje.setFont(SWTResourceManager.getFont("Liberation Sans", 20, SWT.NORMAL));
 		btnGasenje.setBounds(317, 486, 150, 50);
-		
+
 		tVozac.addModifyListener(new TVozacModifyListener());
 		tVozac.setText("117");
 		tVozac.addMouseListener(new textMouseListener());
@@ -181,7 +179,7 @@ public class LoginWindow {
 		btnNastavak.addSelectionListener(new NextButtonListener());
 
 	}
-	
+
 	private class BtnGasenjeSelectionListener extends SelectionAdapter {
 		@Override
 		public void widgetSelected(SelectionEvent e) {
@@ -198,7 +196,6 @@ public class LoginWindow {
 			}
 		}
 	}
-	
 
 	protected class NextButtonListener extends SelectionAdapter {
 		@Override
@@ -210,12 +207,11 @@ public class LoginWindow {
 				MessageBox mb = new MessageBox(shlPrijava, SWT.OK | SWT.ICON_ERROR);
 				mb.setMessage("Morate prijaviti vozača,vozilo i liniju!");
 				mb.open();
-			} else if  (! Starter.vozac.getPassword().equals(DbUtil.md5hash(tLozinka.getText()))) {
+			} else if (!Starter.vozac.getPassword().equals(DbUtil.md5hash(tLozinka.getText()))) {
 				MessageBox mb = new MessageBox(shlPrijava, SWT.OK | SWT.ICON_ERROR);
 				mb.setMessage("Neispravna lozinka!");
 				mb.open();
-			}
-			else {
+			} else {
 				ProdajaWindow pw = new ProdajaWindow();
 				boolean exit = pw.open();
 				if (exit)
@@ -279,7 +275,6 @@ public class LoginWindow {
 		}
 	}
 
-
 	private class SearchStupacButtonListener extends SelectionAdapter {
 		@Override
 		public void widgetDefaultSelected(SelectionEvent e) {
@@ -293,6 +288,7 @@ public class LoginWindow {
 				lOpisLinije.setText("");
 			}
 		}
+
 		@Override
 		public void widgetSelected(SelectionEvent e) {
 			widgetDefaultSelected(e);
@@ -325,12 +321,9 @@ public class LoginWindow {
 			}
 		}
 
-		@Override
 		public void widgetSelected(SelectionEvent e) {
-			// TODO Auto-generated method stub
 			widgetDefaultSelected(e);
 		}
 	}
-
 
 }
