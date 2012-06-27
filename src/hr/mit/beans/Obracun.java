@@ -181,9 +181,10 @@ public class Obracun {
 				int komada = rs.getInt("Komada");
 				double cena = rs.getDouble("cena");
 				retval.append(String.format("%-20s %3d %7.2f\r", opis, komada, cena));
-				if (kartaId != Karta.ZAMJENSKA_KARTA) {
-					ukupno = ukupno + cena;
-				}
+				// Još ne znam kaj da tu radim
+				// if (kartaId != Karta.ZAMJENSKA_KARTA) {
+				ukupno = ukupno + cena;
+				// }
 			}
 			// if (stupacID != 0) {
 			retval.append(" \r");

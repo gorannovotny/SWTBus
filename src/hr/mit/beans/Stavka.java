@@ -20,6 +20,15 @@ public class Stavka {
 	private CijenaKarte cijenaKarte;
 	private Stupac stupac;
 	private BigDecimal cijenaZamjenske;
+	private Boolean jeZamjenska;
+
+	public Boolean getJeZamjenska() {
+		return jeZamjenska;
+	}
+
+	public void setJeZamjenska(Boolean jeZamjenska) {
+		this.jeZamjenska = jeZamjenska;
+	}
 
 	public static void clear() {
 		stavkaList.clear();
@@ -85,7 +94,7 @@ public class Stavka {
 	public static BigDecimal getUkupno() {
 		BigDecimal retval = BigDecimal.ZERO;
 		for (Stavka s : stavkaList) {
-			if (!s.getKarta().getId().equals(Karta.ZAMJENSKA_KARTA))
+			if (!s.getJeZamjenska())
 				retval = retval.add(s.getProdajnaCijena());
 		}
 		return retval.setScale(2);
@@ -103,7 +112,8 @@ public class Stavka {
 		this.popust = popust;
 		cijenaKarte = new CijenaKarte(stupac, karta, odPostaje, doPostaje);
 		// cijena = c.getUkupnaCijena();
-		// cijena = cijena.subtract(cijena.multiply(popust.getPopust().movePointLeft(2)));
+		// cijena =
+		// cijena.subtract(cijena.multiply(popust.getPopust().movePointLeft(2)));
 	}
 
 	public String getDesc() {
@@ -130,7 +140,7 @@ public class Stavka {
 	}
 
 	public BigDecimal getProdajnaCijena() {
-		if (getKarta().getId().equals(Karta.ZAMJENSKA_KARTA))
+		if (jeZamjenska)
 			return cijenaZamjenske.setScale(2);
 		else {
 			if (popust.getId() != 0)

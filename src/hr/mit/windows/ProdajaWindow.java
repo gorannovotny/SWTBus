@@ -86,8 +86,7 @@ public class ProdajaWindow {
 
 		final Display display = Display.getDefault();
 		createContents();
-		stavka = new Stavka(Starter.stupac, Postaja.get((Integer) cOdPostaje.getData()), Postaja.get((Integer) cDoPostaje.getData()), Karta.get((Integer) cKarta.getData()),
-				Popust.get((Integer) cPopust.getData()));
+		stavka = new Stavka(Starter.stupac, Postaja.get((Integer) cOdPostaje.getData()), Postaja.get((Integer) cDoPostaje.getData()), Karta.get((Integer) cKarta.getData()), Popust.get((Integer) cPopust.getData()));
 		stavka.setBrojKarte(String.valueOf(random));
 		screenToStavka();
 		stavkaToScreen();
@@ -136,6 +135,7 @@ public class ProdajaWindow {
 		}
 		stavka.setProdajnoMjesto(ProdajnoMjesto.get((Integer) cProdMjesto.getData()));
 		stavka.setBrojKarte(textBrKarte.getText());
+		stavka.setJeZamjenska(btnZk.getSelection());
 	}
 
 	protected void stavkaToScreen() {
@@ -387,8 +387,7 @@ public class ProdajaWindow {
 		public void widgetSelected(SelectionEvent e) {
 			Stavka.add(stavka);
 			stavkaToScreen();
-			stavka = new Stavka(Starter.stupac, Postaja.get((Integer) cOdPostaje.getData()), Postaja.get((Integer) cDoPostaje.getData()), Karta.get((Integer) cKarta.getData()),
-					Popust.get((Integer) cPopust.getData()));
+			stavka = new Stavka(Starter.stupac, Postaja.get((Integer) cOdPostaje.getData()), Postaja.get((Integer) cDoPostaje.getData()), Karta.get((Integer) cKarta.getData()), Popust.get((Integer) cPopust.getData()));
 			screenToStavka();
 		}
 	}

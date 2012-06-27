@@ -25,17 +25,14 @@ public class Karta {
 	public static Integer FIKSNA_CIJENA = 2;
 	public static Integer FIKSNI_KILOMETRI = 3;
 	public static Integer RUCNI_UNOS = 4;
-	
-	public static Integer ZAMJENSKA_KARTA = 99;
-	public static Integer POVRATNA_KARTA = 462;
 
 	static {
 		try {
 			String sql = "Select a.id,a.kratkiOpis,stVoznji,NacinDolocanjaCene,TarifniRazredID,FiksnaCena,KMPogoja,PopustProcent,TipKarteID,FaktorCene from PTKTVozneKarte a  ORDER BY sifra";
 			ResultSet rs = DbUtil.getConnection().createStatement().executeQuery(sql);
 			while (rs.next()) {
-				kartaList.add(new Karta(rs.getInt("ID"), rs.getString("kratkiOpis"), rs.getInt("stVoznji"), rs.getInt("NacinDolocanjaCene"), rs.getInt("TarifniRazredID"), rs.getDouble("FiksnaCena"),
-						rs.getInt("KmPogoja"), rs.getDouble("PopustProcent"), rs.getInt("TipKarteID"),rs.getDouble("FaktorCene")));
+				kartaList.add(new Karta(rs.getInt("ID"), rs.getString("kratkiOpis"), rs.getInt("stVoznji"), rs.getInt("NacinDolocanjaCene"), rs.getInt("TarifniRazredID"), rs.getDouble("FiksnaCena"), rs.getInt("KmPogoja"), rs
+						.getDouble("PopustProcent"), rs.getInt("TipKarteID"), rs.getDouble("FaktorCene")));
 			}
 			rs.close();
 		} catch (SQLException e) {
@@ -45,7 +42,7 @@ public class Karta {
 		// Karta(Karta.ZAMJENSKA_KARTA,"Zamjenska karta",1,0,0,0,0,0.0,0));
 	}
 
-	public Karta(int id, String naziv, int stVoznji, int nacinDolocanjaCene, int tarifniRazredID, double FiksnaCena, int kmPogoja, double popustProcent, int tip,double faktorCene) {
+	public Karta(int id, String naziv, int stVoznji, int nacinDolocanjaCene, int tarifniRazredID, double FiksnaCena, int kmPogoja, double popustProcent, int tip, double faktorCene) {
 		this.id = id;
 		this.naziv = naziv;
 		this.stVoznji = stVoznji;
