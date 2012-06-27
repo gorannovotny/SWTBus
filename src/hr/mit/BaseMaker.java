@@ -317,7 +317,7 @@ public class BaseMaker {
 			i++;
 		}
 		ps.executeBatch();
-		con2.createStatement().execute("insert into PTKTVozneKarte (ID,Firma,Sifra,TipKarteID,kratkiOpis) VALUES (99,5,99,1,'ZAMJENSKA KARTA');");
+//		con2.createStatement().execute("insert into PTKTVozneKarte (ID,Firma,Sifra,TipKarteID,kratkiOpis) VALUES (99,5,99,1,'ZAMJENSKA KARTA');");
 		con2.createStatement().execute("UPDATE PTKTVozneKarte SET kratkiOpis = 'Dnevna' WHERE kratkiOpis IS NULL");
 		con2.commit();
 		System.out.println(String.format("%20s -> %7d", "PTKTVozneKarte", i));
