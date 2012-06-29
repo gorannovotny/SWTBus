@@ -48,7 +48,7 @@ public class CijenaKarte {
 	}
 
 	private Integer izracunajDistancaLinije() {
-		String sql = "SELECT SUM(DistancaM) FROM PTPostajeVarijantVR WHERE VarijantaID = ? AND ZapSt NOT IN (SELECT MIN(ZapSt) FROM PTPostajeVarijantVR WHERE VarijantaID = ?)";
+		String sql = "SELECT SUM(DistancaM) FROM PTPostajeVarijantVR WHERE Staje <> '-' and VarijantaID = ? AND ZapSt NOT IN (SELECT MIN(ZapSt) FROM PTPostajeVarijantVR WHERE VarijantaID = ?)";
 		Integer retval;
 		try {
 			PreparedStatement ps = DbUtil.getConnection().prepareStatement(sql);
@@ -63,7 +63,7 @@ public class CijenaKarte {
 	}
 
 	private Integer izracunajDistancaRelacije() {
-		String sql = "SELECT SUM(DistancaM) FROM PTPostajeVarijantVR WHERE VarijantaID = ? AND ZapSt > ? AND ZapSt <= ?";
+		String sql = "SELECT SUM(DistancaM) FROM PTPostajeVarijantVR WHERE Staje <> '-' and VarijantaID = ? AND ZapSt > ? AND ZapSt <= ?";
 		Integer retval;
 		try {
 			PreparedStatement ps = DbUtil.getConnection().prepareStatement(sql);
@@ -79,7 +79,7 @@ public class CijenaKarte {
 	}
 
 	private Integer izracunajDomDistanca() {
-		String sql = "SELECT SUM(a.DistancaM) FROM PTPostajeVarijantVR a,PTPostajeVR b,PTPostaje c WHERE b.ID = a.NodePostajeVRID AND c.ID = b.PostajaID AND a.VarijantaID = ? AND a.ZapSt > ? AND a.ZapSt <= ? AND c.Drzava = '191'";
+		String sql = "SELECT SUM(a.DistancaM) FROM PTPostajeVarijantVR a,PTPostajeVR b,PTPostaje c WHERE a.staje <> '-'  and b.ID = a.NodePostajeVRID AND c.ID = b.PostajaID AND a.VarijantaID = ? AND a.ZapSt > ? AND a.ZapSt <= ? AND c.Drzava = '191'";
 		Integer retval;
 		try {
 			PreparedStatement ps = DbUtil.getConnection().prepareStatement(sql);
