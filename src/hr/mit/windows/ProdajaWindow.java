@@ -164,6 +164,14 @@ public class ProdajaWindow {
 			textCijena.setText(stavka.getProdajnaCijena().toString());
 			cPopust.setEnabled(true);
 		}
+		btnZk.setSelection(stavka.getJeZamjenska());
+		if (btnZk.getSelection()) {
+			btnZk.setBackground(SWTResourceManager.getColor(SWT.COLOR_RED));
+			btnZk.setForeground(SWTResourceManager.getColor(SWT.COLOR_RED));
+		} else {
+			btnZk.setBackground(SWTResourceManager.getColor(SWT.COLOR_WIDGET_BACKGROUND));
+			btnZk.setForeground(SWTResourceManager.getColor(SWT.COLOR_WIDGET_FOREGROUND));
+		}
 		textRacun.setText(Stavka.getDescription());
 		lblUkupno.setText("Kn " + Stavka.getUkupno().toString());
 
@@ -302,7 +310,6 @@ public class ProdajaWindow {
 		lblCijena.setBounds(640, 220, 94, 15);
 
 		btnZk = new Button(shell, SWT.TOGGLE);
-		// btnZk.addSelectionListener(new BtnZkSelectionListener());
 		btnZk.setText("ZK");
 		btnZk.setFont(SWTResourceManager.getFont("Liberation Sans", 22, SWT.BOLD));
 		btnZk.setAlignment(SWT.CENTER);
@@ -385,6 +392,7 @@ public class ProdajaWindow {
 		@Override
 		public void widgetSelected(SelectionEvent e) {
 			Stavka.add(stavka);
+			stavka.setJeZamjenska(false);
 			stavkaToScreen();
 			stavka = new Stavka(Starter.stupac, Postaja.get((Integer) cOdPostaje.getData()), Postaja.get((Integer) cDoPostaje.getData()), Karta.get((Integer) cKarta.getData()), Popust.get((Integer) cPopust.getData()));
 			screenToStavka();
@@ -442,14 +450,19 @@ public class ProdajaWindow {
 				Popust.setKartaStupac(Karta.get((Integer) cKarta.getData()), Starter.stupac);
 				cPopust.setData(0);
 				cPopust.setText(Popust.getList()[0]);
-			} else if (btnZk.getSelection()) {
+			} else if (e.widget.equals(btnZk)) {
 				cProdMjesto.setData(1);
 				cProdMjesto.setText(ProdajnoMjesto.getList()[1]);
 				stavka.setProdajnoMjesto(ProdajnoMjesto.get(1));
 				textCijena.setText("0.00");
-				btnZk.setBackground(SWTResourceManager.getColor(SWT.COLOR_RED));
-				btnZk.setForeground(SWTResourceManager.getColor(SWT.COLOR_RED));
-
+				if (btnZk.getSelection()) {
+					btnZk.setBackground(SWTResourceManager.getColor(SWT.COLOR_RED));
+					btnZk.setForeground(SWTResourceManager.getColor(SWT.COLOR_RED));
+				} else {
+					btnZk.setBackground(SWTResourceManager.getColor(SWT.COLOR_WIDGET_BACKGROUND));
+					btnZk.setForeground(SWTResourceManager.getColor(SWT.COLOR_WIDGET_FOREGROUND));
+				}
+				stavka.setJeZamjenska(btnZk.getSelection());
 			} else if (e.widget.equals(cPopust)) {
 				Integer index = (Integer) cPopust.getData();
 				Picker picker = new Picker(cPopust, Popust.getArrayList(), index);
@@ -462,7 +475,6 @@ public class ProdajaWindow {
 				stavka.setProdajnoMjesto(ProdajnoMjesto.get((Integer) cProdMjesto.getData()));
 			}
 			stavkaToScreen();
-
 		}
 
 		@Override
@@ -521,25 +533,6 @@ public class ProdajaWindow {
 		}
 
 		@Override
-		public void widgetSelected(SelectionEvent e) {
-			// TODO Auto-generated method stub
-			widgetDefaultSelected(e);
-		}
-	}
-
-	private class BtnZkSelectionListener extends SelectionAdapter {
-		@Override
-		public void widgetDefaultSelected(SelectionEvent e) {
-			Button b = (Button) e.widget;
-			if (b.getSelection()) {
-				b.setBackground(SWTResourceManager.getColor(SWT.COLOR_RED));
-				b.setForeground(SWTResourceManager.getColor(SWT.COLOR_RED));
-			} else {
-				b.setBackground(SWTResourceManager.getColor(SWT.COLOR_WIDGET_BACKGROUND));
-				b.setForeground(SWTResourceManager.getColor(SWT.COLOR_WIDGET_FOREGROUND));
-			}
-		}
-
 		public void widgetSelected(SelectionEvent e) {
 			// TODO Auto-generated method stub
 			widgetDefaultSelected(e);
