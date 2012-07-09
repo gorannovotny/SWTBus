@@ -139,8 +139,7 @@ public class ProdajaWindow {
 	}
 
 	protected void stavkaToScreen() {
-		// if (stavka.getKarta().getId().equals(Karta.ZAMJENSKA_KARTA)) {
-		if (btnZk.getSelection()) {
+		if (stavka.getJeZamjenska()) {
 			cProdMjesto.setEnabled(true);
 			textBrKarte.setEnabled(true);
 			textCijena.setEnabled(true);
@@ -303,7 +302,7 @@ public class ProdajaWindow {
 		lblCijena.setBounds(640, 220, 94, 15);
 
 		btnZk = new Button(shell, SWT.TOGGLE);
-		btnZk.addSelectionListener(new BtnZkSelectionListener());
+		// btnZk.addSelectionListener(new BtnZkSelectionListener());
 		btnZk.setText("ZK");
 		btnZk.setFont(SWTResourceManager.getFont("Liberation Sans", 22, SWT.BOLD));
 		btnZk.setAlignment(SWT.CENTER);
@@ -443,14 +442,14 @@ public class ProdajaWindow {
 				Popust.setKartaStupac(Karta.get((Integer) cKarta.getData()), Starter.stupac);
 				cPopust.setData(0);
 				cPopust.setText(Popust.getList()[0]);
-				// if (stavka.getKarta().getId().equals(Karta.ZAMJENSKA_KARTA))
-				// {
-				if (btnZk.getSelection()) {
-					cProdMjesto.setData(1);
-					cProdMjesto.setText(ProdajnoMjesto.getList()[1]);
-					stavka.setProdajnoMjesto(ProdajnoMjesto.get(1));
-					textCijena.setText("0.00");
-				}
+			} else if (btnZk.getSelection()) {
+				cProdMjesto.setData(1);
+				cProdMjesto.setText(ProdajnoMjesto.getList()[1]);
+				stavka.setProdajnoMjesto(ProdajnoMjesto.get(1));
+				textCijena.setText("0.00");
+				btnZk.setBackground(SWTResourceManager.getColor(SWT.COLOR_RED));
+				btnZk.setForeground(SWTResourceManager.getColor(SWT.COLOR_RED));
+
 			} else if (e.widget.equals(cPopust)) {
 				Integer index = (Integer) cPopust.getData();
 				Picker picker = new Picker(cPopust, Popust.getArrayList(), index);

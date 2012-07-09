@@ -98,6 +98,7 @@ public class Obracun {
 				else
 					retval = true;
 			}
+			rsCnt.close();
 		} catch (SQLException e) {
 			e.printStackTrace();
 		}
@@ -121,6 +122,8 @@ public class Obracun {
 			ps = DbUtil.getConnection2().prepareStatement("UPDATE PTKTProdaja SET ObracunID = ? WHERE ObracunID IS NULL");
 			ps.setInt(1, id);
 			ps.execute();
+			rs.close();
+			ps.close();
 			DbUtil.getConnection2().commit();
 		} catch (SQLException e) {
 			throw new RuntimeException(e);
@@ -133,9 +136,11 @@ public class Obracun {
 			PreparedStatement ps = DbUtil.getConnection2().prepareStatement("SELECT sum(cena) FROM PTKTProdaja WHERE ObracunID IS NULL AND StatusZK != 1");
 			double ss = DbUtil.getSingleResultDouble(ps);
 			saldo = new BigDecimal(ss);
+			ps.close();
 		} catch (SQLException e) {
 			e.printStackTrace();
 		}
+
 		return saldo.setScale(2, BigDecimal.ROUND_DOWN);
 	}
 
@@ -190,6 +195,8 @@ public class Obracun {
 			retval.append(" \r");
 			retval.append("................................\r");
 			retval.append(String.format("%-24s %7.2f", "Blagajna", ukupno));
+			rs.close();
+			ps.close();
 			// }
 		} catch (SQLException e) {
 			throw new RuntimeException(e);

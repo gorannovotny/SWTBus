@@ -207,7 +207,7 @@ public class LoginWindow {
 				MessageBox mb = new MessageBox(shlPrijava, SWT.OK | SWT.ICON_ERROR);
 				mb.setMessage("Morate prijaviti vozača,vozilo i liniju!");
 				mb.open();
-			} else if (!Starter.vozac.getPassword().equals(DbUtil.md5hash(tLozinka.getText()))) {
+			} else if (Starter.vozac.getPassword().equals(DbUtil.md5hash(tLozinka.getText()))) {
 				MessageBox mb = new MessageBox(shlPrijava, SWT.OK | SWT.ICON_ERROR);
 				mb.setMessage("Neispravna lozinka!");
 				mb.open();
