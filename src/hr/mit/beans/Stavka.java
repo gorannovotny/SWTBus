@@ -110,7 +110,9 @@ public class Stavka {
 		this.doPostaje = doPostaje;
 		this.karta = karta;
 		this.popust = popust;
-		cijenaKarte = new CijenaKarte(stupac, karta, odPostaje, doPostaje);
+		this.brojKarte = "";
+		this.jeZamjenska = false;
+		this.cijenaKarte = new CijenaKarte(stupac, karta, odPostaje, doPostaje);
 		// cijena = c.getUkupnaCijena();
 		// cijena =
 		// cijena.subtract(cijena.multiply(popust.getPopust().movePointLeft(2)));
@@ -122,6 +124,7 @@ public class Stavka {
 			k = k.substring(0, 19);
 		String out;
 		out = String.format("%-19s %3.0f%% %7.2f", k, popust.getPopust().doubleValue(), getProdajnaCijena().doubleValue());
+		if (jeZamjenska) out = out + " ZK";
 		return out;
 	}
 

@@ -161,9 +161,9 @@ public class ProdajaWindow {
 			textBrKarte.setEnabled(false);
 			textCijena.setEnabled(false);
 			textBrKarte.setText(stavka.getBrojKarte());
-			textCijena.setText(stavka.getProdajnaCijena().toString());
 			cPopust.setEnabled(true);
 		}
+		textCijena.setText(stavka.getProdajnaCijena().toString());
 		btnZk.setSelection(stavka.getJeZamjenska());
 		if (btnZk.getSelection()) {
 			btnZk.setBackground(SWTResourceManager.getColor(SWT.COLOR_RED));
@@ -392,9 +392,8 @@ public class ProdajaWindow {
 		@Override
 		public void widgetSelected(SelectionEvent e) {
 			Stavka.add(stavka);
-			stavka.setJeZamjenska(false);
-			stavkaToScreen();
 			stavka = new Stavka(Starter.stupac, Postaja.get((Integer) cOdPostaje.getData()), Postaja.get((Integer) cDoPostaje.getData()), Karta.get((Integer) cKarta.getData()), Popust.get((Integer) cPopust.getData()));
+			stavkaToScreen();
 			screenToStavka();
 		}
 	}
@@ -454,10 +453,10 @@ public class ProdajaWindow {
 				cProdMjesto.setData(1);
 				cProdMjesto.setText(ProdajnoMjesto.getList()[1]);
 				stavka.setProdajnoMjesto(ProdajnoMjesto.get(1));
-				textCijena.setText("0.00");
 				if (btnZk.getSelection()) {
 					btnZk.setBackground(SWTResourceManager.getColor(SWT.COLOR_RED));
 					btnZk.setForeground(SWTResourceManager.getColor(SWT.COLOR_RED));
+					stavka.setCijena(BigDecimal.ZERO);
 				} else {
 					btnZk.setBackground(SWTResourceManager.getColor(SWT.COLOR_WIDGET_BACKGROUND));
 					btnZk.setForeground(SWTResourceManager.getColor(SWT.COLOR_WIDGET_FOREGROUND));
