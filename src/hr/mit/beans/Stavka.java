@@ -3,6 +3,8 @@ package hr.mit.beans;
 import hr.mit.utils.CijenaKarte;
 
 import java.math.BigDecimal;
+import java.text.DecimalFormat;
+import java.text.NumberFormat;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -124,7 +126,8 @@ public class Stavka {
 			k = k.substring(0, 19);
 		String out;
 		out = String.format("%-19s %3.0f%% %7.2f", k, popust.getPopust().doubleValue(), getProdajnaCijena().doubleValue());
-		if (jeZamjenska) out = out + " ZK";
+		if (jeZamjenska)
+			out = out + " ZK";
 		return out;
 	}
 
@@ -215,6 +218,17 @@ public class Stavka {
 
 	public void setCijena(BigDecimal cijena) {
 		this.cijenaZamjenske = cijena;
+	}
+
+	public void setCijena(String s) {
+		try {
+			NumberFormat nf = NumberFormat.getNumberInstance();
+			DecimalFormat df = (DecimalFormat) nf;
+			df.parseObject(s);
+			setCijena(new BigDecimal(s).setScale(2));
+		} catch (Exception e) {
+			setCijena(BigDecimal.ZERO.setScale(2));
+		}
 	}
 
 	public Integer getKmLinije() {

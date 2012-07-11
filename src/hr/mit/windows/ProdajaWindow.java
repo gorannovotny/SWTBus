@@ -11,8 +11,6 @@ import hr.mit.beans.Stavka;
 import hr.mit.utils.PrintUtils;
 
 import java.math.BigDecimal;
-import java.text.DecimalFormat;
-import java.text.NumberFormat;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.List;
@@ -117,22 +115,13 @@ public class ProdajaWindow {
 		stavka.setDoPostaje(Postaja.get((Integer) cDoPostaje.getData()));
 		if (!Karta.get((Integer) cKarta.getData()).equals(stavka.getKarta())) {
 			stavka.setKarta(Karta.get((Integer) cKarta.getData()));
-			Popust.setKartaStupac(Karta.get((Integer) cKarta.getData()), Starter.stupac);
-			cPopust.setData(0);
-			cPopust.setText(Popust.getList()[0]);
-			;
+			 Popust.setKartaStupac(Karta.get((Integer) cKarta.getData()), Starter.stupac);
+			 cPopust.setData(0);
+			 cPopust.setText(Popust.getList()[0]);
 		}
 
 		stavka.setPopust(Popust.get((Integer) cPopust.getData()));
-		String s = textCijena.getText();
-		try {
-			NumberFormat nf = NumberFormat.getNumberInstance();
-			DecimalFormat df = (DecimalFormat) nf;
-			df.parseObject(s);
-			stavka.setCijena(new BigDecimal(textCijena.getText()).setScale(2));
-		} catch (Exception e) {
-			stavka.setCijena(BigDecimal.ZERO.setScale(2));
-		}
+		stavka.setCijena(textCijena.getText());
 		stavka.setProdajnoMjesto(ProdajnoMjesto.get((Integer) cProdMjesto.getData()));
 		stavka.setBrojKarte(textBrKarte.getText());
 		stavka.setJeZamjenska(btnZk.getSelection());
@@ -153,8 +142,6 @@ public class ProdajaWindow {
 		} else {
 			textCijena.removeMouseListener(mouseListener);
 			textBrKarte.removeMouseListener(mouseListener);
-			// CijenaKarte c = new CijenaKarte(stavka);
-			// stavka.setCijena(c.getUkupnaCijena().multiply(BigDecimal.ONE.subtract(stavka.getPopust().getPopust().movePointLeft(2))).setScale(2));
 			cProdMjesto.setData(0);
 			cProdMjesto.setText(ProdajnoMjesto.getList()[0]);
 			cProdMjesto.setEnabled(false);
@@ -207,13 +194,9 @@ public class ProdajaWindow {
 	}
 
 	protected void createContents() {
-		// shell = new Shell(SWT.SYSTEM_MODAL | SWT.ON_TOP);
-		// shell.setMaximized(true);
 		shell = new Shell(SWT.NONE);
-		shell.setSize(450, 333);
 		shell.setBackground(SWTResourceManager.getColor(SWT.COLOR_GRAY));
 		shell.setBounds(0, 0, 800, 600);
-		// shell.setFullScreen(true);
 
 		btnStupac = new Button(shell, SWT.NONE);
 		btnStupac.setBackground(SWTResourceManager.getColor(SWT.COLOR_GRAY));
@@ -381,8 +364,6 @@ public class ProdajaWindow {
 		lClock = new CLabel(shell, SWT.LEFT);
 		lClock.setAlignment(SWT.RIGHT);
 		lClock.setBackground(SWTResourceManager.getColor(SWT.COLOR_GRAY));
-		// lClock.setForeground(SWTResourceManager.getColor(SWT.COLOR_WHITE));
-		// lClock.setBackground(SWTResourceManager.getColor(SWT.COLOR_BLACK));
 		lClock.setFont(SWTResourceManager.getFont("Liberation Sans", 20, SWT.NORMAL));
 		lClock.setBounds(685, 546, 113, 52);
 		lClock.setText(new SimpleDateFormat("dd.MM.yy\nHH:mm:ss").format(new Date()));
@@ -508,7 +489,7 @@ public class ProdajaWindow {
 		}
 	}
 
-	private class LBlagajnaSelectionListener extends SelectionAdapter {
+	class LBlagajnaSelectionListener extends SelectionAdapter {
 		@Override
 		public void widgetDefaultSelected(SelectionEvent e) {
 			ObracunWindow ow = new ObracunWindow();
@@ -524,7 +505,7 @@ public class ProdajaWindow {
 		}
 	}
 
-	private class BtnZadnjiSelectionListener extends SelectionAdapter {
+	class BtnZadnjiSelectionListener extends SelectionAdapter {
 		@Override
 		public void widgetDefaultSelected(SelectionEvent e) {
 			Zadnji z = new Zadnji(shell);
