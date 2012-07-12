@@ -113,22 +113,22 @@ public class ProdajaWindow {
 	protected void screenToStavka() {
 		stavka.setOdPostaje(Postaja.get((Integer) cOdPostaje.getData()));
 		stavka.setDoPostaje(Postaja.get((Integer) cDoPostaje.getData()));
-		if (!Karta.get((Integer) cKarta.getData()).equals(stavka.getKarta())) {
-			stavka.setKarta(Karta.get((Integer) cKarta.getData()));
-			 Popust.setKartaStupac(Karta.get((Integer) cKarta.getData()), Starter.stupac);
-			 cPopust.setData(0);
-			 cPopust.setText(Popust.getList()[0]);
-		}
-
+		stavka.setKarta(Karta.get((Integer) cKarta.getData()));
 		stavka.setPopust(Popust.get((Integer) cPopust.getData()));
-		stavka.setCijena(textCijena.getText());
+		stavka.setJeZamjenska(btnZk.getSelection());
 		stavka.setProdajnoMjesto(ProdajnoMjesto.get((Integer) cProdMjesto.getData()));
 		stavka.setBrojKarte(textBrKarte.getText());
-		stavka.setJeZamjenska(btnZk.getSelection());
+		stavka.setCijena(textCijena.getText());
 	}
 
 	protected void stavkaToScreen() {
+		btnZk.setSelection(stavka.getJeZamjenska());
+		textCijena.setText(stavka.getProdajnaCijena().toString());
+		textRacun.setText(Stavka.getDescription());
+		lblUkupno.setText("Kn " + Stavka.getUkupno().toString());
 		if (stavka.getJeZamjenska()) {
+			btnZk.setBackground(SWTResourceManager.getColor(SWT.COLOR_RED));
+			btnZk.setForeground(SWTResourceManager.getColor(SWT.COLOR_RED));
 			cProdMjesto.setEnabled(true);
 			textBrKarte.setEnabled(true);
 			textCijena.setEnabled(true);
@@ -140,6 +140,8 @@ public class ProdajaWindow {
 			if (!textBrKarte.isListening(SWT.MouseDown))
 				textBrKarte.addMouseListener(mouseListener);
 		} else {
+			btnZk.setBackground(SWTResourceManager.getColor(SWT.COLOR_WIDGET_BACKGROUND));
+			btnZk.setForeground(SWTResourceManager.getColor(SWT.COLOR_WIDGET_FOREGROUND));
 			textCijena.removeMouseListener(mouseListener);
 			textBrKarte.removeMouseListener(mouseListener);
 			cProdMjesto.setData(0);
@@ -150,18 +152,6 @@ public class ProdajaWindow {
 			textBrKarte.setText(stavka.getBrojKarte());
 			cPopust.setEnabled(true);
 		}
-		textCijena.setText(stavka.getProdajnaCijena().toString());
-		btnZk.setSelection(stavka.getJeZamjenska());
-		if (btnZk.getSelection()) {
-			btnZk.setBackground(SWTResourceManager.getColor(SWT.COLOR_RED));
-			btnZk.setForeground(SWTResourceManager.getColor(SWT.COLOR_RED));
-		} else {
-			btnZk.setBackground(SWTResourceManager.getColor(SWT.COLOR_WIDGET_BACKGROUND));
-			btnZk.setForeground(SWTResourceManager.getColor(SWT.COLOR_WIDGET_FOREGROUND));
-		}
-		textRacun.setText(Stavka.getDescription());
-		lblUkupno.setText("Kn " + Stavka.getUkupno().toString());
-
 		if (Stavka.getCount() > 0) {
 			cOdPostaje.setEnabled(false);
 			cDoPostaje.setEnabled(false);
@@ -425,7 +415,6 @@ public class ProdajaWindow {
 				Integer index = (Integer) cKarta.getData();
 				Picker picker = new Picker(cKarta, Karta.getArrayList(), index);
 				cKarta = picker.open();
-
 				stavka.setKarta(Karta.get((Integer) cKarta.getData()));
 				Popust.setKartaStupac(Karta.get((Integer) cKarta.getData()), Starter.stupac);
 				cPopust.setData(0);
