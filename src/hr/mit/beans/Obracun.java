@@ -133,7 +133,7 @@ public class Obracun {
 	public static BigDecimal getSaldo() {
 		BigDecimal saldo = BigDecimal.ZERO;
 		try {
-			PreparedStatement ps = DbUtil.getConnection2().prepareStatement("SELECT sum(cena) FROM PTKTProdaja WHERE ObracunID IS NULL AND StatusZK != 1");
+			PreparedStatement ps = DbUtil.getConnection2().prepareStatement("SELECT sum(ZaPlatiti) FROM PTKTProdaja WHERE ObracunID IS NULL AND StatusZK != 1");
 			double ss = DbUtil.getSingleResultDouble(ps);
 			saldo = new BigDecimal(ss);
 			ps.close();
