@@ -9,7 +9,8 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class Karta {
-	private static ArrayList<Karta> kartaList = new ArrayList<Karta>();
+	private static ArrayList<Karta> kartaListMobilna = new ArrayList<Karta>();
+	private static ArrayList<Karta> kartaListZamjenska = new ArrayList<Karta>();
 	private Integer id;
 	private String naziv;
 	private Integer stVoznji;
@@ -28,10 +29,18 @@ public class Karta {
 
 	static {
 		try {
-			String sql = "Select a.id,a.kratkiOpis,stVoznji,NacinDolocanjaCene,TarifniRazredID,FiksnaCena,KMPogoja,PopustProcent,TipKarteID,FaktorCene from PTKTVozneKarte a  ORDER BY sifra";
+			String sql = "Select a.id,a.kratkiOpis,stVoznji,NacinDolocanjaCene,TarifniRazredID,FiksnaCena,KMPogoja,PopustProcent,TipKarteID,FaktorCene from PTKTVozneKarte a WHERE MobilnaProdaja = '1' ORDER BY sifra";
 			ResultSet rs = DbUtil.getConnection().createStatement().executeQuery(sql);
 			while (rs.next()) {
-				kartaList.add(new Karta(rs.getInt("ID"), rs.getString("kratkiOpis"), rs.getInt("stVoznji"), rs.getInt("NacinDolocanjaCene"), rs.getInt("TarifniRazredID"), rs.getDouble("FiksnaCena"), rs.getInt("KmPogoja"), rs
+				kartaListMobilna.add(new Karta(rs.getInt("ID"), rs.getString("kratkiOpis"), rs.getInt("stVoznji"), rs.getInt("NacinDolocanjaCene"), rs.getInt("TarifniRazredID"), rs.getDouble("FiksnaCena"), rs.getInt("KmPogoja"), rs
+						.getDouble("PopustProcent"), rs.getInt("TipKarteID"), rs.getDouble("FaktorCene")));
+			}
+			rs.close();
+			sql = "Select a.id,a.kratkiOpis,stVoznji,NacinDolocanjaCene,TarifniRazredID,FiksnaCena,KMPogoja,PopustProcent,TipKarteID,FaktorCene from PTKTVozneKarte a WHERE ZamjenskaKarta = '1' ORDER BY sifra";
+
+			rs = DbUtil.getConnection().createStatement().executeQuery(sql);
+			while (rs.next()) {
+				kartaListZamjenska.add(new Karta(rs.getInt("ID"), rs.getString("kratkiOpis"), rs.getInt("stVoznji"), rs.getInt("NacinDolocanjaCene"), rs.getInt("TarifniRazredID"), rs.getDouble("FiksnaCena"), rs.getInt("KmPogoja"), rs
 						.getDouble("PopustProcent"), rs.getInt("TipKarteID"), rs.getDouble("FaktorCene")));
 			}
 			rs.close();
@@ -55,15 +64,26 @@ public class Karta {
 		this.faktorCene = new BigDecimal(faktorCene);
 	}
 
-	public static String[] getList() {
-		String[] l = new String[kartaList.size()];
-		int x = 0;
-		for (Karta v : kartaList) {
-			l[x] = v.getNaziv();
-			x++;
-		}
-		return l;
-	}
+//	public static String[] getListMobilna() {
+//		String[] l = new String[kartaList.size()];
+//		int x = 0;
+//		for (Karta v : kartaList) {
+//			l[x] = v.getNaziv();
+//			x++;
+//		}
+//		return l;
+//	}
+//	
+//	public static String[] getListZamjenska() {
+//		String[] l = new String[kartaList.size()];
+//		int x = 0;
+//		for (Karta v : kartaList) {
+//			l[x] = v.getNaziv();
+//			x++;
+//		}
+//		return l;
+//	}
+	
 
 	public static Karta getByID(int id) {
 		for (Karta v : kartaList) {
@@ -120,7 +140,15 @@ public class Karta {
 		return faktorCene;
 	}
 
-	public static List<String> getArrayList() {
+	public static List<String> getArrayListMobilna() {
+		List<String> l = new ArrayList<String>();
+		for (Karta v : kartaList) {
+			l.add(v.getNaziv());
+		}
+		return l;
+	}
+
+	public static List<String> getArrayListZamjenska() {
 		List<String> l = new ArrayList<String>();
 		for (Karta v : kartaList) {
 			l.add(v.getNaziv());

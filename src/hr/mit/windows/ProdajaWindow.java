@@ -252,7 +252,7 @@ public class ProdajaWindow {
 		cKarta.setAlignment(SWT.LEFT);
 		cKarta.setFont(SWTResourceManager.getFont("Liberation Sans", 22, SWT.NORMAL));
 		cKarta.setBounds(5, 150, 390, 70);
-		cKarta.setText(Karta.getList()[0]);
+		cKarta.setText(Karta.getArrayListMobilna().get(0));
 		Popust.setKartaStupac(Karta.get(0), Starter.stupac);
 		cKarta.setData(0);
 
@@ -413,7 +413,11 @@ public class ProdajaWindow {
 				}
 			} else if (e.widget.equals(cKarta)) {
 				Integer index = (Integer) cKarta.getData();
-				Picker picker = new Picker(cKarta, Karta.getArrayList(), index);
+				Picker picker;
+				if (btnZk.getSelection())
+					picker = new Picker(cKarta, Karta.getArrayListZamjenska(), index);
+				else
+					picker = new Picker(cKarta, Karta.getArrayListMobilna(), index);
 				cKarta = picker.open();
 				stavka.setKarta(Karta.get((Integer) cKarta.getData()));
 				Popust.setKartaStupac(Karta.get((Integer) cKarta.getData()), Starter.stupac);
