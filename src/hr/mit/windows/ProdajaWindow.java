@@ -84,7 +84,7 @@ public class ProdajaWindow {
 
 		final Display display = Display.getDefault();
 		createContents();
-		stavka = new Stavka(Starter.stupac, Postaja.get((Integer) cOdPostaje.getData()), Postaja.get((Integer) cDoPostaje.getData()), Karta.get((Integer) cKarta.getData()), Popust.get((Integer) cPopust.getData()));
+		stavka = new Stavka(Starter.stupac, Postaja.get((Integer) cOdPostaje.getData()), Postaja.get((Integer) cDoPostaje.getData()), Karta.getMobilna((Integer) cKarta.getData()), Popust.get((Integer) cPopust.getData()));
 		stavka.setBrojKarte(String.valueOf(random));
 		screenToStavka();
 		stavkaToScreen();
@@ -113,7 +113,10 @@ public class ProdajaWindow {
 	protected void screenToStavka() {
 		stavka.setOdPostaje(Postaja.get((Integer) cOdPostaje.getData()));
 		stavka.setDoPostaje(Postaja.get((Integer) cDoPostaje.getData()));
-		stavka.setKarta(Karta.get((Integer) cKarta.getData()));
+		if (btnZk.getSelection()) 
+		stavka.setKarta(Karta.getZamjenska((Integer) cKarta.getData()));
+		else
+			stavka.setKarta(Karta.getMobilna((Integer) cKarta.getData()));
 		stavka.setPopust(Popust.get((Integer) cPopust.getData()));
 		stavka.setJeZamjenska(btnZk.getSelection());
 		stavka.setProdajnoMjesto(ProdajnoMjesto.get((Integer) cProdMjesto.getData()));
@@ -126,6 +129,7 @@ public class ProdajaWindow {
 		textCijena.setText(stavka.getProdajnaCijena().toString());
 		textRacun.setText(Stavka.getDescription());
 		lblUkupno.setText("Kn " + Stavka.getUkupno().toString());
+		cKarta.setText(stavka.getKarta().getNaziv());
 		if (stavka.getJeZamjenska()) {
 			btnZk.setBackground(SWTResourceManager.getColor(SWT.COLOR_RED));
 			btnZk.setForeground(SWTResourceManager.getColor(SWT.COLOR_RED));
@@ -253,7 +257,7 @@ public class ProdajaWindow {
 		cKarta.setFont(SWTResourceManager.getFont("Liberation Sans", 22, SWT.NORMAL));
 		cKarta.setBounds(5, 150, 390, 70);
 		cKarta.setText(Karta.getArrayListMobilna().get(0));
-		Popust.setKartaStupac(Karta.get(0), Starter.stupac);
+		Popust.setKartaStupac(Karta.getMobilna(0), Starter.stupac);
 		cKarta.setData(0);
 
 		cPopust = new Button(shell, SWT.READ_ONLY);
@@ -363,7 +367,7 @@ public class ProdajaWindow {
 		@Override
 		public void widgetSelected(SelectionEvent e) {
 			Stavka.add(stavka);
-			stavka = new Stavka(Starter.stupac, Postaja.get((Integer) cOdPostaje.getData()), Postaja.get((Integer) cDoPostaje.getData()), Karta.get((Integer) cKarta.getData()), Popust.get((Integer) cPopust.getData()));
+			stavka = new Stavka(Starter.stupac, Postaja.get((Integer) cOdPostaje.getData()), Postaja.get((Integer) cDoPostaje.getData()), Karta.getMobilna((Integer) cKarta.getData()), Popust.get((Integer) cPopust.getData()));
 			stavkaToScreen();
 			screenToStavka();
 		}
@@ -414,13 +418,16 @@ public class ProdajaWindow {
 			} else if (e.widget.equals(cKarta)) {
 				Integer index = (Integer) cKarta.getData();
 				Picker picker;
-				if (btnZk.getSelection())
+				if (btnZk.getSelection()){
 					picker = new Picker(cKarta, Karta.getArrayListZamjenska(), index);
-				else
+					stavka.setKarta(Karta.getZamjenska((Integer) cKarta.getData()));
+				}
+				else {
 					picker = new Picker(cKarta, Karta.getArrayListMobilna(), index);
+					stavka.setKarta(Karta.getMobilna((Integer) cKarta.getData()));
+					Popust.setKartaStupac(Karta.getMobilna((Integer) cKarta.getData()), Starter.stupac);
+				}
 				cKarta = picker.open();
-				stavka.setKarta(Karta.get((Integer) cKarta.getData()));
-				Popust.setKartaStupac(Karta.get((Integer) cKarta.getData()), Starter.stupac);
 				cPopust.setData(0);
 				cPopust.setText(Popust.getList()[0]);
 			} else if (e.widget.equals(btnZk)) {
@@ -431,9 +438,12 @@ public class ProdajaWindow {
 					btnZk.setBackground(SWTResourceManager.getColor(SWT.COLOR_RED));
 					btnZk.setForeground(SWTResourceManager.getColor(SWT.COLOR_RED));
 					stavka.setCijena(BigDecimal.ZERO);
+					stavka.setKarta(Karta.getZamjenska(0));
+					
 				} else {
 					btnZk.setBackground(SWTResourceManager.getColor(SWT.COLOR_WIDGET_BACKGROUND));
 					btnZk.setForeground(SWTResourceManager.getColor(SWT.COLOR_WIDGET_FOREGROUND));
+					stavka.setKarta(Karta.getMobilna(0));
 				}
 				stavka.setJeZamjenska(btnZk.getSelection());
 			} else if (e.widget.equals(cPopust)) {

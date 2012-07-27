@@ -86,15 +86,22 @@ public class Karta {
 	
 
 	public static Karta getByID(int id) {
-		for (Karta v : kartaList) {
+		for (Karta v : kartaListMobilna) {
+			if (v.getId().equals(id))
+				return v;
+		}
+		for (Karta v : kartaListZamjenska) {
 			if (v.getId().equals(id))
 				return v;
 		}
 		return null;
 	}
 
-	public static Karta get(int index) {
-		return kartaList.get(index);
+	public static Karta getMobilna(int index) {
+		return kartaListMobilna.get(index);
+	}
+	public static Karta getZamjenska(int index) {
+		return kartaListZamjenska.get(index);
 	}
 
 	public Integer getId() {
@@ -142,7 +149,7 @@ public class Karta {
 
 	public static List<String> getArrayListMobilna() {
 		List<String> l = new ArrayList<String>();
-		for (Karta v : kartaList) {
+		for (Karta v : kartaListMobilna) {
 			l.add(v.getNaziv());
 		}
 		return l;
@@ -150,7 +157,7 @@ public class Karta {
 
 	public static List<String> getArrayListZamjenska() {
 		List<String> l = new ArrayList<String>();
-		for (Karta v : kartaList) {
+		for (Karta v : kartaListZamjenska) {
 			l.add(v.getNaziv());
 		}
 		return l;
