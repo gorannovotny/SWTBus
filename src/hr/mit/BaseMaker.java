@@ -27,7 +27,23 @@ public class BaseMaker {
 		Connection con1 = null;
 		Connection con2 = null;
 		Connection con3 = null;
-		Connection con4 = null;
+		boolean FMakeVR = false;
+		boolean FMakeMesecne = false;
+		boolean FMakeZaduzenja = false;
+
+		for (String s : args) {
+			// System.out.println(s);
+			if (s.equalsIgnoreCase("VR")) {
+				FMakeVR = true;
+			}
+			if (s.equalsIgnoreCase("MES")) {
+				FMakeMesecne = true;
+			}
+			if (s.equalsIgnoreCase("ZAD")) {
+				FMakeZaduzenja = true;
+			}
+		}
+
 		long stoperica = System.currentTimeMillis();
 		try {
 			Class.forName("org.sqlite.JDBC");
@@ -35,37 +51,42 @@ public class BaseMaker {
 			con1 = DriverManager.getConnection("jdbc:jtds:sqlserver://tehnoinspekt.dyndns.org:1433;DatabaseName=MitSql", "sa", "SaKlik2003");
 			con2 = DriverManager.getConnection("jdbc:sqlite:baza.db");
 			con3 = DriverManager.getConnection("jdbc:sqlite:prodaja.db");
-			con4 = DriverManager.getConnection("jdbc:sqlite:mesecne.db");
 			con2.setAutoCommit(false);
 			con3.setAutoCommit(false);
-			con4.setAutoCommit(false);
-
-			doSkValute(con1, con2);
-			doPTVozniRedi(con1, con2);
-			doPTVarijanteVR(con1, con2);
-			doPTStupciVR(con1, con2);
-			doPTPostaje(con1, con2);
-			doPTPostajeVR(con1, con2);
-			doPTPostajeVarijantVR(con1, con2);
-			doPTCasiVoznjeVR(con1, con2);
-			doPTKTVozneKarte(con1, con2);
-			doPTVozaci(con1, con2);
-			doPTKTTarifniRazrediCenik(con1, con2);
-			doPTKTVrstePopustov(con1, con2);
-			doPTIzjemeCenikaVR(con1, con2);
-			doPTKTProdaja(con1, con3);
-			doPTKTTipiKarti(con1, con2);
-			doPTKTPopusti(con1, con2);
-			doPromVozila(con1, con2);
-			doPTProdajnaMesta(con1, con2);
-			doPTStupciVRMirovanja(con1, con2);
-			doPTPrevozniki(con1, con2);
-			doPTDneviVoznje(con1, con2);
-			doPTMesRelacije(con1, con2);
-			doPTMesOsebe(con1, con2);
-			doPTMesCode(con1, con2);
-			doPTMesProdaja(con1, con2);
-			doPromAlmexMasine(con1, con2);
+			if (FMakeVR) {
+				doSkValute(con1, con2);
+				doPTVozniRedi(con1, con2);
+				doPTVarijanteVR(con1, con2);
+				doPTStupciVR(con1, con2);
+				doPTPostaje(con1, con2);
+				doPTPostajeVR(con1, con2);
+				doPTPostajeVarijantVR(con1, con2);
+				doPTCasiVoznjeVR(con1, con2);
+				doPTKTVozneKarte(con1, con2);
+				doPTVozaci(con1, con2);
+				doPTKTTarifniRazrediCenik(con1, con2);
+				doPTKTVrstePopustov(con1, con2);
+				doPTIzjemeCenikaVR(con1, con2);
+				doPTKTProdaja(con1, con3);
+				doPTKTTipiKarti(con1, con2);
+				doPTKTPopusti(con1, con2);
+				doPromVozila(con1, con2);
+				doPTProdajnaMesta(con1, con2);
+				doPTStupciVRMirovanja(con1, con2);
+				doPTPrevozniki(con1, con2);
+				doPTDneviVoznje(con1, con2);
+				doPromAlmexMasine(con1, con2);
+			}
+			if (FMakeMesecne) {
+				doPTMesRelacije(con1, con2);
+				doPTMesOsebe(con1, con2);
+				doPTMesCode(con1, con2);
+				doPTMesProdaja(con1, con2);
+			}
+			if (FMakeZaduzenja) {
+				doPTMobilnaZaduzenja(con1, con2);
+			}
+			doPTMobileSetup(con1, con2);
 			doPTVerzija(con1, con2);
 		} catch (Exception e) {
 			e.printStackTrace();
@@ -76,8 +97,6 @@ public class BaseMaker {
 				con1.close();
 			if (con3 != null)
 				con3.close();
-			if (con4 != null)
-				con4.close();
 			System.out.println(String.format("Trajanje: %d ms", (System.currentTimeMillis() - stoperica)));
 		}
 
@@ -86,8 +105,8 @@ public class BaseMaker {
 	private static void doPTVozniRedi(Connection con1, Connection con2) throws SQLException {
 		int i = 0;
 		con2.createStatement().executeUpdate("drop table if exists PTVozniRedi;");
-		con2.createStatement().executeUpdate("CREATE TABLE PTVozniRedi(ID INT NOT NULL,Firma INT NOT NULL,Sifra VARCHAR(12)  NOT NULL,OznakaLinije VARCHAR(40) ,PrivitakDozvole VARCHAR(20) ,Registracija VARCHAR(20) ,Opis1 VARCHAR(80)  ,Opis2 VARCHAR(80)  ,VeljaOd DATETIME,VeljaDo DATETIME, SifraOznakeVR INT, VrstaVR INT,KategorijaPrevoza INT,VrstaLinije INT,VrstaPrevoza INT,NacinPrevoza INT,VrstaPosadeID INT,OE INT,PrevoznikID INT,Kooperacija INT,Pool INT,DOSVRID INT,Stat1 INT,PRIMARY KEY (ID))");
-		PreparedStatement ps = con2.prepareStatement("INSERT INTO PTVozniRedi VALUES (?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)");
+		con2.createStatement().executeUpdate("CREATE TABLE PTVozniRedi(ID INT NOT NULL,Firma INT NOT NULL,Sifra VARCHAR(12)  NOT NULL,OznakaLinije VARCHAR(40) ,PrivitakDozvole VARCHAR(20) ,Registracija VARCHAR(20) ,Opis1 VARCHAR(80)  ,Opis2 VARCHAR(80)  ,VeljaOd DATETIME,VeljaDo DATETIME, SifraOznakeVR INT, VrstaVR INT,KategorijaPrevoza INT,VrstaLinije INT,VrstaPrevoza INT,NacinPrevoza INT,VrstaPosadeID INT,PrevoznikID INT,Kooperacija INT,Pool INT,DOSVRID INT,Stat1 INT,PRIMARY KEY (ID))");
+		PreparedStatement ps = con2.prepareStatement("INSERT INTO PTVozniRedi VALUES (?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)");
 		ResultSet rs = con1.createStatement().executeQuery("select * from PtVozniredi where VrstaVR=1 and veljaDo >= GETDATE()"); // svi danasnji i buduci vozni redi
 		while (rs.next()) {
 			ps.setInt(1, rs.getInt("ID"));
@@ -107,12 +126,11 @@ public class BaseMaker {
 			ps.setInt(15, rs.getInt("VrstaPrevoza"));
 			ps.setInt(16, rs.getInt("NacinPrevoza"));
 			ps.setInt(17, rs.getInt("VrstaPosadeID"));
-			ps.setInt(18, rs.getInt("OE"));
-			ps.setInt(19, rs.getInt("PrevoznikID"));
-			ps.setInt(20, rs.getInt("Kooperacija"));
-			ps.setInt(21, rs.getInt("Pool"));
-			ps.setInt(22, rs.getInt("DOSVRID"));
-			ps.setInt(23, rs.getInt("Status"));
+			ps.setInt(18, rs.getInt("PrevoznikID"));
+			ps.setInt(19, rs.getInt("Kooperacija"));
+			ps.setInt(20, rs.getInt("Pool"));
+			ps.setInt(21, rs.getInt("DOSVRID"));
+			ps.setInt(22, rs.getInt("Status"));
 			ps.addBatch();
 			i++;
 		}
@@ -149,8 +167,8 @@ public class BaseMaker {
 	private static void doPTStupciVR(Connection con1, Connection con2) throws SQLException {
 		int i = 0;
 		con2.createStatement().executeUpdate("drop table if exists PTStupciVR;");
-		con2.createStatement().executeUpdate("CREATE TABLE PTStupciVR (ID INT NOT NULL,Firma INT NOT NULL,VozniRedID INT NOT NULL,VarijantaVRID INT NOT NULL,ZapSt VARCHAR NOT NULL,SmerVoznje VARCHAR,DneviVoznjeID INT,PrevoznikID INT,VrstaPrevoza INT,VrstaBusa INT,StBusov INT,NacinPrevoza INT,VrstaPosadeID INT,VremeOdhoda FLOAT,OE INT,VeljaOd DATETIME,VeljaDo DATETIME,StatusERR INT,DOSID INT,PRIMARY KEY (ID),FOREIGN KEY (VarijantaVRID) REFERENCES PTVarijanteVR (ID))");
-		PreparedStatement ps = con2.prepareStatement("INSERT INTO PTStupciVR VALUES (?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)");
+		con2.createStatement().executeUpdate("CREATE TABLE PTStupciVR (ID INT NOT NULL,Firma INT NOT NULL,VozniRedID INT NOT NULL,VarijantaVRID INT NOT NULL,ZapSt VARCHAR NOT NULL,SmerVoznje VARCHAR,DneviVoznjeID INT,PrevoznikID INT,VrstaPrevoza INT,VrstaBusa INT,StBusov INT,NacinPrevoza INT,VrstaPosadeID INT,VremeOdhoda FLOAT, VeljaOd DATETIME,VeljaDo DATETIME,StatusERR INT,DOSID INT,PRIMARY KEY (ID),FOREIGN KEY (VarijantaVRID) REFERENCES PTVarijanteVR (ID))");
+		PreparedStatement ps = con2.prepareStatement("INSERT INTO PTStupciVR VALUES (?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)");
 		ResultSet rs = con1.createStatement().executeQuery("SELECT * FROM PTStupciVR WHERE VarijantaVRID IN (select ID from PTVarijanteVR where VozniRedID IN (SELECT ID FROM PTVozniRedi WHERE  VrstaVR=1 and veljaDo >= GETDATE())) ");
 		while (rs.next()) {
 			ps.setInt(1, rs.getInt("ID"));
@@ -167,11 +185,10 @@ public class BaseMaker {
 			ps.setInt(12, rs.getInt("NacinPrevoza"));
 			ps.setInt(13, rs.getInt("VrstaPosadeID"));
 			ps.setDouble(14, rs.getDouble("VremeOdhoda"));
-			ps.setInt(15, rs.getInt("OE"));
-			ps.setString(16, rs.getString("VeljaOd"));
-			ps.setString(17, rs.getString("VeljaDo"));
-			ps.setInt(18, rs.getInt("StatusERR"));
-			ps.setInt(19, rs.getInt("DOSID"));
+			ps.setString(15, rs.getString("VeljaOd"));
+			ps.setString(16, rs.getString("VeljaDo"));
+			ps.setInt(17, rs.getInt("StatusERR"));
+			ps.setInt(18, rs.getInt("DOSID"));
 			ps.addBatch();
 			i++;
 		}
@@ -774,6 +791,37 @@ public class BaseMaker {
 		i++;
 		con2.commit();
 		System.out.println(String.format("%-26s -> %7d", "PTVersion", i));
+	}
+
+	private static void doPTMobileSetup(Connection con1, Connection con2) throws SQLException {
+		int i = 0;
+		con2.createStatement().executeUpdate("Create table if not exists PTMobileSetup(KeyString varchar(30), KeyValue varchar(30), PRIMARY KEY (KeyString))");
+		i++;
+		con2.commit();
+		System.out.println(String.format("%-26s -> %7d", "PTMobileSetup", i));
+	}
+
+	private static void doPTMobilnaZaduzenja(Connection con1, Connection con2) throws SQLException {
+		int i = 0;
+		con2.createStatement().executeUpdate("Drop table if exists PTMobilnaZaduzenja;");
+		con2.createStatement().executeUpdate("CREATE TABLE PTMobilnaZaduzenja(VozacID int, ZBVPID, Datum DATETIME, OdBroja int, DoBroja Int, Cena FLOAT(53), SifraValute int)");
+		con2.createStatement().executeUpdate("CREATE INDEX [IXMZVozac] ON [PTMobilnaZaduzenja] ([VozacID])");
+		PreparedStatement ps = con2.prepareStatement("INSERT INTO PTMobilnaZaduzenja VALUES (?,?,?,?,?,?,?)");
+		ResultSet rs = con1.createStatement().executeQuery("select OBV.VrstaPrometaID, OBR.Datum, OBR.Vozac1ID as VozacID, OBV.zaduzenjeOdBroja as OdBroja, OBV.zaduzenjeDoBroja as DoBroja, " + "OBV.zaduzenjeDoBroja - (coalesce(OBV.ZaduzenjeKomada,0) - coalesce(OBV.BrojKarata,0) - coalesce(OBV.RazduzenjeKomada,0)) + 1 as _OdBroja,Coalesce(OBV.ZaduzenjeCena,0) as Cena, " + "OBV.SifraValute,(coalesce(OBV.ZaduzenjeKomada,0) - coalesce(OBV.BrojKarata,0) - coalesce(OBV.RazduzenjeKomada,0)) as StanjeZaduzenja " + "from ZBObracuniVrstice OBV " + "inner join ZBObracuni OBR ON OBR.ID=OBV.IDDokumenta " + "inner join ZBVrstePrometa VP ON OBV.VrstaPrometaID=VP.ID " + "where VP.Zaduzenja=1 and OBV.ZaduzenjeKomada is not null " + "and (OBV.ZaduzenjeKomada - Coalesce(OBV.BrojKarata,0) - Coalesce(OBV.RazduzenjeKomada,0) > 0)");
+		while (rs.next()) {
+			ps.setInt(1, rs.getInt("VozacID"));
+			ps.setInt(3, rs.getInt("VrstaPrometaID"));
+			ps.setString(3, rs.getString("Datum"));
+			ps.setInt(4, rs.getInt("_OdBroja")); // calc od broja
+			ps.setInt(5, rs.getInt("DoBroja"));
+			ps.setDouble(6, rs.getDouble("Cena"));
+			ps.setInt(7, rs.getInt("SifraValute"));
+			ps.addBatch();
+			i++;
+		}
+		ps.executeBatch();
+		con2.commit();
+		System.out.println(String.format("%-26s -> %7d", "PTMobilnaZaduzenja", i));
 	}
 
 }
