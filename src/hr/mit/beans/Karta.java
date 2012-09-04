@@ -96,7 +96,23 @@ public class Karta {
 		}
 		return null;
 	}
+	
+	public Integer getIndexMobilna() {
+		for (int i = 0; i < kartaListMobilna.size(); i++) {
+			if (this == kartaListMobilna.get(i))
+					return i;
+		}
+		return null;
+	}
 
+	public Integer getIndexZamjenska() {
+		for (int i = 0; i < kartaListZamjenska.size(); i++) {
+			if (this == kartaListZamjenska.get(i))
+					return i;
+		}
+		return null;
+	}
+	
 	public static Karta getMobilna(int index) {
 		return kartaListMobilna.get(index);
 	}

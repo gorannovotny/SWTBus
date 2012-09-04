@@ -32,14 +32,11 @@ public class BaseMaker {
 		boolean FMakeZaduzenja = false;
 
 		for (String s : args) {
-			// System.out.println(s);
 			if (s.equalsIgnoreCase("VR")) {
 				FMakeVR = true;
-			}
-			if (s.equalsIgnoreCase("MES")) {
+			} else if (s.equalsIgnoreCase("MES")) {
 				FMakeMesecne = true;
-			}
-			if (s.equalsIgnoreCase("ZAD")) {
+			} else if (s.equalsIgnoreCase("ZAD")) {
 				FMakeZaduzenja = true;
 			}
 		}
@@ -84,6 +81,7 @@ public class BaseMaker {
 				doPTMesProdaja(con1, con2);
 			}
 			if (FMakeZaduzenja) {
+				doZBVrstePrometa(con1, con2);
 				doPTMobilnaZaduzenja(con1, con2);
 			}
 			doPTMobileSetup(con1, con2);
@@ -301,8 +299,8 @@ public class BaseMaker {
 	private static void doPTKTVozneKarte(Connection con1, Connection con2) throws SQLException {
 		int i = 0;
 		con2.createStatement().executeUpdate("drop table if exists PTKTVozneKarte");
-		con2.createStatement().executeUpdate("CREATE TABLE PTKTVozneKarte(ID INT NOT NULL , Firma INT NOT NULL,Sifra VARCHAR(10) NOT NULL,Oznaka VARCHAR(16) ,TipKarteID INT NOT NULL,TarifniRazredID INT,Opis VARCHAR(50) ,StVoznji INT,SmerVoznje INT,OdDanaM INT,DoDanaM INT,VeljaDniOdProdaje INT,Status INT,PrevoznikID INT,NacinDolocanjaCene INT,KMPogoja INT,FiksnaCena FLOAT(53),FaktorCene FLOAT(53),PopustProcent FLOAT(53),SifraValute INT,RoundN FLOAT(53),MobilnaProdaja INT,InternetProdaja INT,DOSID INT,CenaRezervacije FLOAT(53),KmRezervacije INT,KratkiOpis VARCHAR(20), ZamjenskaKarta int, PRIMARY KEY (ID))");
-		PreparedStatement ps = con2.prepareStatement("INSERT INTO PTKTVozneKarte VALUES (?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)");
+		con2.createStatement().executeUpdate("CREATE TABLE PTKTVozneKarte(ID INT NOT NULL , Firma INT NOT NULL,Sifra VARCHAR(10) NOT NULL,Oznaka VARCHAR(16) ,TipKarteID INT NOT NULL,TarifniRazredID INT,Opis VARCHAR(50) ,StVoznji INT,SmerVoznje INT,OdDanaM INT,DoDanaM INT,VeljaDniOdProdaje INT,Status INT,PrevoznikID INT,NacinDolocanjaCene INT,KMPogoja INT,FiksnaCena FLOAT(53),FaktorCene FLOAT(53),PopustProcent FLOAT(53),SifraValute INT,RoundN FLOAT(53),MobilnaProdaja INT,InternetProdaja INT,DOSID INT,CenaRezervacije FLOAT(53),KmRezervacije INT,KratkiOpis VARCHAR(20), ZamjenskaKarta int, ZBVPID int, PRIMARY KEY (ID))");
+		PreparedStatement ps = con2.prepareStatement("INSERT INTO PTKTVozneKarte VALUES (?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)");
 		ResultSet rs = con1.createStatement().executeQuery("SELECT * FROM PTKTVozneKarte");
 		while (rs.next()) {
 			ps.setInt(1, rs.getInt("ID"));
@@ -333,6 +331,7 @@ public class BaseMaker {
 			ps.setInt(26, rs.getInt("KmRezervacije"));
 			ps.setString(27, rs.getString("KratkiOpis"));
 			ps.setInt(28, rs.getInt("ZamjenskaKarta"));
+			ps.setInt(29, rs.getInt("ZBVPID"));
 			ps.addBatch();
 			i++;
 		}
@@ -748,7 +747,7 @@ public class BaseMaker {
 		Date Datum = cal.getTime();
 
 		con2.createStatement().executeUpdate("drop table if exists PTMesProdaja;");
-		con2.createStatement().executeUpdate("CREATE TABLE PTMesPRodaja(ID INT NOT NULL,Firma INT NOT NULL,SifraMarkice int not null" + ",PER varchar(7) not null, MesOsebaID not null, PrevoznikID int, TipKarteID int, VoznaKartaID int" + ",MesRelacijaID not null, DistancaM int, BrVoznji int, PcenaKarte FLOAT(53), ZaPlatiti FLOAT(53)" + ",Datum DateTime, Storno int, Duplikat int, ProdajnoMestoID int" + ",VeljaOdDanaMes Smallint, VeljaDoDanaMes smallint, VeljaDniOdProdaje smallint " + ",PRIMARY KEY (ID)" + ",FOREIGN KEY (MesOsebaID)    REFERENCES PTMesUporabniki (ID) " + ",FOREIGN KEY (MesRelacijaID) REFERENCES PTMesRelacije (ID) " + ")");
+		con2.createStatement().executeUpdate("CREATE TABLE PTMesProdaja(ID INT NOT NULL,Firma INT NOT NULL,SifraMarkice int not null" + ",PER varchar(7) not null, MesOsebaID not null, PrevoznikID int, TipKarteID int, VoznaKartaID int" + ",MesRelacijaID not null, DistancaM int, BrVoznji int, PcenaKarte FLOAT(53), ZaPlatiti FLOAT(53)" + ",Datum DateTime, Storno int, Duplikat int, ProdajnoMestoID int" + ",VeljaOdDanaMes Smallint, VeljaDoDanaMes smallint, VeljaDniOdProdaje smallint " + ",PRIMARY KEY (ID)" + ",FOREIGN KEY (MesOsebaID)    REFERENCES PTMesUporabniki (ID) " + ",FOREIGN KEY (MesRelacijaID) REFERENCES PTMesRelacije (ID) " + ")");
 		con2.createStatement().executeUpdate("CREATE INDEX [IXMesOsebaID] ON [PTMesProdaja] ([MesOsebaID],  [Firma])");
 		con2.createStatement().executeUpdate("CREATE INDEX [IXMesMarkica] ON [PTMesProdaja] ([SifraMarkice],[Firma])");
 
@@ -795,7 +794,7 @@ public class BaseMaker {
 
 	private static void doPTMobileSetup(Connection con1, Connection con2) throws SQLException {
 		int i = 0;
-		con2.createStatement().executeUpdate("Create table if not exists PTMobileSetup(KeyString varchar(30), KeyValue varchar(30), PRIMARY KEY (KeyString))");
+		con2.createStatement().executeUpdate("Create table if not exists PTMobileSetup(KeyName varchar(30), KeyValue varchar(30), PRIMARY KEY (KeyName))");
 		i++;
 		con2.commit();
 		System.out.println(String.format("%-26s -> %7d", "PTMobileSetup", i));
@@ -810,7 +809,7 @@ public class BaseMaker {
 		ResultSet rs = con1.createStatement().executeQuery("select OBV.VrstaPrometaID, OBR.Datum, OBR.Vozac1ID as VozacID, OBV.zaduzenjeOdBroja as OdBroja, OBV.zaduzenjeDoBroja as DoBroja, " + "OBV.zaduzenjeDoBroja - (coalesce(OBV.ZaduzenjeKomada,0) - coalesce(OBV.BrojKarata,0) - coalesce(OBV.RazduzenjeKomada,0)) + 1 as _OdBroja,Coalesce(OBV.ZaduzenjeCena,0) as Cena, " + "OBV.SifraValute,(coalesce(OBV.ZaduzenjeKomada,0) - coalesce(OBV.BrojKarata,0) - coalesce(OBV.RazduzenjeKomada,0)) as StanjeZaduzenja " + "from ZBObracuniVrstice OBV " + "inner join ZBObracuni OBR ON OBR.ID=OBV.IDDokumenta " + "inner join ZBVrstePrometa VP ON OBV.VrstaPrometaID=VP.ID " + "where VP.Zaduzenja=1 and OBV.ZaduzenjeKomada is not null " + "and (OBV.ZaduzenjeKomada - Coalesce(OBV.BrojKarata,0) - Coalesce(OBV.RazduzenjeKomada,0) > 0)");
 		while (rs.next()) {
 			ps.setInt(1, rs.getInt("VozacID"));
-			ps.setInt(3, rs.getInt("VrstaPrometaID"));
+			ps.setInt(2, rs.getInt("VrstaPrometaID"));
 			ps.setString(3, rs.getString("Datum"));
 			ps.setInt(4, rs.getInt("_OdBroja")); // calc od broja
 			ps.setInt(5, rs.getInt("DoBroja"));
@@ -822,6 +821,26 @@ public class BaseMaker {
 		ps.executeBatch();
 		con2.commit();
 		System.out.println(String.format("%-26s -> %7d", "PTMobilnaZaduzenja", i));
+	}
+
+	// ***** kodovi za iskaznice, rfid kartice i sl ********
+	private static void doZBVrstePrometa(Connection con1, Connection con2) throws SQLException {
+		int i = 0;
+		con2.createStatement().executeUpdate("drop table if exists ZBVrstePrometa;");
+		con2.createStatement().executeUpdate("CREATE TABLE ZBVrstePrometa(ID INT NOT NULL, Sifra int not null, Naziv varchar(40), Zaduzenja int, PRIMARY KEY (ID))");
+		PreparedStatement ps = con2.prepareStatement("INSERT INTO ZBVrstePrometa VALUES (?,?,?,?)");
+		ResultSet rs = con1.createStatement().executeQuery("SELECT * FROM ZbVrstePrometa Where Zaduzenja=1"); // samo oni koji se zaduzjuju
+		while (rs.next()) {
+			ps.setInt(1, rs.getInt("ID"));
+			ps.setInt(2, rs.getInt("Sifra"));
+			ps.setString(3, rs.getString("Naziv"));
+			ps.setInt(4, rs.getInt("Zaduzenja"));
+			ps.addBatch();
+			i++;
+		}
+		ps.executeBatch();
+		con2.commit();
+		System.out.println(String.format("%-26s -> %7d", "ZBVrstePrometa", i));
 	}
 
 }
