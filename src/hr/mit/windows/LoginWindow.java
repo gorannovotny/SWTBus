@@ -39,7 +39,8 @@ public class LoginWindow {
 	private Text tLinija;
 	private Button btnNastavak;
 	private Button btnGasenje;
-
+	private Button btnPrintTest;
+	
 	protected Label lOpisVozilo;
 	protected Label lOpisVozac;
 	protected Label lOpisLinije;
@@ -146,16 +147,22 @@ public class LoginWindow {
 		btnUcitaj.setFont(SWTResourceManager.getFont("Liberation Sans", 20, SWT.NORMAL));
 		btnUcitaj.setBounds(5, 486, 150, 50);
 
-		btnNastavak = new Button(shlPrijava, SWT.CENTER);
-		btnNastavak.setText("Nastavak");
-		btnNastavak.setFont(SWTResourceManager.getFont("Liberation Sans", 20, SWT.NORMAL));
-		btnNastavak.setBounds(638, 486, 150, 50);
+		btnPrintTest = new Button(shlPrijava, SWT.NONE);
+		btnPrintTest.addSelectionListener(new BtnPrintTestSelectionListener());
+		btnPrintTest.setText("Print Test");
+		btnPrintTest.setFont(SWTResourceManager.getFont("Liberation Sans", 20, SWT.NORMAL));
+		btnPrintTest.setBounds(210, 486, 150, 50);
 
 		btnGasenje = new Button(shlPrijava, SWT.NONE);
 		btnGasenje.addSelectionListener(new BtnGasenjeSelectionListener());
 		btnGasenje.setText("Gašenje");
 		btnGasenje.setFont(SWTResourceManager.getFont("Liberation Sans", 20, SWT.NORMAL));
-		btnGasenje.setBounds(317, 486, 150, 50);
+		btnGasenje.setBounds(420, 486, 150, 50);
+
+		btnNastavak = new Button(shlPrijava, SWT.CENTER);
+		btnNastavak.setText("Nastavak");
+		btnNastavak.setFont(SWTResourceManager.getFont("Liberation Sans", 20, SWT.NORMAL));
+		btnNastavak.setBounds(638, 486, 150, 50);
 
 		tVozac.addModifyListener(new TVozacModifyListener());
 		tVozac.setText("117");
@@ -181,6 +188,23 @@ public class LoginWindow {
 	}
 
 	private class BtnGasenjeSelectionListener extends SelectionAdapter {
+		@Override
+		public void widgetSelected(SelectionEvent e) {
+			shlPrijava.dispose();
+			if (new File(".shutdown").exists()) {
+				try {
+					Runtime.getRuntime().exec("/sbin/shutdown now");
+				} catch (IOException e1) {
+					throw new RuntimeException(e1);
+				}
+			} else {
+				shlPrijava.dispose();
+
+			}
+		}
+	}
+
+	private class BtnPrintTestSelectionListener extends SelectionAdapter {
 		@Override
 		public void widgetSelected(SelectionEvent e) {
 			shlPrijava.dispose();
