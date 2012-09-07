@@ -28,39 +28,34 @@ public class BaseMaker {
 		Connection con2 = null;
 		Connection con3 = null;
 		boolean FMakeVR = false;
-		boolean FMakeMesecne   = false;
+		boolean FMakeMesecne = false;
 		boolean FMakeZaduzenja = false;
-		boolean FAPConnection  = false;
+		boolean FAPConnection = false;
 
 		for (String s : args) {
 			// System.out.println(s);
 			if (s.equalsIgnoreCase("/ALL")) {
-				FMakeVR        = true;
-				FMakeMesecne   = true;
-				FMakeZaduzenja = true;
-			} else 
-			if (s.equalsIgnoreCase("/VR")) {
-					FMakeVR = true;
-			} else 
-			if (s.equalsIgnoreCase("/MES")) {
+				FMakeVR = true;
 				FMakeMesecne = true;
-			} else 
-			if (s.equalsIgnoreCase("/ZAD")) {
-					FMakeZaduzenja = true;
-			} else 
-				if (s.equalsIgnoreCase("/APCON")) {
-				    FAPConnection = true;
-			} else
-			if (s.equalsIgnoreCase("/?")) {
-					System.out.println("Parametri:");
-					System.out.println(String.format("%-8s - %-30s", "/ALL", "Prenose se svi podaci"));
-					System.out.println(String.format("%-8s - %-30s", "/VR", "Vozni redi"));
-					System.out.println(String.format("%-8s - %-30s", "/MES", "Mjesecne karte"));
-					System.out.println(String.format("%-8s - %-30s", "/ZAD", "Zaduzenja vozaca"));
-					System.out.println(String.format("%-8s - %-30s", "/APCON", "AP server konekcija"));
-					return;
-			} 
-			
+				FMakeZaduzenja = true;
+			} else if (s.equalsIgnoreCase("/VR")) {
+				FMakeVR = true;
+			} else if (s.equalsIgnoreCase("/MES")) {
+				FMakeMesecne = true;
+			} else if (s.equalsIgnoreCase("/ZAD")) {
+				FMakeZaduzenja = true;
+			} else if (s.equalsIgnoreCase("/APCON")) {
+				FAPConnection = true;
+			} else if (s.equalsIgnoreCase("/?")) {
+				System.out.println("Parametri:");
+				System.out.println(String.format("%-8s - %-30s", "/ALL", "Prenose se svi podaci"));
+				System.out.println(String.format("%-8s - %-30s", "/VR", "Vozni redi"));
+				System.out.println(String.format("%-8s - %-30s", "/MES", "Mjesecne karte"));
+				System.out.println(String.format("%-8s - %-30s", "/ZAD", "Zaduzenja vozaca"));
+				System.out.println(String.format("%-8s - %-30s", "/APCON", "AP server konekcija"));
+				return;
+			}
+
 		}
 
 		long stoperica = System.currentTimeMillis();
@@ -68,10 +63,9 @@ public class BaseMaker {
 			Class.forName("org.sqlite.JDBC");
 			Class.forName("net.sourceforge.jtds.jdbc.Driver");
 			if (FAPConnection) {
-				   con1 = DriverManager.getConnection("jdbc:jtds:sqlserver://77.237.120.229:1433;DatabaseName=APSql", "sa", "klik2003");
-			} else 
-			{
-				   con1 = DriverManager.getConnection("jdbc:jtds:sqlserver://tehnoinspekt.dyndns.org:1433;DatabaseName=MitSql", "sa", "SaKlik2003");
+				con1 = DriverManager.getConnection("jdbc:jtds:sqlserver://77.237.120.229:1433;DatabaseName=APSql", "sa", "klik2003");
+			} else {
+				con1 = DriverManager.getConnection("jdbc:jtds:sqlserver://tehnoinspekt.dyndns.org:1433;DatabaseName=MitSql", "sa", "SaKlik2003");
 			}
 			con2 = DriverManager.getConnection("jdbc:sqlite:baza.db");
 			con3 = DriverManager.getConnection("jdbc:sqlite:prodaja.db");

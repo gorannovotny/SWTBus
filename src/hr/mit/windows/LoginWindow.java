@@ -1,13 +1,16 @@
 package hr.mit.windows;
 
 import hr.mit.Starter;
+import hr.mit.beans.Obracun;
 import hr.mit.beans.Stupac;
 import hr.mit.beans.Vozac;
 import hr.mit.beans.Vozilo;
 import hr.mit.utils.DbUtil;
 import hr.mit.utils.FileChecksum;
+import hr.mit.utils.PrintUtils;
 
 import java.io.File;
+import java.io.FileWriter;
 import java.io.IOException;
 
 import org.eclipse.swt.SWT;
@@ -40,7 +43,7 @@ public class LoginWindow {
 	private Button btnNastavak;
 	private Button btnGasenje;
 	private Button btnPrintTest;
-	
+
 	protected Label lOpisVozilo;
 	protected Label lOpisVozac;
 	protected Label lOpisLinije;
@@ -207,17 +210,34 @@ public class LoginWindow {
 	private class BtnPrintTestSelectionListener extends SelectionAdapter {
 		@Override
 		public void widgetSelected(SelectionEvent e) {
-			shlPrijava.dispose();
-			if (new File(".shutdown").exists()) {
-				try {
-					Runtime.getRuntime().exec("/sbin/shutdown now");
-				} catch (IOException e1) {
-					throw new RuntimeException(e1);
-				}
-			} else {
-				shlPrijava.dispose();
+			StringBuffer sb = new StringBuffer();
+			sb.append("********************************\r");
+			sb.append("AP d.d. Varazdin - u stecaju\r");
+			sb.append("Gospodarska 56\r");
+			sb.append("OIB: 51631089795\r");
+			sb.append("\r");
+			sb.append("Prijevoznik: AP d.d\r");
+			sb.append("--------------------------------\r");
+			sb.append("--------------------------------\r");
+			sb.append(" P R I P R E M A    P A P I R A \r");
+			sb.append("--------------------------------\r");
+			sb.append("--------------------------------\r");
+			sb.append("********************************\r");
+			sb.append(" \r \r \r");
 
-			}
+			if (new File(".print").exists()) {
+				char[] reset = { 27, 64, 13 };
+				try {
+					FileWriter out = new FileWriter("/dev/ttyS0");
+					out.write(reset);
+					out.write(sb.toString());
+					out.flush();
+					out.close();
+				} catch (IOException ioe) {
+					ioe.printStackTrace();
+				}
+			} else
+				System.out.println(sb.toString());
 		}
 	}
 
