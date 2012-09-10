@@ -168,13 +168,13 @@ public class LoginWindow {
 		btnNastavak.setBounds(638, 486, 150, 50);
 
 		tVozac.addModifyListener(new TVozacModifyListener());
-		tVozac.setText("117");
+		tVozac.setText("24");
 		tVozac.addMouseListener(new textMouseListener());
 		tVozilo.addModifyListener(new TVoziloModifyListener());
 		tVozilo.setText("557");
 		tVozilo.addMouseListener(new textMouseListener());
 		tLinija.addModifyListener(new TLinijaModifyListener());
-		tLinija.setText("51555");
+		tLinija.setText("7222");
 		tLozinka = new Text(shlPrijava, SWT.BORDER | SWT.PASSWORD);
 		tLozinka.setText("TEST");
 		tLozinka.setFont(SWTResourceManager.getFont("Liberation Sans", 30, SWT.NORMAL));

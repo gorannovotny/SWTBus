@@ -146,14 +146,16 @@ public class Stavka {
 	}
 
 	public BigDecimal getProdajnaCijena() {
+		BigDecimal retval;
 		if (jeZamjenska)
-			return cijenaZamjenske.setScale(2);
+			retval = cijenaZamjenske.setScale(2);
 		else {
 			if (popust.getId() != 0)
-				return cijenaKarte.getCijena().multiply(BigDecimal.ONE.subtract(popust.getPopust().movePointLeft(2))).setScale(2);
+				retval = cijenaKarte.getCijena().multiply(BigDecimal.ONE.subtract(popust.getPopust().movePointLeft(2))).setScale(2);
 			else
-				return cijenaKarte.getCijena().multiply(BigDecimal.ONE.subtract(getKarta().getPopustProcent().movePointLeft(2)));
+				retval = cijenaKarte.getCijena().multiply(BigDecimal.ONE.subtract(getKarta().getPopustProcent().movePointLeft(2)));
 		}
+		return CijenaKarte.zaokruzi(retval,this.getKarta().getRoundN());
 	}
 
 	public BigDecimal getNettoCijena() {

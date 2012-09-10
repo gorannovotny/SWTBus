@@ -28,6 +28,7 @@ public class ZaokruziTest {
 		iznos = new BigDecimal(0.0001);
 		r = new BigDecimal(0.5);
 		assertEquals(new BigDecimal(0.5), CijenaKarte.zaokruzi(iznos, r));
+		assertEquals(BigDecimal.ZERO, CijenaKarte.zaokruzi(BigDecimal.ZERO, r));
 
 	}
 

@@ -21,6 +21,7 @@ public class Karta {
 	private BigDecimal popustProcent;
 	private Integer tipKarteID;
 	private BigDecimal faktorCene;
+	private BigDecimal roundN;
 
 	public static Integer TARIFNI_DALJINAR = 1;
 	public static Integer FIKSNA_CIJENA = 2;
@@ -29,19 +30,19 @@ public class Karta {
 
 	static {
 		try {
-			String sql = "Select a.id,a.kratkiOpis,stVoznji,NacinDolocanjaCene,TarifniRazredID,FiksnaCena,KMPogoja,PopustProcent,TipKarteID,FaktorCene from PTKTVozneKarte a WHERE MobilnaProdaja = '1' ORDER BY sifra";
+			String sql = "Select a.id,a.kratkiOpis,stVoznji,NacinDolocanjaCene,TarifniRazredID,FiksnaCena,KMPogoja,PopustProcent,TipKarteID,FaktorCene,RoundN from PTKTVozneKarte a WHERE MobilnaProdaja = '1' ORDER BY sifra";
 			ResultSet rs = DbUtil.getConnection().createStatement().executeQuery(sql);
 			while (rs.next()) {
 				kartaListMobilna.add(new Karta(rs.getInt("ID"), rs.getString("kratkiOpis"), rs.getInt("stVoznji"), rs.getInt("NacinDolocanjaCene"), rs.getInt("TarifniRazredID"), rs.getDouble("FiksnaCena"), rs.getInt("KmPogoja"), rs
-						.getDouble("PopustProcent"), rs.getInt("TipKarteID"), rs.getDouble("FaktorCene")));
+						.getDouble("PopustProcent"), rs.getInt("TipKarteID"), rs.getDouble("FaktorCene"),rs.getDouble("RoundN")));
 			}
 			rs.close();
-			sql = "Select a.id,a.kratkiOpis,stVoznji,NacinDolocanjaCene,TarifniRazredID,FiksnaCena,KMPogoja,PopustProcent,TipKarteID,FaktorCene from PTKTVozneKarte a WHERE ZamjenskaKarta = '1' ORDER BY sifra";
+			sql = "Select a.id,a.kratkiOpis,stVoznji,NacinDolocanjaCene,TarifniRazredID,FiksnaCena,KMPogoja,PopustProcent,TipKarteID,FaktorCene,RoundN from PTKTVozneKarte a WHERE ZamjenskaKarta = '1' ORDER BY sifra";
 
 			rs = DbUtil.getConnection().createStatement().executeQuery(sql);
 			while (rs.next()) {
 				kartaListZamjenska.add(new Karta(rs.getInt("ID"), rs.getString("kratkiOpis"), rs.getInt("stVoznji"), rs.getInt("NacinDolocanjaCene"), rs.getInt("TarifniRazredID"), rs.getDouble("FiksnaCena"), rs.getInt("KmPogoja"), rs
-						.getDouble("PopustProcent"), rs.getInt("TipKarteID"), rs.getDouble("FaktorCene")));
+						.getDouble("PopustProcent"), rs.getInt("TipKarteID"), rs.getDouble("FaktorCene"),rs.getDouble("RoundN")));
 			}
 			rs.close();
 		} catch (SQLException e) {
@@ -51,7 +52,7 @@ public class Karta {
 		// Karta(Karta.ZAMJENSKA_KARTA,"Zamjenska karta",1,0,0,0,0,0.0,0));
 	}
 
-	public Karta(int id, String naziv, int stVoznji, int nacinDolocanjaCene, int tarifniRazredID, double FiksnaCena, int kmPogoja, double popustProcent, int tip, double faktorCene) {
+	public Karta(int id, String naziv, int stVoznji, int nacinDolocanjaCene, int tarifniRazredID, double FiksnaCena, int kmPogoja, double popustProcent, int tip, double faktorCene, double roundN) {
 		this.id = id;
 		this.naziv = naziv;
 		this.stVoznji = stVoznji;
@@ -62,6 +63,7 @@ public class Karta {
 		this.popustProcent = new BigDecimal(popustProcent);
 		this.tipKarteID = tip;
 		this.faktorCene = new BigDecimal(faktorCene);
+		this.roundN = new BigDecimal(roundN);
 	}
 
 //	public static String[] getListMobilna() {
@@ -161,6 +163,10 @@ public class Karta {
 
 	public BigDecimal getFaktorCene() {
 		return faktorCene;
+	}
+
+	public BigDecimal getRoundN() {
+		return roundN;
 	}
 
 	public static List<String> getArrayListMobilna() {
