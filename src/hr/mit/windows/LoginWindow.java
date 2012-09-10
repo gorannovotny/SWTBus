@@ -152,9 +152,9 @@ public class LoginWindow {
 
 		btnPrintTest = new Button(shlPrijava, SWT.NONE);
 		btnPrintTest.addSelectionListener(new BtnPrintTestSelectionListener());
-		btnPrintTest.setText("Print Test");
+		btnPrintTest.setText("Priprema papira");
 		btnPrintTest.setFont(SWTResourceManager.getFont("Liberation Sans", 20, SWT.NORMAL));
-		btnPrintTest.setBounds(210, 486, 150, 50);
+		btnPrintTest.setBounds(190, 486, 200, 50);
 
 		btnGasenje = new Button(shlPrijava, SWT.NONE);
 		btnGasenje.addSelectionListener(new BtnGasenjeSelectionListener());
@@ -212,7 +212,7 @@ public class LoginWindow {
 		public void widgetSelected(SelectionEvent e) {
 			StringBuffer sb = new StringBuffer();
 			sb.append("********************************\r");
-			sb.append("AP d.d. Varazdin - u stecaju\r");
+			sb.append("AP d.d. Varazdin\r");
 			sb.append("Gospodarska 56\r");
 			sb.append("OIB: 51631089795\r");
 			sb.append("\r");
