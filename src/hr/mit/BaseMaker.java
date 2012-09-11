@@ -487,8 +487,9 @@ public class BaseMaker {
 		int i = 0;
 		con2.createStatement().executeUpdate("drop table if exists PTKTProdaja;");
 		con2.createStatement().executeUpdate("drop table if exists PTKTObracun;");
-		con2.createStatement().executeUpdate("CREATE TABLE PTKTProdaja(ID INTEGER PRIMARY KEY ,Firma INT NOT NULL, Stevilka INT, DokumentProdajeID INT,VrsticaProdajeID INT,DokumentBlagajneID INT,BUSProdajaID INT,Datum DATETIME,Vreme DATETIME,VoznaKartaID INT,Code VARCHAR(20) ,BRVoznji INT, SifraValute INT, Cena FLOAT(53),Popust1ID INT,Popust2ID INT,Popust3ID INT,PCenaKarte FLOAT(53),NCenaKarte FLOAT(53),Popust FLOAT(53),ZaPlatiti FLOAT(53),PorezProcent INT,ProdajnoMestoID INT,PrevoznikID INT,VrstaPosadeID INT,Vozac1ID INT,Vozac2ID INT,Vozac3ID INT,Blagajnik INT,Blagajna INT,StupacID INT,OdPostajeID INT,DoPostajeID INT,VoziloID INT,Rezervacija INT,StatusZK INT,KmLinijeVR INT,KmDomaci INT,KmIno INT,BRPutnika INT,BRKarata INT,MobStrojID INT,ObracunID INT)");
+		con2.createStatement().executeUpdate("CREATE TABLE PTKTProdaja(ID INTEGER PRIMARY KEY ,Firma INT NOT NULL, Stevilka INT, DokumentProdajeID INT,VrsticaProdajeID INT,DokumentBlagajneID INT,BUSProdajaID INT,Datum DATETIME,Vreme DATETIME,VoznaKartaID INT,Code VARCHAR(20) ,BRVoznji INT, SifraValute INT, Cena FLOAT(53),Popust1ID INT,Popust2ID INT,Popust3ID INT,PCenaKarte FLOAT(53),NCenaKarte FLOAT(53),Popust FLOAT(53),ZaPlatiti FLOAT(53),PorezProcent INT, UdioPoreza FLOAT(53), ProdajnoMestoID INT,PrevoznikID INT,VrstaPosadeID INT,Vozac1ID INT,Vozac2ID INT,Vozac3ID INT,Blagajnik INT,Blagajna INT,StupacID INT,OdPostajeID INT,DoPostajeID INT,VoziloID INT,Rezervacija INT,StatusZK INT,KmLinijeVR INT,KmDomaci INT,KmIno INT,BRPutnika INT,BRKarata INT,MobStrojID INT,ObracunID INT)");
 		con2.createStatement().executeUpdate("CREATE INDEX [IXPRStevilka] ON [PTKTProdaja] ([Stevilka])");
+		con2.createStatement().executeUpdate("CREATE INDEX [IXObracunID]  ON [PTKTProdaja] ([ObracunID])");
 		con2.createStatement().executeUpdate("CREATE TABLE PTKTObracun(ID INTEGER PRIMARY KEY,Datum DATETIME,VozacID INT,GUID VARCHAR)");
 		con2.commit();
 		System.out.println(String.format("%-26s -> %7d", "PTKTProdaja", i));

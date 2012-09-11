@@ -5,15 +5,29 @@ import hr.mit.beans.Vozac;
 import hr.mit.beans.Vozilo;
 import hr.mit.windows.LoginWindow;
 
+import java.io.FileInputStream;
+import java.util.Properties;
+
 public class Starter {
 
 	public static Vozac vozac = null;
 	public static Stupac stupac = null;
 	public static Vozilo vozilo = null;
-	
+
+	public static String Prefix = null;
+	public static String SifraMobStroja = null;
+
 	public static void main(String[] args) {
-			LoginWindow loginWindow = new LoginWindow();
-			loginWindow.open();
+		Properties p = new Properties();
+		try {
+			p.load(new FileInputStream("mobile.conf"));
+			Prefix = p.getProperty("Prefix");
+			SifraMobStroja = p.getProperty("SifraMobStroja");
+		} catch (Exception e) {
+			throw new RuntimeException(e);
+		}		
+		LoginWindow loginWindow = new LoginWindow();
+		loginWindow.open();
 	}
 
 }

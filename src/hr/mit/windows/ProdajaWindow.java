@@ -260,7 +260,7 @@ public class ProdajaWindow {
 		cKarta.setBounds(5, 150, 390, 70);
 		cKarta.setText(Karta.getArrayListMobilna().get(0));
 		Popust.setKartaStupac(Karta.getMobilna(0), Starter.stupac);
-		cKarta.setData(0);
+		cKarta.setData(1);
 
 		cPopust = new Button(shell, SWT.READ_ONLY);
 		cPopust.setAlignment(SWT.LEFT);
