@@ -34,8 +34,6 @@ public class Blagajna {
 				ps.setInt(18, stavka.getKmLinije());
 				ps.setInt(19, stavka.getKmDomaci());
 				ps.setInt(20, stavka.getKmIno());
-				Integer i = getNextStevilka();
-				ps.setInt(21, i);  // stevilka
 				ps.setInt(22,Integer.parseInt(Starter.SifraMobStroja)); // MobStrojID
 
 				if (stavka.getJeZamjenska()) {
@@ -44,13 +42,16 @@ public class Blagajna {
 					ps.setDouble(17, 0.0); // Za platiti
 					ps.setInt(12, 0); // Broj karata
 					ps.setInt(10, 0); // Broj voznji
-					
+					ps.setObject(21, null);  // stevilka
 				} else {
+					Integer i = getNextStevilka();
+					ps.setInt(21, i);  // stevilka
 					ps.setString(2, Starter.Prefix + Starter.SifraMobStroja + String.format("%05d", i));
 					ps.setInt(13, 0); // Status zamjenske karte
 					ps.setDouble(17, stavka.getProdajnaCijena().doubleValue()); // Za platiti
 					ps.setInt(12, 1); // Broj karata
 					ps.setInt(10, stavka.getKarta().getStVoznji()); // Broj voznji
+					stavka.setBrojKarte(Starter.Prefix + Starter.SifraMobStroja + String.format("%05d", i));
 				}
 				
 				ps.execute();

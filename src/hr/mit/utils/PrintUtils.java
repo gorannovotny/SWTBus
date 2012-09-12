@@ -35,7 +35,7 @@ public class PrintUtils {
 		SimpleDateFormat sdf = new SimpleDateFormat("dd.MM.yyyy. HH:mm");
 		StringBuffer sb = new StringBuffer();
 		for (Stavka stavka : stavkaList) {
-			sb.append("AP d.d. Varazdin - u stecaju\rGospodarska 56\rOIB: 51631089795\r\rBroj racuna: 734234429\rPrijevoznik: AP d.d\r");
+			sb.append("AP d.d. Varazdin - u stecaju\rGospodarska 56\rOIB: 51631089795\r\rPrijevoznik: AP d.d\r");
 			sb.append(stavkaList.get(0).getRelacija() + "\r \r");
 			sb.append("Broj karte: " + stavka.getBrojKarte() + "\r");
 			sb.append("Vrsta karte       Popust  Cijena\r................................\r");
@@ -45,12 +45,15 @@ public class PrintUtils {
 			sb.append(String.format("PDV 25%%                  %7.2f\r", stavka.getIznosPDV().doubleValue()));
 			sb.append(String.format("Za platiti               %7.2f\r", stavka.getProdajnaCijena()));
 			sb.append("\r");
-			sb.append("Vozač : " + vozac.getSifra() + "\r");
+			sb.append("Vozač: " + vozac.getSifra() + "\r");
 			sb.append(sdf.format(new Date()) + "\r");
 			sb.append("................................\r");
 			if (stavka.getKarta().getStVoznji().equals(2)) {
+				sb.append("\r");
 				sb.append("................................\r");
-				sb.append("Talon: " + stavka.getRelacijaKontra() + "\r");
+				sb.append("Kupon za povratni smjer\r");
+				sb.append(sdf.format(new Date()) + "\r");
+				sb.append(stavka.getRelacijaKontra() + "\r");
 				sb.append("Vrsta karte: " + stavka.getKarta().getNaziv() + "\r");
 				sb.append("Broj karte: " + stavka.getBrojKarte() + "\r");
 				sb.append("................................\r");
