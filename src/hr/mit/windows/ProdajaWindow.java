@@ -258,9 +258,9 @@ public class ProdajaWindow {
 		cKarta.setAlignment(SWT.LEFT);
 		cKarta.setFont(SWTResourceManager.getFont("Liberation Sans", 22, SWT.NORMAL));
 		cKarta.setBounds(5, 150, 390, 70);
-		cKarta.setText(Karta.getArrayListMobilna().get(0));
-		Popust.setKartaStupac(Karta.getMobilna(0), Starter.stupac);
-		cKarta.setData(1);
+//		cKarta.setText(Karta.getArrayListMobilna().get(0));
+		Popust.setKartaStupac(Karta.getMobilna(3), Starter.stupac);
+		cKarta.setData(3);
 
 		cPopust = new Button(shell, SWT.READ_ONLY);
 		cPopust.setAlignment(SWT.LEFT);
