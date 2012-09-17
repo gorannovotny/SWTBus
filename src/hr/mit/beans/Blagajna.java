@@ -12,7 +12,7 @@ import java.util.List;
 public class Blagajna {
 
 	public static void save(Vozac vozac, Vozilo vozilo, List<Stavka> stavkaList) {
-		String sql = "INSERT INTO PTKTProdaja (Firma,Datum,VoznaKartaID,Code,Cena,Popust,Vozac1ID,StupacID,OdPostajeID,DoPostajeID,VoziloID,BRVoznji,BrPutnika,BRKarata,StatusZK,popust1ID,PCenaKarte,NCenaKarte,ZaPlatiti,KmLinijeVR,KmDomaci,KmIno,Stevilka,MobStrojID) VALUES(5,DATETIME('now'),?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)";
+		String sql = "INSERT INTO PTKTProdaja (Firma,Datum,VoznaKartaID,Code,Cena,Popust,Vozac1ID,StupacID,OdPostajeID,DoPostajeID,VoziloID,BRVoznji,BrPutnika,BRKarata,StatusZK,popust1ID,PCenaKarte,NCenaKarte,ZaPlatiti,KmLinijeVR,KmDomaci,KmIno,Stevilka,MobStrojID,SifraValute) VALUES(5,DATETIME('now'),?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)";
 		try {
 			DbUtil.getConnection2().setAutoCommit(false);
 			PreparedStatement ps = DbUtil.getConnection2().prepareStatement(sql);
@@ -35,6 +35,7 @@ public class Blagajna {
 				ps.setInt(19, stavka.getKmDomaci());
 				ps.setInt(20, stavka.getKmIno());
 				ps.setInt(22,Integer.parseInt(Starter.SifraMobStroja)); // MobStrojID
+				ps.setInt(23, 191); // SifraValute
 
 				if (stavka.getJeZamjenska()) {
 					ps.setString(2, stavka.getBrojKarte());

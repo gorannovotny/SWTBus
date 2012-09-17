@@ -48,7 +48,7 @@ public class PrintUtils {
 			sb.append("Vozač: " + vozac.getSifra() + "\r");
 			sb.append(sdf.format(new Date()) + "\r");
 			sb.append("................................\r");
-			if (stavka.getKarta().getStVoznji().equals(2)) {
+			if (stavka.getKarta().getStVoznji().equals(2) && (! stavka.getJeZamjenska())) {
 				sb.append("\r");
 				sb.append("................................\r");
 				sb.append("Kupon za povratni smjer\r");

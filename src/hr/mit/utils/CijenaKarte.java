@@ -103,7 +103,7 @@ public class CijenaKarte {
 		if (karta.getNacinDolocanjaCene().equals(Karta.FIKSNI_KILOMETRI))
 			retval = karta.getKmPogoja() * 1000;
 		else {
-			String sql1 = "SELECT SUM(a.DistancaM) FROM PTPostajeVarijantVR a WHERE a.VarijantaID = ? AND a.ZapSt > ? AND a.ZapSt <= ? AND a.Vozel IN  (SELECT Vozel  FROM PTPostajeVarijantVR b WHERE b.VarijantaID = a.VarijantaID AND (b.ZapSt = ? OR b.ZapSt = ?))";
+			String sql1 = "SELECT SUM(a.DistancaM) FROM PTPostajeVarijantVR a WHERE a.VarijantaID = ? AND a.ZapSt > ? AND a.ZapSt <= ? " + " AND (a.Vozel=0 OR a.Vozel IN (SELECT Vozel  FROM PTPostajeVarijantVR b WHERE b.VarijantaID = a.VarijantaID AND (b.ZapSt = ? OR b.ZapSt = ?)))";
 			PreparedStatement ps1 = DbUtil.getConnection().prepareStatement(sql1);
 			ps1.setInt(1, varijantaID);
 			ps1.setInt(2, odZapSt);
@@ -123,15 +123,9 @@ public class CijenaKarte {
 		else {
 			if (false) {
 				/*
-				 * TODO Ima iznimke Select IC.Cena from PTIzjemeCenikaVR IC
-				 * Where IC.TarifniCenikID = @TarifniCenikID and IC.VeljaOd <=
-				 * (@ZaDan and IC.VozniRedID = @VozniRedID and IC.VarijantaID in
-				 * (0,@VarijantaID) and IC.StupacID in (0,@StupacID) and
-				 * ((IC.Postaja1ID = @OdPostajeID and IC.Postaja2ID =
+				 * TODO Ima iznimke Select IC.Cena from PTIzjemeCenikaVR IC Where IC.TarifniCenikID = @TarifniCenikID and IC.VeljaOd <= (@ZaDan and IC.VozniRedID = @VozniRedID and IC.VarijantaID in (0,@VarijantaID) and IC.StupacID in (0,@StupacID) and ((IC.Postaja1ID = @OdPostajeID and IC.Postaja2ID =
 				 * 
-				 * @DoPostajeID) or (IC.Postaja1ID = @DoPostajeID and
-				 * IC.Postaja2ID = @OdPostajeID)) order by IC.VeljaOd desc,
-				 * IC.StupacID desc, IC.VarijantaID desc LIMIT 1;
+				 * @DoPostajeID) or (IC.Postaja1ID = @DoPostajeID and IC.Postaja2ID = @OdPostajeID)) order by IC.VeljaOd desc, IC.StupacID desc, IC.VarijantaID desc LIMIT 1;
 				 */
 			} else {
 				String sql = "SELECT Cena FROM PTKTTarifniRazrediCenik WHERE IDRazreda = ? AND VeljaOd <= DATE('now') and OdKM <= ? order by VeljaOd desc, OdKM desc LIMIT 1";
@@ -151,7 +145,7 @@ public class CijenaKarte {
 				}
 			}
 		}
-//		return retval.multiply(BigDecimal.ONE.subtract(karta.getPopustProcent().movePointLeft(2)));
+		// return retval.multiply(BigDecimal.ONE.subtract(karta.getPopustProcent().movePointLeft(2)));
 		return retval;
 	}
 
@@ -176,10 +170,12 @@ public class CijenaKarte {
 	}
 
 	public static BigDecimal zaokruzi(BigDecimal iznos, BigDecimal r) {
-		if (r == null || r.floatValue() < 0.01) return iznos;
-		if (iznos.equals(BigDecimal.ZERO.setScale(2))) return iznos;
+		if (r == null || r.floatValue() < 0.01)
+			return iznos;
+		if (iznos.equals(BigDecimal.ZERO.setScale(2)))
+			return iznos;
 		int i = (int) ((iznos.floatValue() - 0.0001) / r.floatValue());
-		BigDecimal retval  = r.multiply(new BigDecimal(i+1)); 
+		BigDecimal retval = r.multiply(new BigDecimal(i + 1));
 		return retval;
 	}
 }

@@ -90,7 +90,9 @@ public class Obracun {
 	public static boolean imaZaObracun() {
 		boolean retval = false;
 		try {
-			ResultSet rsCnt = DbUtil.getConnection2().createStatement().executeQuery("SELECT COUNT(*) FROM PTKTProdaja WHERE obracunID IS NULL");
+			PreparedStatement ps = DbUtil.getConnection2().prepareStatement("SELECT COUNT(*) FROM PTKTProdaja WHERE obracunID IS NULL and Vozac1ID = ?");
+			ps.setInt(1, Starter.vozac.getId());
+			ResultSet rsCnt = ps.executeQuery();
 			if (rsCnt.next()) {
 				Integer id = rsCnt.getInt(1);
 				if (id.equals(0))
@@ -119,8 +121,9 @@ public class Obracun {
 				id = rs.getInt(1);
 			else
 				id = 0;
-			ps = DbUtil.getConnection2().prepareStatement("UPDATE PTKTProdaja SET ObracunID = ? WHERE ObracunID IS NULL");
+			ps = DbUtil.getConnection2().prepareStatement("UPDATE PTKTProdaja SET ObracunID = ? WHERE ObracunID IS NULL and Vozac1ID = ?");
 			ps.setInt(1, id);
+			ps.setInt(2, Starter.vozac.getId());
 			ps.execute();
 			rs.close();
 			ps.close();
@@ -133,7 +136,8 @@ public class Obracun {
 	public static BigDecimal getSaldo() {
 		BigDecimal saldo = BigDecimal.ZERO;
 		try {
-			PreparedStatement ps = DbUtil.getConnection2().prepareStatement("SELECT sum(ZaPlatiti) FROM PTKTProdaja WHERE ObracunID IS NULL AND StatusZK != 1");
+			PreparedStatement ps = DbUtil.getConnection2().prepareStatement("SELECT sum(ZaPlatiti) FROM PTKTProdaja WHERE ObracunID IS NULL AND StatusZK != 1 and Vozac1ID = ?");
+			ps.setInt(1, Starter.vozac.getId());
 			double ss = DbUtil.getSingleResultDouble(ps);
 			saldo = new BigDecimal(ss);
 			ps.close();
@@ -156,8 +160,9 @@ public class Obracun {
 				ps = DbUtil.getConnection2().prepareStatement(sql);
 				ps.setInt(1, id);
 			} else {
-				sql = sql + " WHERE obracunID IS NULL GROUP BY 1,2 ORDER BY 1,2";
+				sql = sql + " WHERE obracunID IS NULL and Vozac1ID = ? GROUP BY 1,2 ORDER BY 1,2";
 				ps = DbUtil.getConnection2().prepareStatement(sql);
+				ps.setInt(1, Starter.vozac.getId());
 			}
 			retval = new StringBuffer();
 			ResultSet rs = ps.executeQuery();

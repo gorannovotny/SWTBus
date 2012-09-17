@@ -102,10 +102,6 @@ public class Stavka {
 		return retval.setScale(2);
 	}
 
-	// public Stavka(Stupac stupac) {
-	// this.stupac = stupac;
-	// }
-
 	public Stavka(Stupac stupac, Postaja odPostaje, Postaja doPostaje, Karta karta, Popust popust) {
 		this.stupac = stupac;
 		this.odPostaje = odPostaje;
@@ -115,19 +111,16 @@ public class Stavka {
 		this.brojKarte = "";
 		this.jeZamjenska = false;
 		this.cijenaKarte = new CijenaKarte(stupac, karta, odPostaje, doPostaje);
-		// cijena = c.getUkupnaCijena();
-		// cijena =
-		// cijena.subtract(cijena.multiply(popust.getPopust().movePointLeft(2)));
 	}
 
 	public String getDesc() {
 		String k = karta.getNaziv();
+		if (jeZamjenska)
+			k = "(Z)" + k;
 		if (k.length() > 19)
 			k = k.substring(0, 19);
 		String out;
 		out = String.format("%-19s %3.0f%% %7.2f", k, popust.getPopust().doubleValue(), getProdajnaCijena().doubleValue());
-		if (jeZamjenska)
-			out = out + " ZK";
 		return out;
 	}
 
@@ -155,7 +148,7 @@ public class Stavka {
 			else
 				retval = cijenaKarte.getCijena().multiply(BigDecimal.ONE.subtract(getKarta().getPopustProcent().movePointLeft(2)));
 		}
-		return CijenaKarte.zaokruzi(retval,this.getKarta().getRoundN());
+		return CijenaKarte.zaokruzi(retval, this.getKarta().getRoundN());
 	}
 
 	public BigDecimal getNettoCijena() {
