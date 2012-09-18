@@ -150,17 +150,18 @@ public class Obracun {
 
 	public static String getObracun(Integer id) {
 		double ukupno = 0;
-		String sql = "select stupacID,VoznaKartaID,COUNT(*) Komada,SUM(Cena) cena from ptktprodaja";
+		String sql = "select StupacID,Coalesce(StatusZK,0) AS StatusZK,VoznaKartaID, COUNT(*) Komada, SUM(PCenaKarte) cena from ptktprodaja";
 		StringBuffer retval;
 		PreparedStatement ps;
 		String linija = "";
+		String OznakaZK = "";
 		try {
 			if (id != null) {
-				sql = sql + " WHERE obracunID = ? GROUP BY 1,2 ORDER BY 1,2";
+				sql = sql + " WHERE obracunID=? GROUP BY 1,2,3 ORDER BY 1,2,3";
 				ps = DbUtil.getConnection2().prepareStatement(sql);
 				ps.setInt(1, id);
 			} else {
-				sql = sql + " WHERE obracunID IS NULL and Vozac1ID = ? GROUP BY 1,2 ORDER BY 1,2";
+				sql = sql + " WHERE obracunID IS NULL and Vozac1ID=? GROUP BY 1,2,3 ORDER BY 1,2,3";
 				ps = DbUtil.getConnection2().prepareStatement(sql);
 				ps.setInt(1, Starter.vozac.getId());
 			}
@@ -186,14 +187,20 @@ public class Obracun {
 				}
 				// retval.append("Tip                  Kom  Ukupno\r");
 				// retval.append("--------------------------------\r");
-				int kartaId = rs.getInt("VoznaKartaID");
-				String opis = Karta.getByID(kartaId).getNaziv();
-				int komada = rs.getInt("Komada");
 				double cena = rs.getDouble("cena");
+				if (rs.getInt("StatusZK") == 0)
+				{
+					ukupno = ukupno + cena;
+				    OznakaZK = "";
+				}
+				else 
+					OznakaZK = "(Z)";
+				int kartaId = rs.getInt("VoznaKartaID");
+				String opis = OznakaZK+Karta.getByID(kartaId).getNaziv();
+				int komada = rs.getInt("Komada");
 				retval.append(String.format("%-20s %3d %7.2f\r", opis, komada, cena));
 				// Još ne znam kaj da tu radim
 				// if (kartaId != Karta.ZAMJENSKA_KARTA) {
-				ukupno = ukupno + cena;
 				// }
 			}
 			// if (stupacID != 0) {

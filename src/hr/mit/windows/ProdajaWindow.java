@@ -369,7 +369,7 @@ public class ProdajaWindow {
 		@Override
 		public void widgetSelected(SelectionEvent e) {
 			Stavka.add(stavka);
-			stavka = new Stavka(Starter.stupac, Postaja.get((Integer) cOdPostaje.getData()), Postaja.get((Integer) cDoPostaje.getData()), Karta.getMobilna((Integer) cKarta.getData()), Popust.get((Integer) cPopust.getData()));
+			stavka = new Stavka(Starter.stupac, Postaja.get((Integer) cOdPostaje.getData()), Postaja.get((Integer) cDoPostaje.getData()), Karta.getMobilna(3), Popust.get((Integer) cPopust.getData()));
 			stavkaToScreen();
 			screenToStavka();
 		}

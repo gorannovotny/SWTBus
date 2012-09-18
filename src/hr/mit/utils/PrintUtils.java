@@ -6,6 +6,7 @@ import hr.mit.beans.Vozac;
 import java.io.File;
 import java.io.FileWriter;
 import java.io.IOException;
+import java.math.BigDecimal;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.List;
@@ -34,16 +35,23 @@ public class PrintUtils {
 	private static String createString(Vozac vozac, List<Stavka> stavkaList) {
 		SimpleDateFormat sdf = new SimpleDateFormat("dd.MM.yyyy. HH:mm");
 		StringBuffer sb = new StringBuffer();
+		int BrKt = 0;
 		for (Stavka stavka : stavkaList) {
+			
+			if (stavka.getJeZamjenska()) 
+				BrKt = 0;
+			else
+	            BrKt = 1;
+	            
 			sb.append("AP d.d. Varazdin - u stecaju\rGospodarska 56\rOIB: 51631089795\r\rPrijevoznik: AP d.d\r");
 			sb.append(stavkaList.get(0).getRelacija() + "\r \r");
 			sb.append("Broj karte: " + stavka.getBrojKarte() + "\r");
 			sb.append("Vrsta karte       Popust  Cijena\r................................\r");
 			sb.append(stavka.getDesc() + "\r");
 			sb.append("................................\r");
-			sb.append(String.format("Osnovica PDV 25%%         %7.2f\r", stavka.getNettoCijena().doubleValue()));
-			sb.append(String.format("PDV 25%%                  %7.2f\r", stavka.getIznosPDV().doubleValue()));
-			sb.append(String.format("Za platiti               %7.2f\r", stavka.getProdajnaCijena()));
+			sb.append(String.format("Osnovica PDV 25%%         %7.2f\r", stavka.getNettoCijena().doubleValue()*BrKt ));
+			sb.append(String.format("PDV 25%%                  %7.2f\r", stavka.getIznosPDV().doubleValue()*BrKt ));
+			sb.append(String.format("Za platiti               %7.2f\r",  stavka.getProdajnaCijena().doubleValue()*BrKt));
 			sb.append("\r");
 			sb.append("Vozač: " + vozac.getSifra() + "\r");
 			sb.append(sdf.format(new Date()) + "\r");
