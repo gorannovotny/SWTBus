@@ -16,6 +16,7 @@ public class Starter {
 
 	public static String Prefix = null;
 	public static String SifraMobStroja = null;
+	public static final Integer KARTA_DEFAULT = 3; 
 
 	public static void main(String[] args) {
 		Properties p = new Properties();

@@ -16,7 +16,7 @@ public class Vozac {
 
 	static {
 		try {
-			String sql = "SELECT id,Sifra,Naziv,MobilePassword FROM PTVozaci ORDER BY Naziv";
+			String sql = "SELECT ID,Sifra,Naziv,Coalesce(MobilePassword,'') FROM PTVozaci ORDER BY Naziv";
 			ResultSet rs = DbUtil.getConnection().createStatement().executeQuery(sql);
 			while (rs.next()) {
 				vozacList.add(new Vozac(rs.getInt(1),rs.getInt(2),rs.getString(3),rs.getString(4)));
