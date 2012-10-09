@@ -2,6 +2,7 @@ package hr.mit.utils;
 
 import hr.mit.beans.Stavka;
 import hr.mit.beans.Vozac;
+import hr.mit.Starter;
 
 import java.io.File;
 import java.io.FileWriter;
@@ -19,7 +20,8 @@ public class PrintUtils {
 	public static void print(Vozac vozac, List<Stavka> stavkaList) {
 		if (new File(".print").exists()) {
 			try {
-				FileWriter out = new FileWriter("/dev/ttyS0");
+			//	FileWriter out = new FileWriter("/dev/ttyS0");
+                FileWriter out = new FileWriter(Starter.ComPortPrinter);
 				out.write(reset);
 				out.write(filter(createString(vozac, stavkaList)));
 	
@@ -43,7 +45,7 @@ public class PrintUtils {
 			else
 	            BrKt = 1;
 	            
-			sb.append("AP d.d. Varazdin - u stecaju\rGospodarska 56\rOIB: 51631089795\r\rPrijevoznik: AP d.d\r");
+			sb.append("AP d.d. Varazdin\rGospodarska 56\rOIB: 51631089795\r\rPrijevoznik: AP d.d\r");
 			sb.append(stavkaList.get(0).getRelacija() + "\r \r");
 			sb.append("Broj karte: " + stavka.getBrojKarte() + "\r");
 			sb.append("Vrsta karte       Popust  Cijena\r................................\r");

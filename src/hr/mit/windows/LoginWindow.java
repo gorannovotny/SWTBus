@@ -135,14 +135,14 @@ public class LoginWindow {
 		lblVerzijaBaze = new Label(shlPrijava, SWT.NONE);
 		lblVerzijaBaze.setBackground(SWTResourceManager.getColor(SWT.COLOR_GRAY));
 		lblVerzijaBaze.setFont(SWTResourceManager.getFont("Liberation Sans", 14, SWT.NORMAL));
-		lblVerzijaBaze.setBounds(5, 405 + 140, 260, 20);
-		lblVerzijaBaze.setText("Podaci: " + DbUtil.getDbVersionInfo());
+		lblVerzijaBaze.setBounds(5, 405 + 140, 420, 20);
+		lblVerzijaBaze.setText("Podaci: " + DbUtil.getDbVersionInfo()+", mob.stroj br.: "+Starter.SifraMobStroja);
 
 		lblVerzijaPrograma = new Label(shlPrijava, SWT.NONE);
 		lblVerzijaPrograma.setBackground(SWTResourceManager.getColor(SWT.COLOR_GRAY));
 		lblVerzijaPrograma.setFont(SWTResourceManager.getFont("Liberation Sans", 14, SWT.NORMAL));
-		lblVerzijaPrograma.setBounds(5, 425 + 140, 260, 25);
-		lblVerzijaPrograma.setText("Verzija programa: " + DbUtil.getVersionInfo());
+		lblVerzijaPrograma.setBounds(5, 425 + 140, 420, 25);
+		lblVerzijaPrograma.setText("Verzija programa: " + DbUtil.getVersionInfo() +", prn.port: "+Starter.ComPortPrinter);
 
 		btnUcitaj = new Button(shlPrijava, SWT.NONE);
 		btnUcitaj.addSelectionListener(new UcitajBazuButtonListener());
@@ -228,7 +228,7 @@ public class LoginWindow {
 			if (new File(".print").exists()) {
 				char[] reset = { 27, 64, 13 };
 				try {
-					FileWriter out = new FileWriter("/dev/ttyS0");
+					FileWriter out = new FileWriter(Starter.ComPortPrinter);
 					out.write(reset);
 					out.write(sb.toString());
 					out.flush();

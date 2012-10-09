@@ -16,6 +16,8 @@ public class Starter {
 
 	public static String Prefix = null;
 	public static String SifraMobStroja = null;
+	public static String ComPortRfid= null;
+	public static String ComPortPrinter= null;
 	public static final Integer KARTA_DEFAULT = 3; 
 
 	public static void main(String[] args) {
@@ -23,6 +25,8 @@ public class Starter {
 		try {
 			p.load(new FileInputStream("mobile.conf"));
 			Prefix = p.getProperty("Prefix");
+			ComPortPrinter = p.getProperty("ComPortPrinter");
+			ComPortRfid    = p.getProperty("ComPortRfid");
 			SifraMobStroja = p.getProperty("SifraMobStroja");
 		} catch (Exception e) {
 			throw new RuntimeException(e);
