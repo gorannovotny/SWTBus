@@ -163,6 +163,7 @@ public class BaseMaker {
 		int i = 0;
 		con2.createStatement().executeUpdate("drop table if exists PTVarijanteVR;");
 		con2.createStatement().executeUpdate("CREATE TABLE PTVarijanteVR(ID INT NOT NULL,VozniRedID INT NOT NULL,Varijanta INT NOT NULL,Opis1 VARCHAR,Opis2 VARCHAR,DOSVarID INT,PRIMARY KEY (ID),FOREIGN KEY (VozniRedID) REFERENCES PTVozniRedi (ID))");
+		con2.createStatement().executeUpdate("CREATE INDEX [IXVarVRVozniRedID]  ON [PTVarijanteVR] ([VozniRedID])");
 		PreparedStatement ps = con2.prepareStatement("INSERT INTO PTVarijanteVR VALUES (?,?,?,?,?,?)");
 		ResultSet rs = con1.createStatement().executeQuery("select * from PTVarijanteVR where VozniRedID IN (SELECT ID FROM PTVozniRedi WHERE VrstaVR=1 and veljaDo >= GETDATE())"); //
 		while (rs.next()) {
@@ -185,7 +186,10 @@ public class BaseMaker {
 	private static void doPTStupciVR(Connection con1, Connection con2) throws SQLException {
 		int i = 0;
 		con2.createStatement().executeUpdate("drop table if exists PTStupciVR;");
-		con2.createStatement().executeUpdate("CREATE TABLE PTStupciVR (ID INT NOT NULL,Firma INT NOT NULL,VozniRedID INT NOT NULL,VarijantaVRID INT NOT NULL,ZapSt VARCHAR NOT NULL,SmerVoznje VARCHAR,DneviVoznjeID INT,PrevoznikID INT,VrstaPrevoza INT,VrstaBusa INT,StBusov INT,NacinPrevoza INT,VrstaPosadeID INT,VremeOdhoda FLOAT, VeljaOd DATETIME,VeljaDo DATETIME,StatusERR INT,DOSID INT,PRIMARY KEY (ID),FOREIGN KEY (VarijantaVRID) REFERENCES PTVarijanteVR (ID))");
+		con2.createStatement().executeUpdate("CREATE TABLE PTStupciVR (ID INT NOT NULL,Firma INT NOT NULL,VozniRedID INT NOT NULL,VarijantaVRID INT NOT NULL,ZapSt VARCHAR NOT NULL,SmerVoznje VARCHAR,DneviVoznjeID INT,PrevoznikID INT,VrstaPrevoza INT,VrstaBusa INT,StBusov INT,NacinPrevoza INT,VrstaPosadeID INT,VremeOdhoda FLOAT, VeljaOd DATETIME,VeljaDo DATETIME,StatusERR INT,DOSID INT,PRIMARY KEY (ID)" +
+				",FOREIGN KEY (VarijantaVRID) REFERENCES PTVarijanteVR (ID) ,FOREIGN KEY (VozniRedID) REFERENCES PTVozniRedi (ID))");
+		con2.createStatement().executeUpdate("CREATE INDEX [IXStupciVRVozniRedID]   ON [PTStupciVR] ([VozniRedID])");
+		con2.createStatement().executeUpdate("CREATE INDEX [IXStupciVRVarijantaID]  ON [PTStupciVR] ([VarijantaVRID])");
 		PreparedStatement ps = con2.prepareStatement("INSERT INTO PTStupciVR VALUES (?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)");
 		ResultSet rs = con1.createStatement().executeQuery("SELECT * FROM PTStupciVR WHERE VarijantaVRID IN (select ID from PTVarijanteVR where VozniRedID IN (SELECT ID FROM PTVozniRedi WHERE  VrstaVR=1 and veljaDo >= GETDATE())) ");
 		while (rs.next()) {
@@ -216,11 +220,36 @@ public class BaseMaker {
 		rs.close();
 		ps.close();
 	}
+	
+	private static void doPTStupciVRMirovanja(Connection con1, Connection con2) throws SQLException {
+		int i = 0;
+		con2.createStatement().executeUpdate("drop table if exists PTStupciVRMirovanja;");
+		con2.createStatement().executeUpdate("CREATE TABLE PTStupciVRMirovanja(ID INT NOT NULL,StupacID INT NOT NULL,OdDatuma DATETIME,DoDatuma DATETIME,Opis VARCHAR(120),PRIMARY KEY (ID)" +
+				" ,FOREIGN KEY (StupacID) REFERENCES PTStupciVR (ID) )");
+		con2.createStatement().executeUpdate("CREATE INDEX [IXMirovanjaStupacID] ON [PTStupciVRMirovanja] ([StupacID])");
+		PreparedStatement ps = con2.prepareStatement("INSERT INTO PTStupciVRMirovanja VALUES (?,?,?,?,?)");
+		ResultSet rs = con1.createStatement().executeQuery("SELECT * FROM PTStupciVRMirovanja WHERE DoDatuma >= GETDATE()"); // svi dansanji i buduci su ok
+		while (rs.next()) {
+			ps.setInt(1, rs.getInt("ID"));
+			ps.setInt(2, rs.getInt("StupacID"));
+			ps.setString(3, rs.getString("OdDatuma"));
+			ps.setString(4, rs.getString("DoDatuma"));
+			ps.setString(5, rs.getString("Opis"));
+			ps.addBatch();
+			i++;
+		}
+		ps.executeBatch();
+		con2.commit();
+		System.out.println(String.format("%-26s -> %7d", "PTStupciVRMirovanja", i));
+	}
+	
 
 	private static void doPTPostajeVarijantVR(Connection con1, Connection con2) throws SQLException {
 		int i = 0;
 		con2.createStatement().executeUpdate("drop table if exists PTPostajeVarijantVR;");
 		con2.createStatement().executeUpdate("CREATE TABLE PTPostajeVarijantVR(ID INT NOT NULL,VarijantaID INT NOT NULL,NodePostajeVRID INT NOT NULL,ZapSt INT,KumDistancaM INT,DistancaM INT,Vozel INT,Staje CHAR,DOSID INT,PRIMARY KEY (ID),FOREIGN KEY (NodePostajeVRID) REFERENCES PTPostajeVR (ID),FOREIGN KEY (VarijantaID) REFERENCES PTVarijanteVR (ID))");
+		con2.createStatement().executeUpdate("CREATE INDEX [IXPostajaVarVRVarijantaID] ON [PTPostajeVarijantVR] ([VarijantaID],[NodePostajeVRID])");
+		con2.createStatement().executeUpdate("CREATE INDEX [IXPostajaVarVRNodePostajeVRID] ON [PTPostajeVarijantVR] ([NodePostajeVRID])");
 		PreparedStatement ps = con2.prepareStatement("INSERT INTO PTPostajeVarijantVR VALUES (?,?,?,?,?,?,?,?,?)");
 		ResultSet rs = con1.createStatement().executeQuery("SELECT * FROM PTPostajeVarijantVR WHERE VarijantaID IN(select ID from PTVarijanteVR where VozniRedID IN (SELECT ID FROM PTVozniRedi WHERE  VrstaVR=1 and veljaDo >= GETDATE()))");
 		while (rs.next()) {
@@ -247,6 +276,7 @@ public class BaseMaker {
 		int i = 0;
 		con2.createStatement().executeUpdate("drop table if exists PTPostajeVR;");
 		con2.createStatement().executeUpdate("CREATE TABLE PTPostajeVR(ID INT NOT NULL,VozniRedID INT NOT NULL,ZapSt INT NOT NULL, Vozel INT NOT NULL,PostajaID INT NOT NULL,KumDistancaM INT,DistancaM INT,Staje CHAR,DosID INT,PRIMARY KEY (ID),FOREIGN KEY (PostajaID) REFERENCES PTPostaje (ID) ,FOREIGN KEY (VozniRedID) REFERENCES PTVozniRedi (ID))");
+		con2.createStatement().executeUpdate("CREATE INDEX [IXPostajeVRVozniRedID] ON [PTPostajeVR] ([VozniRedID],[ZapSt])");
 		PreparedStatement ps = con2.prepareStatement("INSERT INTO PTPostajeVR VALUES (?,?,?,?,?,?,?,?,?)");
 		ResultSet rs = con1.createStatement().executeQuery("SELECT * FROM PTPostajeVR WHERE VozniRedID IN (SELECT ID FROM PTVozniRedi WHERE  VrstaVR=1 and veljaDo >= GETDATE())");
 		while (rs.next()) {
@@ -273,6 +303,7 @@ public class BaseMaker {
 		int i = 0;
 		con2.createStatement().executeUpdate("drop table if exists PTPostaje;");
 		con2.createStatement().executeUpdate("CREATE TABLE PTPostaje(ID INT NOT NULL,Sifra VARCHAR(12),Naziv VARCHAR(50),VrstaPostaje INT,Drzava INT,PGRID INT,Prodaja CHAR(1),PRIMARY KEY (ID))");
+		con2.createStatement().executeUpdate("CREATE INDEX [IXPostajeVRNaziv] ON [PTPostaje] ([Naziv])");
 		PreparedStatement ps = con2.prepareStatement("INSERT INTO PTPostaje VALUES (?,?,?,?,?,?,?)");
 		ResultSet rs = con1.createStatement().executeQuery("SELECT * FROM PTPostaje");
 		while (rs.next()) {
@@ -297,6 +328,7 @@ public class BaseMaker {
 		int i = 0;
 		con2.createStatement().executeUpdate("drop table if exists PTCasiVoznjeVR;");
 		con2.createStatement().executeUpdate("CREATE TABLE PTCasiVoznjeVR(ID INT NOT NULL,Firma INT NOT NULL,StupacVRID INT NOT NULL,NodePostajeVarijanteVRID INT NOT NULL,VremeOdhoda FLOAT,VremePrihoda FLOAT,PRIMARY KEY (ID),FOREIGN KEY (NodePostajeVarijanteVRID) REFERENCES PTPostajeVarijantVR (ID),FOREIGN KEY (StupacVRID) REFERENCES PTStupciVR (ID))");
+		con2.createStatement().executeUpdate("CREATE INDEX [IXCasiVoznjeVRStupacID] ON [PTCasiVoznjeVR] ([StupacVRID],[NodePostajeVarijanteVRID])");
 		PreparedStatement ps = con2.prepareStatement("INSERT INTO PTCasiVoznjeVR VALUES (?,?,?,?,?,?)");
 		ResultSet rs = con1.createStatement().executeQuery("SELECT * FROM PTCasiVoznjeVR WHERE StupacVRID IN(SELECT ID FROM PTStupciVR WHERE VarijantaVRID IN (select ID from PTVarijanteVR where VozniRedID IN (SELECT ID FROM PTVozniRedi WHERE  VrstaVR=1 and veljaDo >= GETDATE())))");
 		while (rs.next()) {
@@ -413,6 +445,7 @@ public class BaseMaker {
 		int i = 0;
 		con2.createStatement().executeUpdate("drop table if exists PTKTTarifniRazrediCenik;");
 		con2.createStatement().executeUpdate("CREATE TABLE PTKTTarifniRazrediCenik(ID INT NOT NULL ,IDRazreda INT NOT NULL,VeljaOd DATETIME NOT NULL,OdKM INT NOT NULL,Cena FLOAT(53),DOSID INT,PRIMARY KEY (ID))");
+		con2.createStatement().executeUpdate("CREATE INDEX [IXTarRazCenikIDRazreda]  ON [PTKTTarifniRazrediCenik] ([IDRazreda],[VeljaOd])");
 		PreparedStatement ps = con2.prepareStatement("INSERT INTO PTKTTarifniRazrediCenik VALUES (?,?,?,?,?,?)");
 		ResultSet rs = con1.createStatement().executeQuery("SELECT * FROM PTKTTarifniRazrediCenik a WHERE IDRazreda IN ( SELECT DISTINCT TarifniRazredID FROM PTKTVozneKarte WHERE MobilnaProdaja = 1) AND VeljaOD = (SELECT MAX(VeljaOd) FROM PTKTTarifniRazrediCenik b WHERE b.IDRazreda = a.IDRazreda AND b.OdKM = a.OdKM AND b.VeljaOd <= GETDATE()+15)");
 		while (rs.next()) {
@@ -455,11 +488,11 @@ public class BaseMaker {
 		rs.close();
 		ps.close();
 	}
-
 	private static void doPTIzjemeCenikaVR(Connection con1, Connection con2) throws SQLException {
 		int i = 0;
 		con2.createStatement().executeUpdate("drop table if exists PTIzjemeCenikaVR;");
 		con2.createStatement().executeUpdate("CREATE TABLE PTIzjemeCenikaVR(ID INT NOT NULL,Firma INT NOT NULL,TarifniCenikID INT NOT NULL,VeljaOd DATETIME NOT NULL,VozniRedID INT NOT NULL,VarijantaID INT NOT NULL,StupacID INT NOT NULL,Postaja1ID INT NOT NULL,Postaja2ID INT NOT NULL,Cena FLOAT(53),PRIMARY KEY (ID))");
+		con2.createStatement().executeUpdate("CREATE INDEX [IXIzjemaTRID]  ON [PTIzjemeCenikaVR] ([TarifniCenikID],[VeljaOd])");
 		PreparedStatement ps = con2.prepareStatement("INSERT INTO PTIzjemeCenikaVR VALUES (?,?,?,?,?,?,?,?,?,?)");
 		ResultSet rs = con1.createStatement().executeQuery("SELECT * FROM PTIzjemeCenikaVR");
 		while (rs.next()) {
@@ -499,6 +532,7 @@ public class BaseMaker {
 		int i = 0;
 		con2.createStatement().executeUpdate("drop table if exists PTKTPopusti;");
 		con2.createStatement().executeUpdate("CREATE TABLE PTKTPopusti(ID INT NOT NULL , PrevoznikID INT NOT NULL,TipKarteID INT NOT NULL, Opis VARCHAR(40), KratkiOpis VARCHAR(20), StupacID INT, VeljaOd DATETIME NOT NULL, VrstaPopustaID INT NOT NULL, NacinIzracuna INT,Popust FLOAT(53),PRIMARY KEY (ID))");
+		con2.createStatement().executeUpdate("CREATE INDEX [IXPopTipKarteID] ON [PTKTPopusti] ([TipKarteID],[VeljaOd])");
 		PreparedStatement ps = con2.prepareStatement("INSERT INTO PTKTPopusti VALUES (?,?,?,?,?,?,?,?,?,?)");
 		ResultSet rs = con1.createStatement().executeQuery("SELECT * FROM PTKTPopusti");
 		while (rs.next()) {
@@ -610,25 +644,6 @@ public class BaseMaker {
 		System.out.println(String.format("%-26s -> %7d", "PTProdajnaMesta", i));
 	}
 
-	private static void doPTStupciVRMirovanja(Connection con1, Connection con2) throws SQLException {
-		int i = 0;
-		con2.createStatement().executeUpdate("drop table if exists PTStupciVRMirovanja;");
-		con2.createStatement().executeUpdate("CREATE TABLE PTStupciVRMirovanja(ID INT NOT NULL,StupacID INT NOT NULL,OdDatuma DATETIME,DoDatuma DATETIME,Opis VARCHAR(120),PRIMARY KEY (ID))");
-		PreparedStatement ps = con2.prepareStatement("INSERT INTO PTStupciVRMirovanja VALUES (?,?,?,?,?)");
-		ResultSet rs = con1.createStatement().executeQuery("SELECT * FROM PTStupciVRMirovanja WHERE DoDatuma >= GETDATE()"); // svi dansanji i buduci su ok
-		while (rs.next()) {
-			ps.setInt(1, rs.getInt("ID"));
-			ps.setInt(2, rs.getInt("StupacID"));
-			ps.setString(3, rs.getString("OdDatuma"));
-			ps.setString(4, rs.getString("DoDatuma"));
-			ps.setString(5, rs.getString("Opis"));
-			ps.addBatch();
-			i++;
-		}
-		ps.executeBatch();
-		con2.commit();
-		System.out.println(String.format("%-26s -> %7d", "PTStupciVRMirovanja", i));
-	}
 
 	private static void doPTPrevozniki(Connection con1, Connection con2) throws SQLException {
 		int i = 0;

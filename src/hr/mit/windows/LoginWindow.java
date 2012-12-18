@@ -12,6 +12,8 @@ import hr.mit.utils.PrintUtils;
 import java.io.File;
 import java.io.FileWriter;
 import java.io.IOException;
+import java.text.SimpleDateFormat;
+import java.util.Date;
 
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.events.ModifyEvent;
@@ -217,6 +219,7 @@ public class LoginWindow {
 			sb.append("OIB: 51631089795\r");
 			sb.append("\r");
 			sb.append("Prijevoznik: AP d.d\r");
+			sb.append("Vrijeme: "+(new SimpleDateFormat("dd.MM.yy\nHH:mm:ss").format(new Date()))+"\r");
 			sb.append("--------------------------------\r");
 			sb.append("--------------------------------\r");
 			sb.append(" P R I P R E M A    P A P I R A \r");

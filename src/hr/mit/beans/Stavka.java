@@ -156,6 +156,17 @@ public class Stavka {
 
 	}
 
+	public BigDecimal getCijenaVoznje() {
+		BigDecimal stVoznji = new BigDecimal (karta.getStVoznji());
+	        if (stVoznji.equals(0)) 
+	            stVoznji = new BigDecimal(1);	
+	    BigDecimal Cena = getProdajnaCijena().divide(stVoznji);
+	    CijenaKarte.zaokruzi(Cena, this.getKarta().getRoundN());
+	    
+		return (Cena);
+
+	}
+	
 	public Postaja getOdPostaje() {
 		return odPostaje;
 	}

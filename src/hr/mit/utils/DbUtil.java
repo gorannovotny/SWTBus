@@ -25,6 +25,10 @@ public class DbUtil {
 		return 5;
 	}
 
+	public static int getPrevoznikSifra() {
+		return 1; // AP d.d. vž
+	}
+
 	public static int getPGRID() {
 		return 0;
 	}
@@ -86,9 +90,6 @@ public class DbUtil {
 		return retval;
 	}
 
-	public static String getVersionInfo() {
-		return "2012/10.5";
-	}
 
 	public static String getDbVersionInfo() {
 		String StrInfo = "??";
@@ -154,6 +155,7 @@ public class DbUtil {
 	}
 
 	public static String getHHMM(Double time) {
+		time = time + 0.00001157407407; 
 		Integer hours = (int) (time * 24);
 		Integer mins = (int) ((time * 24 - hours) * 60);
 		return String.format("%02d", hours) + ":" + String.format("%02d", mins);
@@ -178,5 +180,10 @@ public class DbUtil {
 		}
 		return buf.toString();
 	}
+	
+	public static String getVersionInfo() {
+		return "2012/12.12";
+	}
+	
 
 }

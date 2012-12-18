@@ -221,7 +221,7 @@ public class Obracun {
 		char[] reset = { 27, 64, 13 };
 		if (new File(".print").exists()) {
 			try {
-				FileWriter out = new FileWriter("/dev/ttyS0");
+				FileWriter out = new FileWriter(Starter.ComPortPrinter);
 				out.write(reset);
 				out.write(PrintUtils.filter(zaglavlje(o) + getObracun(o.getId())));
 				out.write(" \r \r \r");

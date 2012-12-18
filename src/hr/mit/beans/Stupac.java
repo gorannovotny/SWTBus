@@ -6,6 +6,7 @@ import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 
 import org.eclipse.swt.widgets.Text;
@@ -148,9 +149,40 @@ public class Stupac {
 	}
 	
 	
-	public static void setupFinder(Text t1, Text t2) {
-        String pos1,pos2;
+	public static String OpisPostajeFinder(String tin) {
+            String pos1, ss="";
+            
+            pos1 = tin;
+            if (pos1.equals("")) {
+            	return("");
+            }
+
+            pos1= pos1.replace('Ž','_');
+            pos1= pos1.replace('Š','_');
+            pos1= pos1.replace('Č','_');
+            pos1= pos1.replace('Ć','_');
+            pos1= pos1.replace('Đ','_');
+
+            // najdemo za postaju 1 najblizega
         	try {
+              String sql = "Select Naziv from PTPostaje WHERE Upper(Naziv) like Upper(?) and PGrid=? order by Naziv limit 1"; 
+		      PreparedStatement ps = DbUtil.getConnection().prepareStatement(sql);
+		  	  ps.setString(1,pos1 + "%");
+		 	  ps.setInt(2,DbUtil.getPGRID());
+		 	  ss = DbUtil.getSingleResultString(ps);
+		 	  if (ss == null) {
+		 		  ss = "";
+   			     }
+    		} catch (SQLException e) {
+    			throw new RuntimeException(e);
+    		}
+	 		 return(ss);
+        }	
+	
+	
+	public static void setupFinder(Text t1, Text t2, float FlPolazak ) {
+        String pos1,pos2;
+    	try {
     		stupacList.clear();
             Integer OdPostajeID = null;
             Integer DoPostajeID = null;
@@ -196,14 +228,34 @@ public class Stupac {
 	        " inner join PTVarijanteVR VARVR ON VARVR.ID=STP.VarijantaVRID"+ 
 	        " inner join PTDneviVoznje DV on DV.ID = STP.DneviVoznjeID"+
             " where Datetime(?) between STP.VeljaOd and STP.VeljaDo"+ 
-	        " and VR.Firma=? "+ //4. param
-            " and MIR.ID is null"+   // ne smije imati aktivno mirovanje
-            " and VR.VrstaVR=1"+     // samo valjani vozni redi
+	        " and VR.Firma=? "+         // 4. param
+            " and DV.VoziOb like ?"+    // 5. param uvazavamo dane voznje, pojednostavljeno
+            " and PRV.Sifra=?"+         // 6. prevoznik je AP d.d.
+            " and STP.VremeOdhoda>= ?"+ // 7. param vreme odhoda
+            " and MIR.ID is null"+      // ne smije imati aktivno mirovanje na dan
+            " and VR.VrstaVR=1"+        // samo valjani vozni redi
+         " and CASE WHEN STP.SmerVoznje='-' THEN "+
+            " VR.ID in (select distinct PVR1.VozniRedID from PTPostajeVR PVR1"+ // obje postaje moraju biti prisutne u postajama voznog reda
+            " INNER JOIN PTPostajeVR PVR2 ON PVR2.VozniRedID=PVR1.VozniRedID and PVR2.PostajaID=?"+ // 8.param
+            " where  PVR1.PostajaID=?"+       // 8.param postajaOd mora biti manja dopostaje
+            " and PVR1.zapst<PVR2.zapst" +
+            ")"+ // subselect
+         " WHEN STP.SmerVoznje='+' THEN " +
+            " VR.ID in (select distinct PVR1.VozniRedID from PTPostajeVR PVR1 "+ // obje postaje moraju biti prisutne u postajama voznog reda
+            " INNER JOIN PTPostajeVR PVR2 ON PVR2.VozniRedID=PVR1.VozniRedID and PVR2.PostajaID=?"+ // 10.param
+            " where  PVR1.PostajaID=?"+         // 11.param postajaOd mora biti manja dopostaje
+            " and PVR1.zapst>PVR2.zapst" +
+            ")"+ // subselect
+          " END"+ // case
+          " order by STP.VremeOdhoda";
+            
+            
+/*            
             " and VR.ID in (select distinct PVR1.VozniRedID from PTPostajeVR PVR1 "+ // obje postaje moraju biti prisutne u postajama voznog reda
               " INNER JOIN PTPostajeVR PVR2 ON PVR2.VozniRedID=PVR1.VozniRedID and PVR2.PostajaID=?"+ // 2.param
               " where  PVR1.PostajaID=?)"+       // 3.param postajaOd mora biti manja dopostaje
-            " and DV.VoziOb like ?"+             // uvazavamo dane voznje, pojednostavljeno
             " order by STP.VremeOdhoda";
+*/            
 	
         
 			ps = DbUtil.getConnection().prepareStatement(sql);
@@ -212,9 +264,14 @@ public class Stupac {
 			ps.setString(2,  DbUtil.JavaDateToSQLLiteDateStr(Danas)); 
 			ps.setString(3,  DbUtil.JavaDateToSQLLiteDateStr(Danas)); 
 			ps.setInt(4,     DbUtil.getFirma());
-			ps.setInt(5,     DoPostajeID);
-			ps.setInt(6,     OdPostajeID);
-			ps.setString(7,  DT);
+			ps.setString(5,  DT);
+			ps.setInt(6,     DbUtil.getPrevoznikSifra());
+			ps.setFloat(7,   FlPolazak);
+
+			ps.setInt(8,     DoPostajeID);
+			ps.setInt(9,     OdPostajeID);
+			ps.setInt(10,    DoPostajeID);
+			ps.setInt(11,    OdPostajeID);
 			
 			ResultSet rs = ps.executeQuery();
 			while (rs.next()) {

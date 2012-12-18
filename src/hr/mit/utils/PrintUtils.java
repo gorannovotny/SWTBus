@@ -45,11 +45,13 @@ public class PrintUtils {
 			else
 	            BrKt = 1;
 	            
-			sb.append("AP d.d. Varazdin\rGospodarska 56\rOIB: 51631089795\r\rPrijevoznik: AP d.d\r");
+			sb.append("AP d.d. Varazdin u stecaju\rGospodarska 56\rOIB: 51631089795\r\rPrijevoznik: AP d.d\r");
 			sb.append(stavkaList.get(0).getRelacija() + "\r \r");
 			sb.append("Broj karte: " + stavka.getBrojKarte() + "\r");
 			sb.append("Vrsta karte       Popust  Cijena\r................................\r");
-			sb.append(stavka.getDesc() + "\r");
+			if (stavka.getJeZamjenska()) // dodamo opis zamjenska
+				sb.append("ZAMJENSKA KARTA" + "\r");
+			sb.append(stavka.getDesc()+"\r"); // opis karte
 			sb.append("................................\r");
 			sb.append(String.format("Osnovica PDV 25%%         %7.2f\r", stavka.getNettoCijena().doubleValue()*BrKt ));
 			sb.append(String.format("PDV 25%%                  %7.2f\r", stavka.getIznosPDV().doubleValue()*BrKt ));
@@ -60,12 +62,16 @@ public class PrintUtils {
 			sb.append("................................\r");
 			if (stavka.getKarta().getStVoznji().equals(2) && (! stavka.getJeZamjenska())) {
 				sb.append("\r");
+				sb.append("\r");
+				sb.append("\r");
 				sb.append("................................\r");
 				sb.append("Kupon za povratni smjer\r");
+				sb.append("AP d.d. Varazdin u stecaju\rGospodarska 56\rOIB: 51631089795\r\rPrijevoznik: AP d.d\r");
+				sb.append(stavkaList.get(0).getRelacija() + "\r \r");
 				sb.append(sdf.format(new Date()) + "\r");
 				sb.append(stavka.getRelacijaKontra() + "\r");
-				sb.append("Vrsta karte: " + stavka.getKarta().getNaziv() + "\r");
-				sb.append("Broj karte: " + stavka.getBrojKarte() + "\r");
+				sb.append("Broj karte:  " + stavka.getBrojKarte() + "\r");
+				sb.append(String.format("Cijena kupona: %7.2f\r",  stavka.getCijenaVoznje()));
 				sb.append("................................\r");
 			}
 		}
