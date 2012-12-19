@@ -5,6 +5,7 @@ import java.util.Calendar;
 
 
 import hr.mit.beans.Stupac;
+import hr.mit.utils.DbUtil;
 
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.events.MouseAdapter;
@@ -22,6 +23,8 @@ import org.eclipse.wb.swt.SWTResourceManager;
 import org.eclipse.swt.events.VerifyListener; // josip
 import org.eclipse.swt.events.VerifyEvent; // josip
 
+import com.sun.xml.internal.ws.util.StringUtils;
+
 public class VRFinder {
 
 	protected Object result;
@@ -29,12 +32,15 @@ public class VRFinder {
 	protected Shell parent;
 	private Text tOdPostaje;
 	private Text tDoPostaje;
+	private Text tSati;
+	private Text tMinute;
 	private Button btnDummy;
 	private Stupac stupac = null;
 	private Label lblNewLabel;
 	private Label lblSearchPostajaOd;
 	private Label lblSearchPostajaDo;
 	private Label lblTimeLabel;
+	private Label lblTimeLabelO;
 	private DateTime timeBox;
 
 	/**
@@ -96,9 +102,15 @@ public class VRFinder {
 
 		lblTimeLabel = new Label(shell, SWT.NONE);
 		lblTimeLabel.setFont(SWTResourceManager.getFont("Liberation Sans", 18, SWT.NORMAL));// 30
-		lblTimeLabel.setBounds(550, 20, 90, 35);
-		lblTimeLabel.setText("Polazak:");
+		lblTimeLabel.setBounds(520, 20, 110, 35);
+		lblTimeLabel.setText("Polazak u");
 		lblTimeLabel.setVisible(true);
+
+		lblTimeLabelO = new Label(shell, SWT.NONE);
+		lblTimeLabelO.setFont(SWTResourceManager.getFont("Liberation Sans", 18, SWT.NORMAL));// 30
+		lblTimeLabelO.setBounds(640+50, 18, 8, 35);
+		lblTimeLabelO.setText(":");
+		lblTimeLabelO.setVisible(true);
 		
 		tOdPostaje.addMouseListener(new textMouseListener());
 		tDoPostaje.addMouseListener(new textMouseListener());
@@ -114,10 +126,55 @@ public class VRFinder {
 		lblSearchPostajaDo.setText("??");
 
 		timeBox = new DateTime (shell, SWT.TIME | SWT.SHORT ); //
-		timeBox.setBounds(650, 10, 100, 44);
+		timeBox.setBounds(645, 10, 100, 44);
 		timeBox.setFont(SWTResourceManager.getFont("Liberation Sans", 18, SWT.NORMAL));// 30
-		timeBox.setVisible(true);
+		timeBox.setVisible(false);
 		timeBox.addMouseListener(new timeMouseListener());
+
+		tSati = new Text(shell, SWT.BORDER);
+		tSati.setBounds(640, 10, 50, 40);
+		tSati.setFont(SWTResourceManager.getFont("Liberation Sans", 25, SWT.NORMAL));
+		tSati.setVisible(true);
+		tSati.setText(String.format("%02d",timeBox.getHours()));
+		tSati.addMouseListener(new textMouseListener());
+		tSati.addVerifyListener(new VerifyListener() {@Override
+		      public void verifyText(VerifyEvent event) {
+		        // Assume we don't allow it
+			    event.doit = true;
+				String	inTimeStr = "";
+				inTimeStr = tSati.getText()+event.text;
+				
+				if (DbUtil.checkIfNumber(inTimeStr)) {
+				    int num = Integer.parseInt(inTimeStr);
+				    event.doit = (num < 24); 
+				} else 
+					event.doit = false;
+		      }//public
+		    });
+		
+
+		tMinute = new Text(shell, SWT.BORDER);
+		tMinute.setBounds(700, 10, 50, 40);
+		tMinute.setFont(SWTResourceManager.getFont("Liberation Sans", 25, SWT.NORMAL));
+		tMinute.setVisible(true);
+//		tMinute.setText(Integer.toString(timeBox.getMinutes()));
+		tMinute.setText(String.format("%02d",timeBox.getMinutes()));
+        tMinute.addMouseListener(new textMouseListener());
+		tMinute.addVerifyListener(new VerifyListener() {@Override
+		      public void verifyText(VerifyEvent event) {
+		        // Assume we don't allow it
+			    event.doit = true;
+				String	inTimeStr = "";
+				inTimeStr = tMinute.getText()+event.text;
+				
+				if (DbUtil.checkIfNumber(inTimeStr)) {
+				    int num = Integer.parseInt(inTimeStr);
+				    event.doit = (num < 60); 
+				} else 
+					event.doit = false;
+		      }//public
+		    });
+		
 		
 		tOdPostaje.addVerifyListener(new VerifyListener() {
 		      public void verifyText(VerifyEvent event) {
@@ -192,9 +249,22 @@ public class VRFinder {
 			shell.dispose();
 			return;
           }
+          
+/*          
 			float  Ure     = timeBox.getHours();
-			float  Minute  = timeBox.getMinutes(); 
-            float  Polazak = (float) Ure/24+Minute/24/60;
+			float  Minute  = timeBox.getMinutes();
+          float  Polazak = (float) Ure/24+Minute/24/60;
+*/
+			float Sati = 0;
+			String inSatiStr = tSati.getText();
+			if (DbUtil.checkIfNumber(inSatiStr)) 
+				Sati = Integer.parseInt(inSatiStr);
+			float Minute = 0;
+			String inMinuteStr = tMinute.getText();
+			if (DbUtil.checkIfNumber(inMinuteStr)) 
+				Minute = Integer.parseInt(inMinuteStr);
+			
+            float  Polazak = (float) Sati/24+Minute/24/60;
             
 			Stupac.setupFinder(tOdPostaje, tDoPostaje,Polazak);
 			if (Stupac.getList().length == 0) {

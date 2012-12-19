@@ -155,6 +155,12 @@ public class ProdajaWindow {
 			cProdMjesto.setEnabled(false);
 			textBrKarte.setEnabled(false);
 			textCijena.setEnabled(false);
+			//****** za bjelice upisujemo cijenu
+			if (stavka.getKarta().getNacinDolocanjaCene() == Karta.RUCNI_UNOS) {
+				textCijena.setEnabled(true);
+				if (!textCijena.isListening(SWT.MouseDown))
+					textCijena.addMouseListener(mouseListener);
+			}
 			textBrKarte.setText(stavka.getBrojKarte());
 			cPopust.setEnabled(true);
 		}

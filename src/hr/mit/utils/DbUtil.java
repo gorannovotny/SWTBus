@@ -181,6 +181,16 @@ public class DbUtil {
 		return buf.toString();
 	}
 	
+	
+	public  static boolean checkIfNumber(String in) {
+	        try {
+	            Integer.parseInt(in);
+	        } catch (NumberFormatException ex) {
+	            return false;
+	        }
+	        return true;
+	    }
+	   
 	public static String getVersionInfo() {
 		return "2012/12.12";
 	}
