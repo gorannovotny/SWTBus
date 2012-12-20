@@ -1,13 +1,11 @@
 package hr.mit.windows;
 
 import hr.mit.Starter;
-import hr.mit.beans.Obracun;
 import hr.mit.beans.Stupac;
 import hr.mit.beans.Vozac;
 import hr.mit.beans.Vozilo;
 import hr.mit.utils.DbUtil;
 import hr.mit.utils.FileChecksum;
-import hr.mit.utils.PrintUtils;
 
 import java.io.File;
 import java.io.FileWriter;
@@ -138,13 +136,13 @@ public class LoginWindow {
 		lblVerzijaBaze.setBackground(SWTResourceManager.getColor(SWT.COLOR_GRAY));
 		lblVerzijaBaze.setFont(SWTResourceManager.getFont("Liberation Sans", 14, SWT.NORMAL));
 		lblVerzijaBaze.setBounds(5, 405 + 140, 420, 20);
-		lblVerzijaBaze.setText("Podaci: " + DbUtil.getDbVersionInfo()+", mob.stroj br.: "+Starter.SifraMobStroja);
+		lblVerzijaBaze.setText("Podaci: " + DbUtil.getDbVersionInfo() + ", mob.stroj br.: " + Starter.SifraMobStroja);
 
 		lblVerzijaPrograma = new Label(shlPrijava, SWT.NONE);
 		lblVerzijaPrograma.setBackground(SWTResourceManager.getColor(SWT.COLOR_GRAY));
 		lblVerzijaPrograma.setFont(SWTResourceManager.getFont("Liberation Sans", 14, SWT.NORMAL));
 		lblVerzijaPrograma.setBounds(5, 425 + 140, 420, 25);
-		lblVerzijaPrograma.setText("Verzija programa: " + DbUtil.getVersionInfo() +", prn.port: "+Starter.ComPortPrinter);
+		lblVerzijaPrograma.setText("Verzija programa: " + DbUtil.getVersionInfo() + ", prn.port: " + Starter.ComPortPrinter);
 
 		btnUcitaj = new Button(shlPrijava, SWT.NONE);
 		btnUcitaj.addSelectionListener(new UcitajBazuButtonListener());
@@ -176,7 +174,7 @@ public class LoginWindow {
 		tVozilo.setText("557");
 		tVozilo.addMouseListener(new textMouseListener());
 		tLinija.addModifyListener(new TLinijaModifyListener());
-		tLinija.setText("7222");
+		tLinija.setText("50547");
 		tLozinka = new Text(shlPrijava, SWT.BORDER | SWT.PASSWORD);
 		tLozinka.setText("TEST");
 		tLozinka.setFont(SWTResourceManager.getFont("Liberation Sans", 30, SWT.NORMAL));
@@ -219,7 +217,7 @@ public class LoginWindow {
 			sb.append("OIB: 51631089795\r");
 			sb.append("\r");
 			sb.append("Prijevoznik: AP d.d\r");
-			sb.append("Vrijeme: "+(new SimpleDateFormat("dd.MM.yy\nHH:mm:ss").format(new Date()))+"\r");
+			sb.append("Vrijeme: " + (new SimpleDateFormat("dd.MM.yy\nHH:mm:ss").format(new Date())) + "\r");
 			sb.append("--------------------------------\r");
 			sb.append("--------------------------------\r");
 			sb.append(" P R I P R E M A    P A P I R A \r");
@@ -249,9 +247,9 @@ public class LoginWindow {
 		public void widgetSelected(SelectionEvent e) {
 			Starter.vozac = Vozac.getBySifra(Integer.parseInt(tVozac.getText()));
 			Starter.vozilo = Vozilo.getBySifra(tVozilo.getText());
-			
-			if (! tLinija.getText().toString().isEmpty())
-		   	    Starter.stupac = Stupac.getByID(new Integer(tLinija.getText()));
+
+			if (!tLinija.getText().toString().isEmpty())
+				Starter.stupac = Stupac.getByID(new Integer(tLinija.getText()));
 			if (Starter.vozac == null || Starter.stupac == null || Starter.vozilo == null) {
 				MessageBox mb = new MessageBox(shlPrijava, SWT.OK | SWT.ICON_ERROR);
 				mb.setMessage("Morate prijaviti vozača,vozilo i liniju!");

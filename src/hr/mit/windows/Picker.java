@@ -16,8 +16,8 @@ public class Picker extends Dialog {
 
 	protected Shell shell;
 
-	Button upButton;
-	Button downButton;
+	Button upButton, pgUpButton;
+	Button downButton, pgDownButton;
 	ArrayList<Button> buttonList = new ArrayList<Button>();
 	List<String> items = null;
 	Integer pos = 0;
@@ -41,6 +41,7 @@ public class Picker extends Dialog {
 	 */
 	public Picker(Button c, List<String> items, Integer position) {
 		super(c.getShell(), SWT.NONE);
+		// super(new Shell(), SWT.NONE);
 		shell = new Shell(getParent(), SWT.APPLICATION_MODAL | SWT.ON_TOP);
 		this.c = c;
 		this.items = items;
@@ -54,11 +55,22 @@ public class Picker extends Dialog {
 		upButton = new Button(shell, SWT.NONE);
 		upButton.setFont(c.getFont());
 		upButton.setLocation(0, 0);
-		upButton.setSize(c.getSize());
+		// upButton.setSize(c.getSize());
+		upButton.setSize(c.getBounds().width / 2, c.getBounds().height);
 		upButton.setAlignment(SWT.CENTER);
 		upButton.setText("\u25B2");
 		upButton.addSelectionListener(new ButtonUpListener());
 		upButton.setBackground(SWTResourceManager.getColor(255, 255, 255));
+
+		pgUpButton = new Button(shell, SWT.NONE);
+		pgUpButton.setFont(c.getFont());
+		pgUpButton.setLocation(c.getBounds().width / 2, 0);
+		// pgUpButton .setSize(c.getSize());
+		pgUpButton.setSize(c.getBounds().width / 2, c.getBounds().height);
+		pgUpButton.setAlignment(SWT.CENTER);
+		pgUpButton.setText("\u25B2\u25B2");
+		pgUpButton.addSelectionListener(new ButtonUpListener());
+		pgUpButton.setBackground(SWTResourceManager.getColor(255, 255, 255));
 
 		for (int i = 0; i < MAX_PICKS; i++) {
 			Button b = new Button(shell, SWT.NONE);
@@ -79,15 +91,28 @@ public class Picker extends Dialog {
 		downButton.addSelectionListener(new ButtonDownListener());
 		downButton.setFont(c.getFont());
 		downButton.setLocation(0, (MAX_PICKS + 1) * c.getSize().y);
-		downButton.setSize(c.getSize());
+		downButton.setSize(c.getBounds().width / 2, c.getBounds().height);
 		downButton.setAlignment(SWT.CENTER);
 		downButton.setText("\u25BC");
 		downButton.setBackground(SWTResourceManager.getColor(255, 255, 255));
-		if (pos - MAX_PICKS <= 0)
-			upButton.setEnabled(false);
-		if (pos >= items.size())
-			downButton.setEnabled(false);
 
+		pgDownButton = new Button(shell, SWT.NONE);
+		pgDownButton.addSelectionListener(new ButtonDownListener());
+		pgDownButton.setFont(c.getFont());
+		pgDownButton.setLocation(c.getBounds().width / 2, (MAX_PICKS + 1) * c.getSize().y);
+		pgDownButton.setSize(c.getBounds().width / 2, c.getBounds().height);
+		pgDownButton.setAlignment(SWT.CENTER);
+		pgDownButton.setText("\u25BC\u25BC");
+		pgDownButton.setBackground(SWTResourceManager.getColor(255, 255, 255));
+
+		if (pos - MAX_PICKS <= 0) {
+			upButton.setEnabled(false);
+			pgUpButton.setEnabled(false);
+		}
+		if (pos >= items.size()) {
+			downButton.setEnabled(false);
+			pgDownButton.setEnabled(false);
+		}
 		shell.setLocation(c.toDisplay(0, -c.getSize().y));
 		shell.setSize(c.getSize().x, (MAX_PICKS + 2) * c.getSize().y);
 		int van = shell.getBounds().y + shell.getBounds().height;
@@ -118,35 +143,56 @@ public class Picker extends Dialog {
 	class ButtonDownListener extends SelectionAdapter {
 		@Override
 		public void widgetSelected(SelectionEvent e) {
-			for (int i = 0; i < (MAX_PICKS - 1); i++) {
-				buttonList.get(i).setText(buttonList.get(i + 1).getText());
-				buttonList.get(i).setData(buttonList.get(i + 1).getData());
-
+			int times = 1;
+			if (e.widget == pgDownButton)
+				times = MAX_PICKS;
+			for (int a = 0; a < times; a++) {
+				if (pos >= items.size())
+					break;
+				for (int i = 0; i < (MAX_PICKS - 1); i++) {
+					buttonList.get(i).setText(buttonList.get(i + 1).getText());
+					buttonList.get(i).setData(buttonList.get(i + 1).getData());
+				}
+				buttonList.get(MAX_PICKS - 1).setText(items.get(pos));
+				buttonList.get(MAX_PICKS - 1).setData(pos);
+				pos++;
+				if (pos > 0) {
+					upButton.setEnabled(true);
+					pgUpButton.setEnabled(true);
+				}
+				if (pos >= items.size()) {
+					downButton.setEnabled(false);
+					pgDownButton.setEnabled(false);
+				}
 			}
-			buttonList.get(MAX_PICKS - 1).setText(items.get(pos));
-			buttonList.get(MAX_PICKS - 1).setData(pos);
-			pos++;
-			if (pos > 0)
-				upButton.setEnabled(true);
-			if (pos >= items.size())
-				downButton.setEnabled(false);
 		}
 	}
 
 	class ButtonUpListener extends SelectionAdapter {
 		@Override
 		public void widgetSelected(SelectionEvent e) {
-			for (int i = (MAX_PICKS - 1); i > 0; i--) {
-				buttonList.get(i).setText(buttonList.get(i - 1).getText());
-				buttonList.get(i).setData(buttonList.get(i - 1).getData());
+			int times = 1;
+			if (e.widget == pgUpButton)
+				times = MAX_PICKS;
+			for (int a = 0; a < times; a++) {
+				if (pos <= 0)
+					break;
+				for (int i = (MAX_PICKS - 1); i > 0; i--) {
+					buttonList.get(i).setText(buttonList.get(i - 1).getText());
+					buttonList.get(i).setData(buttonList.get(i - 1).getData());
+				}
+				pos--;
+				buttonList.get(0).setText(items.get(pos - MAX_PICKS));
+				buttonList.get(0).setData(pos - MAX_PICKS);
+				if (pos - MAX_PICKS <= 0) {
+					upButton.setEnabled(false);
+					pgUpButton.setEnabled(false);
+				}
+				if (pos < items.size()) {
+					downButton.setEnabled(true);
+					pgDownButton.setEnabled(true);
+				}
 			}
-			pos--;
-			buttonList.get(0).setText(items.get(pos - MAX_PICKS));
-			buttonList.get(0).setData(pos - MAX_PICKS);
-			if (pos - MAX_PICKS <= 0)
-				upButton.setEnabled(false);
-			if (pos < items.size())
-				downButton.setEnabled(true);
 		}
 	}
 
