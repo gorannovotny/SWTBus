@@ -399,8 +399,8 @@ public class BaseMaker {
 	private static void doPTVozaci(Connection con1, Connection con2) throws SQLException {
 		int i = 0;
 		con2.createStatement().executeUpdate("drop table if exists PTVozaci;");
-		con2.createStatement().executeUpdate("CREATE TABLE PTVozaci(ID INT NOT NULL,PGRID INT NOT NULL,Sifra INT NOT NULL,Naziv VARCHAR,OsebaID INT,JeVozac INT,JeKondukter INT,MobilePassword VARCHAR  ,PRIMARY KEY (ID))");
-		PreparedStatement ps = con2.prepareStatement("INSERT INTO PTVozaci VALUES (?,?,?,?,?,?,?,?)");
+		con2.createStatement().executeUpdate("CREATE TABLE PTVozaci(ID INT NOT NULL,PGRID INT NOT NULL,Sifra INT NOT NULL,Naziv VARCHAR,OsebaID INT,JeVozac INT,JeKondukter INT,MobilePassword VARCHAR(40),OIB VARCHAR(15),PRIMARY KEY (ID))");
+		PreparedStatement ps = con2.prepareStatement("INSERT INTO PTVozaci VALUES (?,?,?,?,?,?,?,?,?)");
 		ResultSet rs = con1.createStatement().executeQuery("SELECT * FROM PTVozaci");
 		while (rs.next()) {
 			ps.setInt(1, rs.getInt("ID"));
@@ -411,6 +411,7 @@ public class BaseMaker {
 			ps.setInt(6, rs.getInt("JeVozac"));
 			ps.setInt(7, rs.getInt("JeKondukter"));
 			ps.setString(8, rs.getString("MobilePassword"));
+			ps.setString(9, rs.getString("OIB"));
 			ps.addBatch();
 			i++;
 		}
@@ -520,7 +521,8 @@ public class BaseMaker {
 		int i = 0;
 		con2.createStatement().executeUpdate("drop table if exists PTKTProdaja;");
 		con2.createStatement().executeUpdate("drop table if exists PTKTObracun;");
-		con2.createStatement().executeUpdate("CREATE TABLE PTKTProdaja(ID INTEGER PRIMARY KEY ,Firma INT NOT NULL, Stevilka INT, DokumentProdajeID INT,VrsticaProdajeID INT,DokumentBlagajneID INT,BUSProdajaID INT,Datum DATETIME,Vreme DATETIME,VoznaKartaID INT,Code VARCHAR(20) ,BRVoznji INT, SifraValute INT, Cena FLOAT(53),Popust1ID INT,Popust2ID INT,Popust3ID INT,PCenaKarte FLOAT(53),NCenaKarte FLOAT(53),Popust FLOAT(53),ZaPlatiti FLOAT(53),PorezProcent INT, UdioPoreza FLOAT(53), ProdajnoMestoID INT,PrevoznikID INT,VrstaPosadeID INT,Vozac1ID INT,Vozac2ID INT,Vozac3ID INT,Blagajnik INT,Blagajna INT,StupacID INT,OdPostajeID INT,DoPostajeID INT,VoziloID INT,Rezervacija INT,StatusZK INT,KmLinijeVR INT,KmDomaci INT,KmIno INT,BRPutnika INT,BRKarata INT,MobStrojID INT,ObracunID INT)");
+		con2.createStatement().executeUpdate("CREATE TABLE PTKTProdaja(ID INTEGER PRIMARY KEY ,Firma INT NOT NULL, Stevilka INT, DokumentProdajeID INT,VrsticaProdajeID INT,DokumentBlagajneID INT,BUSProdajaID INT,Datum DATETIME,Vreme DATETIME,VoznaKartaID INT,Code VARCHAR(20) ,BRVoznji INT, SifraValute INT, Cena FLOAT(53),Popust1ID INT,Popust2ID INT,Popust3ID INT,PCenaKarte FLOAT(53),NCenaKarte FLOAT(53),Popust FLOAT(53),ZaPlatiti FLOAT(53),PorezProcent INT, UdioPoreza FLOAT(53), ProdajnoMestoID INT,PrevoznikID INT,VrstaPosadeID INT,Vozac1ID INT,Vozac2ID INT,Vozac3ID INT,Blagajnik INT,Blagajna INT,StupacID INT,OdPostajeID INT,DoPostajeID INT,VoziloID INT,Rezervacija INT,StatusZK INT,KmLinijeVR INT,KmDomaci INT,KmIno INT," +
+				                             "BRPutnika INT,BRKarata INT,MobStrojID INT,ObracunID INT, FiskalStatus INT, ZKI VARCHAR(40), JIR VARCHAR(40))");
 		con2.createStatement().executeUpdate("CREATE INDEX [IXPRStevilka] ON [PTKTProdaja] ([Stevilka])");
 		con2.createStatement().executeUpdate("CREATE INDEX [IXObracunID]  ON [PTKTProdaja] ([ObracunID])");
 		con2.createStatement().executeUpdate("CREATE TABLE PTKTObracun(ID INTEGER PRIMARY KEY,Datum DATETIME,VozacID INT,GUID VARCHAR)");
@@ -830,7 +832,8 @@ public class BaseMaker {
 
 	private static void doPTMobileSetup(Connection con1, Connection con2) throws SQLException {
 		int i = 0;
-		con2.createStatement().executeUpdate("Create table if not exists PTMobileSetup(KeyString varchar(30), KeyValue varchar(30), PRIMARY KEY (KeyString))");
+		con2.createStatement().executeUpdate("drop table if exists PTMobileSetup;");
+		con2.createStatement().executeUpdate("Create table if not exists PTMobileSetup(KeyString varchar(30), KeyValue varchar(30), BlobValue BLOB, PRIMARY KEY (KeyString))");
 		i++;
 		con2.commit();
 		System.out.println(String.format("%-26s -> %7d", "PTMobileSetup", i));

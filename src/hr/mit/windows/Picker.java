@@ -175,15 +175,19 @@ public class Picker extends Dialog {
 			if (e.widget == pgUpButton)
 				times = MAX_PICKS;
 			for (int a = 0; a < times; a++) {
-				if (pos <= 0)
+				if (pos - MAX_PICKS <= 0) // josip 1 imamo def.
+				{	
 					break;
+				}
 				for (int i = (MAX_PICKS - 1); i > 0; i--) {
 					buttonList.get(i).setText(buttonList.get(i - 1).getText());
 					buttonList.get(i).setData(buttonList.get(i - 1).getData());
 				}
 				pos--;
-				buttonList.get(0).setText(items.get(pos - MAX_PICKS));
-				buttonList.get(0).setData(pos - MAX_PICKS);
+				if (pos - MAX_PICKS >= 0){ // josip
+				  buttonList.get(0).setText(items.get(pos - MAX_PICKS));
+			  	  buttonList.get(0).setData(pos - MAX_PICKS);
+				}
 				if (pos - MAX_PICKS <= 0) {
 					upButton.setEnabled(false);
 					pgUpButton.setEnabled(false);

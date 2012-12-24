@@ -228,12 +228,13 @@ public class Stupac {
 	        " inner join PTVarijanteVR VARVR ON VARVR.ID=STP.VarijantaVRID"+ 
 	        " inner join PTDneviVoznje DV on DV.ID = STP.DneviVoznjeID"+
             " where Datetime(?) between STP.VeljaOd and STP.VeljaDo"+ 
-	        " and VR.Firma=? "+         // 4. param
-            " and DV.VoziOb like ?"+    // 5. param uvazavamo dane voznje, pojednostavljeno
-            " and PRV.Sifra=?"+         // 6. prevoznik je AP d.d.
-            " and STP.VremeOdhoda>= ?"+ // 7. param vreme odhoda
-            " and MIR.ID is null"+      // ne smije imati aktivno mirovanje na dan
-            " and VR.VrstaVR=1"+        // samo valjani vozni redi
+	        " and VR.Firma=? "+                // 4. param
+            " and DV.VoziOb like ?"+           // 5. param uvazavamo dane voznje, pojednostavljeno
+            " and PRV.Sifra=?"+                // 6. prevoznik je AP d.d.
+            " and STP.VremeOdhoda>= ?"+        // 7. param vreme odhoda
+            " and MIR.ID is null"+             // ne smije imati aktivno mirovanje na dan
+            " and VR.VrstaVR=1"+               // samo valjani vozni redi "1"
+            " and VR.KategorijaPrevoza <> 50"+ // međunarodni su isključeni za lokal = kategorija "50"
          " and CASE WHEN STP.SmerVoznje='-' THEN "+
             " VR.ID in (select distinct PVR1.VozniRedID from PTPostajeVR PVR1"+ // obje postaje moraju biti prisutne u postajama voznog reda
             " INNER JOIN PTPostajeVR PVR2 ON PVR2.VozniRedID=PVR1.VozniRedID and PVR2.PostajaID=?"+ // 8.param
