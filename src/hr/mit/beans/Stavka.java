@@ -148,7 +148,8 @@ public class Stavka {
 			else
 				retval = cijenaKarte.getCijena().multiply(BigDecimal.ONE.subtract(getKarta().getPopustProcent().movePointLeft(2)));
 		}
-		return CijenaKarte.zaokruzi(retval, this.getKarta().getRoundN());
+		retval = CijenaKarte.zaokruzi(retval, this.getKarta().getRoundN()); //josip 27.12.2012
+		return retval.setScale(2);
 	}
 
 	public BigDecimal getNettoCijena() {
@@ -223,6 +224,7 @@ public class Stavka {
 	}
 
 	public void setCijena(BigDecimal cijena) {
+ 		this.cijenaKarte.setCijena(cijena.setScale(2)); // josip 27.12.2012
 		this.cijenaZamjenske = cijena;
 	}
 

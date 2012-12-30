@@ -521,14 +521,23 @@ public class BaseMaker {
 		int i = 0;
 		con2.createStatement().executeUpdate("drop table if exists PTKTProdaja;");
 		con2.createStatement().executeUpdate("drop table if exists PTKTObracun;");
+		con2.createStatement().executeUpdate("drop table if exists PTKTRacuni;");
+
+		con2.createStatement().executeUpdate("CREATE TABLE PTKTRacuni(ID INTEGER PRIMARY KEY, Firma INT NOT NULL, PrefiksRacuna Varchar(15), BrojRacuna INT, Datum DATETIME, Vreme DATETIME, " +
+                                             "FiskalStatus INT, ZKI VARCHAR(40), JIR VARCHAR(40))");
+		con2.createStatement().executeUpdate("CREATE INDEX [IXRacunBroj] ON [PTKTRacuni] ([PrefiksRacuna],[BrojRacuna],[Firma])");
+
 		con2.createStatement().executeUpdate("CREATE TABLE PTKTProdaja(ID INTEGER PRIMARY KEY ,Firma INT NOT NULL, Stevilka INT, DokumentProdajeID INT,VrsticaProdajeID INT,DokumentBlagajneID INT,BUSProdajaID INT,Datum DATETIME,Vreme DATETIME,VoznaKartaID INT,Code VARCHAR(20) ,BRVoznji INT, SifraValute INT, Cena FLOAT(53),Popust1ID INT,Popust2ID INT,Popust3ID INT,PCenaKarte FLOAT(53),NCenaKarte FLOAT(53),Popust FLOAT(53),ZaPlatiti FLOAT(53),PorezProcent INT, UdioPoreza FLOAT(53), ProdajnoMestoID INT,PrevoznikID INT,VrstaPosadeID INT,Vozac1ID INT,Vozac2ID INT,Vozac3ID INT,Blagajnik INT,Blagajna INT,StupacID INT,OdPostajeID INT,DoPostajeID INT,VoziloID INT,Rezervacija INT,StatusZK INT,KmLinijeVR INT,KmDomaci INT,KmIno INT," +
-				                             "BRPutnika INT,BRKarata INT,MobStrojID INT,ObracunID INT, FiskalStatus INT, ZKI VARCHAR(40), JIR VARCHAR(40))");
+                                             "BRPutnika INT,BRKarata INT,MobStrojID INT,ObracunID INT, MobRacunID INT)");
 		con2.createStatement().executeUpdate("CREATE INDEX [IXPRStevilka] ON [PTKTProdaja] ([Stevilka])");
-		con2.createStatement().executeUpdate("CREATE INDEX [IXObracunID]  ON [PTKTProdaja] ([ObracunID])");
+		con2.createStatement().executeUpdate("CREATE INDEX [IXPRRacunID]  ON [PTKTProdaja] ([MobRacunID])");
+		con2.createStatement().executeUpdate("CREATE INDEX [IXPRObracunID]ON [PTKTProdaja] ([ObracunID])");
+
 		con2.createStatement().executeUpdate("CREATE TABLE PTKTObracun(ID INTEGER PRIMARY KEY,Datum DATETIME,VozacID INT,GUID VARCHAR)");
 		con2.commit();
-		System.out.println(String.format("%-26s -> %7d", "PTKTProdaja", i));
+		System.out.println(String.format("%-26s -> %7d", "Prodaja/Racuni/Obracuni", i));
 	}
+
 
 	private static void doPTKTPopusti(Connection con1, Connection con2) throws SQLException {
 		int i = 0;

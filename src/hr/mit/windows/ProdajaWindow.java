@@ -121,7 +121,9 @@ public class ProdajaWindow {
 		stavka.setJeZamjenska(btnZk.getSelection());
 		stavka.setProdajnoMjesto(ProdajnoMjesto.get((Integer) cProdMjesto.getData()));
 		stavka.setBrojKarte(textBrKarte.getText());
-		stavka.setCijena(textCijena.getText());
+		//josip - 27.12.2012 -- cijenu upisujemo samo u ta dva slucaja
+		if (stavka.getJeZamjenska() || (stavka.getKarta().getNacinDolocanjaCene() == Karta.RUCNI_UNOS))
+		   stavka.setCijena(textCijena.getText());
 	}
 
 	protected void stavkaToScreen() {

@@ -112,10 +112,12 @@ public class LoginWindow {
 
 		tLinija = new Text(shlPrijava, SWT.BORDER);
 		tLinija.setFont(SWTResourceManager.getFont("Liberation Sans", 30, SWT.NORMAL));
-		tLinija.setBounds(165, 260, 125, 50);
+//		tLinija.setBounds(165, 260, 125, 50);
+		tLinija.setBounds(165, 260, 135, 50);
 
 		btnSearch = new Button(shlPrijava, SWT.NONE);
-		btnSearch.setBounds(290, 263, 46, 46);
+//		btnSearch.setBounds(290, 263, 46, 46);
+		btnSearch.setBounds(302, 263, 46, 46);
 		btnSearch.setText("\u2026");
 		btnSearch.addSelectionListener(new SearchStupacButtonListener());
 
@@ -124,7 +126,7 @@ public class LoginWindow {
 		lOpisLinije.setText("");
 		lOpisLinije.setAlignment(SWT.LEFT);
 		lOpisLinije.setFont(SWTResourceManager.getFont("Liberation Sans", 14, SWT.NORMAL));
-		lOpisLinije.setBounds(345, 270, 445, 30);
+		lOpisLinije.setBounds(350, 270, 445, 30);
 
 		lblPolazak = new Label(shlPrijava, SWT.NONE);
 		lblPolazak.setBackground(SWTResourceManager.getColor(SWT.COLOR_GRAY));

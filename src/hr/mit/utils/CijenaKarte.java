@@ -120,6 +120,9 @@ public class CijenaKarte {
 		BigDecimal retval = BigDecimal.ZERO;
 		if (karta.getNacinDolocanjaCene().equals(Karta.FIKSNA_CIJENA))
 			retval = karta.getFiksnaCena();
+		else 
+		if (karta.getNacinDolocanjaCene().equals(Karta.RUCNI_UNOS))
+				retval = BigDecimal.ZERO;
 		else {
 			if (false) {
 				/*
@@ -166,6 +169,11 @@ public class CijenaKarte {
 	}
 
 	public BigDecimal getCijena() {
+		return cijena;
+	}
+
+	public BigDecimal setCijena(BigDecimal iznos) {
+	    cijena = iznos;
 		return cijena;
 	}
 
