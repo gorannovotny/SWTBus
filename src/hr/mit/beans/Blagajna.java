@@ -6,7 +6,6 @@ import hr.mit.utils.DbUtil;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
-import java.text.NumberFormat;
 import java.util.List;
 
 public class Blagajna {
