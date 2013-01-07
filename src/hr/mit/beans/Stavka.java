@@ -224,7 +224,7 @@ public class Stavka {
 	}
 
 	public void setCijena(BigDecimal cijena) {
- 		this.cijenaKarte.setCijena(cijena.setScale(2)); // josip 27.12.2012
+ 		this.cijenaKarte.setCijena(cijena); // josip 27.12.2012
 		this.cijenaZamjenske = cijena;
 	}
 
@@ -233,9 +233,9 @@ public class Stavka {
 			NumberFormat nf = NumberFormat.getNumberInstance();
 			DecimalFormat df = (DecimalFormat) nf;
 			df.parseObject(s);
-			setCijena(new BigDecimal(s).setScale(2));
+			setCijena(new BigDecimal(s));
 		} catch (Exception e) {
-			setCijena(BigDecimal.ZERO.setScale(2));
+			setCijena(BigDecimal.ZERO);
 		}
 	}
 

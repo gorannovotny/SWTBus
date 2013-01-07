@@ -18,8 +18,6 @@ import org.eclipse.swt.widgets.MessageBox;
 import org.eclipse.swt.widgets.Shell;
 import org.eclipse.swt.widgets.Text;
 import org.eclipse.wb.swt.SWTResourceManager;
-// josip
-// josip
 
 public class VRFinder {
 
@@ -31,6 +29,7 @@ public class VRFinder {
 	private Text tSati;
 	private Text tMinute;
 	private Button btnDummy;
+	private Button btnExit;
 	private Stupac stupac = null;
 	private Label lblNewLabel;
 	private Label lblSearchPostajaOd;
@@ -39,6 +38,17 @@ public class VRFinder {
 	private Label lblTimeLabelO;
 	private DateTime timeBox;
 
+	/**
+	 * Create the dialog.
+	 * 
+	 * @param parent
+	 * @param style
+	 */
+	/**
+	 * Open the dialog.
+	 * 
+	 * @return the result
+	 */
 	public VRFinder(Shell parent) {
 		this.parent = parent;
 	}
@@ -47,6 +57,19 @@ public class VRFinder {
 	 * @wbp.parser.entryPoint
 	 */
 	public Stupac open() {
+		createContents();
+		shell.open();
+		shell.layout();
+		Display display = parent.getDisplay();
+		while (!shell.isDisposed()) {
+			if (!display.readAndDispatch()) {
+				display.sleep();
+			}
+		}
+		return stupac;
+	}
+
+	public Stupac openZaPostaje(int Postaja1ID, int Postaja2ID) {
 		createContents();
 		shell.open();
 		shell.layout();
@@ -72,27 +95,22 @@ public class VRFinder {
 
 		btnDummy = new Button(shell, SWT.NONE);
 		btnDummy.addSelectionListener(new BtnDummySelectionListener());
-		btnDummy.setBounds(10, 160, 738, 50);
+		btnDummy.setBounds(10, 150, 738, 50);
 		btnDummy.setFont(SWTResourceManager.getFont("Liberation Sans", 20, SWT.NORMAL)); // 20
 		btnDummy.setAlignment(SWT.LEFT);
 		btnDummy.setText("Traži");
+
+		btnExit = new Button(shell, SWT.NONE);
+		btnExit.addSelectionListener(new BtnExitSelectionListener());
+		btnExit.setBounds(675, 5, 75, 50);
+		btnExit.setFont(SWTResourceManager.getFont("Liberation Sans", 20, SWT.NORMAL)); // 20
+		btnExit.setAlignment(SWT.LEFT);
+		btnExit.setText("Izlaz");
 
 		lblNewLabel = new Label(shell, SWT.NONE);
 		lblNewLabel.setFont(SWTResourceManager.getFont("Liberation Sans", 30, SWT.NORMAL));// 30
 		lblNewLabel.setBounds(10, 10, 410, 44);
 		lblNewLabel.setText("Pretraga voznih redova");
-
-		lblTimeLabel = new Label(shell, SWT.NONE);
-		lblTimeLabel.setFont(SWTResourceManager.getFont("Liberation Sans", 18, SWT.NORMAL));// 30
-		lblTimeLabel.setBounds(520, 20, 110, 35);
-		lblTimeLabel.setText("Polazak u");
-		lblTimeLabel.setVisible(true);
-
-		lblTimeLabelO = new Label(shell, SWT.NONE);
-		lblTimeLabelO.setFont(SWTResourceManager.getFont("Liberation Sans", 18, SWT.NORMAL));// 30
-		lblTimeLabelO.setBounds(640 + 50, 18, 8, 35);
-		lblTimeLabelO.setText(":");
-		lblTimeLabelO.setVisible(true);
 
 		tOdPostaje.addMouseListener(new textMouseListener());
 		tDoPostaje.addMouseListener(new textMouseListener());
@@ -107,14 +125,26 @@ public class VRFinder {
 		lblSearchPostajaDo.setBounds(388 + 35, 115, 290, 35);
 		lblSearchPostajaDo.setText("??");
 
+		lblTimeLabel = new Label(shell, SWT.NONE);
+		lblTimeLabel.setFont(SWTResourceManager.getFont("Liberation Sans", 18, SWT.NORMAL));// 30
+		lblTimeLabel.setBounds(520 - 80, 20, 110, 35);
+		lblTimeLabel.setText("Polazak u");
+		lblTimeLabel.setVisible(true);
+
+		lblTimeLabelO = new Label(shell, SWT.NONE);
+		lblTimeLabelO.setFont(SWTResourceManager.getFont("Liberation Sans", 18, SWT.NORMAL));// 30
+		lblTimeLabelO.setBounds(640 + 50 - 80, 18, 8, 35);
+		lblTimeLabelO.setText(":");
+		lblTimeLabelO.setVisible(true);
+
 		timeBox = new DateTime(shell, SWT.TIME | SWT.SHORT); //
-		timeBox.setBounds(645, 10, 100, 44);
+		timeBox.setBounds(645 - 80, 10, 100, 44);
 		timeBox.setFont(SWTResourceManager.getFont("Liberation Sans", 18, SWT.NORMAL));// 30
 		timeBox.setVisible(false);
 		timeBox.addMouseListener(new timeMouseListener());
 
 		tSati = new Text(shell, SWT.BORDER);
-		tSati.setBounds(640, 10, 50, 40);
+		tSati.setBounds(640 - 80, 10, 50, 40);
 		tSati.setFont(SWTResourceManager.getFont("Liberation Sans", 25, SWT.NORMAL));
 		tSati.setVisible(true);
 		tSati.setText(String.format("%02d", timeBox.getHours()));
@@ -134,7 +164,7 @@ public class VRFinder {
 		});
 
 		tMinute = new Text(shell, SWT.BORDER);
-		tMinute.setBounds(700, 10, 50, 40);
+		tMinute.setBounds(700 - 80, 10, 50, 40);
 		tMinute.setFont(SWTResourceManager.getFont("Liberation Sans", 25, SWT.NORMAL));
 		tMinute.setVisible(true);
 		tMinute.setText(String.format("%02d", timeBox.getMinutes()));
@@ -166,7 +196,6 @@ public class VRFinder {
 				if (inputs.length() > 1)
 					outs = Stupac.OpisPostajeFinder(inputs);
 				lblSearchPostajaOd.setText(outs);
-
 			}
 		});
 
@@ -176,18 +205,29 @@ public class VRFinder {
 				String inputs = "";
 				char myChar = event.character;
 				inputs = tDoPostaje.getText() + event.text;
-
-				// pobrisemo
 				if (myChar == '\b') {
 					inputs = inputs.substring(0, inputs.length() - 1);
 				}
 				if (inputs.length() > 1)
 					outs = Stupac.OpisPostajeFinder(inputs);
 				lblSearchPostajaDo.setText(outs);
-			}// public
+			}
 		});
 
-	} // create context
+	}
+
+	private class BtnExitSelectionListener extends SelectionAdapter {
+		@Override
+		public void widgetDefaultSelected(SelectionEvent e) {
+			shell.dispose();
+			return;
+		}
+
+		@Override
+		public void widgetSelected(SelectionEvent e) {
+			widgetDefaultSelected(e);
+		}
+	}
 
 	private class BtnDummySelectionListener extends SelectionAdapter {
 		public void widgetDefaultSelected(SelectionEvent e) {
@@ -238,12 +278,10 @@ public class VRFinder {
 			VirtualKeyboard keypad = new VirtualKeyboard(shell);
 			t.selectAll();
 			keypad.open(t);
-
 		}
 	}
 
 	protected class timeMouseListener extends MouseAdapter {
-		@Override
 		public void mouseDown(MouseEvent e) {
 			new VirtualKeyboard(shell);
 		}

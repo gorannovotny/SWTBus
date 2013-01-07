@@ -172,9 +172,8 @@ public class CijenaKarte {
 		return cijena;
 	}
 
-	public BigDecimal setCijena(BigDecimal iznos) {
-	    cijena = iznos;
-		return cijena;
+	public void setCijena(BigDecimal cijena) {
+	    this.cijena = cijena.setScale(2);
 	}
 
 	public static BigDecimal zaokruzi(BigDecimal iznos, BigDecimal r) {
