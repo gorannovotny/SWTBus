@@ -64,7 +64,7 @@ public class ProdajaWindow {
 	private TMouseListener mouseListener;
 
 	protected boolean exit;
-	private Button btnZadnji;
+	private Button btnPrelaz;
 
 	protected List<Stavka> oldRacun;
 	private Button btnZk;
@@ -177,10 +177,10 @@ public class ProdajaWindow {
 			btnPrint.setEnabled(false);
 			btnClear.setEnabled(false);
 		}
-		if (Stavka.getOldList() == null || Stavka.getOldList().isEmpty())
-			btnZadnji.setEnabled(false);
+		if (!Stavka.getList().isEmpty() && Stavka.getList().get(0).getKarta().mozePrelaz())
+			btnPrelaz.setEnabled(true);
 		else
-			btnZadnji.setEnabled(true);
+			btnPrelaz.setEnabled(false);
 
 	}
 
@@ -344,11 +344,11 @@ public class ProdajaWindow {
 		btnClear.setFont(SWTResourceManager.getFont("Liberation Sans", 25, SWT.NORMAL));
 		btnClear.setBounds(470, 385, 160, 75);
 
-		btnZadnji = new Button(shell, SWT.NONE);
-		btnZadnji.addSelectionListener(new BtnZadnjiSelectionListener());
-		btnZadnji.setText("Zadnji");
-		btnZadnji.setFont(SWTResourceManager.getFont("Liberation Sans", 25, SWT.NORMAL));
-		btnZadnji.setBounds(470, 465, 160, 75);
+		btnPrelaz = new Button(shell, SWT.NONE);
+		btnPrelaz.addSelectionListener(new BtnPrelazSelectionListener());
+		btnPrelaz.setText("Prelaz");
+		btnPrelaz.setFont(SWTResourceManager.getFont("Liberation Sans", 25, SWT.NORMAL));
+		btnPrelaz.setBounds(470, 465, 160, 75);
 
 		btnPrint = new Button(shell, SWT.NONE);
 		btnPrint.addSelectionListener(new PrintButtonListener());
@@ -520,11 +520,11 @@ public class ProdajaWindow {
 		}
 	}
 
-	class BtnZadnjiSelectionListener extends SelectionAdapter {
+	class BtnPrelazSelectionListener extends SelectionAdapter {
 		@Override
 		public void widgetDefaultSelected(SelectionEvent e) {
-			Zadnji z = new Zadnji(shell);
-			z.open();
+			Prelaz p = new Prelaz(shell);
+			p.open(Stavka.getList().get(0).getDoPostaje().getNaziv());
 		}
 
 		@Override

@@ -185,4 +185,8 @@ public class Karta {
 		return l;
 	}
 
+	public boolean mozePrelaz() {
+		return true;
+	}
+
 }

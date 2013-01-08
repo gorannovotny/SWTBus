@@ -3,6 +3,8 @@ package hr.mit.windows;
 import hr.mit.beans.Stupac;
 import hr.mit.utils.DbUtil;
 
+import java.util.Date;
+
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.events.MouseAdapter;
 import org.eclipse.swt.events.MouseEvent;
@@ -24,31 +26,20 @@ public class VRFinder {
 	protected Object result;
 	protected Shell shell;
 	protected Shell parent;
-	private Text tOdPostaje;
-	private Text tDoPostaje;
+	protected Text tOdPostaje;
+	protected Text tDoPostaje;
 	private Text tSati;
 	private Text tMinute;
-	private Button btnDummy;
-	private Button btnExit;
+	protected Button btnDummy;
+	protected Button btnExit;
 	private Stupac stupac = null;
-	private Label lblNewLabel;
-	private Label lblSearchPostajaOd;
-	private Label lblSearchPostajaDo;
+	protected Label lblNewLabel;
+	protected Label lblSearchPostajaOd;
+	protected Label lblSearchPostajaDo;
 	private Label lblTimeLabel;
 	private Label lblTimeLabelO;
-	private DateTime timeBox;
 
-	/**
-	 * Create the dialog.
-	 * 
-	 * @param parent
-	 * @param style
-	 */
-	/**
-	 * Open the dialog.
-	 * 
-	 * @return the result
-	 */
+
 	public VRFinder(Shell parent) {
 		this.parent = parent;
 	}
@@ -69,23 +60,11 @@ public class VRFinder {
 		return stupac;
 	}
 
-	public Stupac openZaPostaje(int Postaja1ID, int Postaja2ID) {
-		createContents();
-		shell.open();
-		shell.layout();
-		Display display = parent.getDisplay();
-		while (!shell.isDisposed()) {
-			if (!display.readAndDispatch()) {
-				display.sleep();
-			}
-		}
-		return stupac;
-	}
 
-	private void createContents() {
+	protected void createContents() {
 		shell = new Shell(parent, SWT.APPLICATION_MODAL);
 		shell.setSize(760, 400);
-		shell.setBounds(20, 20, 760, 440);
+		shell.setBounds(20, 20, 760, 500);
 		tOdPostaje = new Text(shell, SWT.BORDER);
 		tOdPostaje.setBounds(10, 60, 360, 50);
 		tOdPostaje.setFont(SWTResourceManager.getFont("Liberation Sans", 25, SWT.NORMAL));
@@ -137,17 +116,11 @@ public class VRFinder {
 		lblTimeLabelO.setText(":");
 		lblTimeLabelO.setVisible(true);
 
-		timeBox = new DateTime(shell, SWT.TIME | SWT.SHORT); //
-		timeBox.setBounds(645 - 80, 10, 100, 44);
-		timeBox.setFont(SWTResourceManager.getFont("Liberation Sans", 18, SWT.NORMAL));// 30
-		timeBox.setVisible(false);
-		timeBox.addMouseListener(new timeMouseListener());
-
 		tSati = new Text(shell, SWT.BORDER);
 		tSati.setBounds(640 - 80, 10, 50, 40);
 		tSati.setFont(SWTResourceManager.getFont("Liberation Sans", 25, SWT.NORMAL));
 		tSati.setVisible(true);
-		tSati.setText(String.format("%02d", timeBox.getHours()));
+		tSati.setText(String.format("%02d", new Date().getHours()));
 		tSati.addMouseListener(new textMouseListener());
 		tSati.addVerifyListener(new VerifyListener() {
 			public void verifyText(VerifyEvent event) {
@@ -167,7 +140,7 @@ public class VRFinder {
 		tMinute.setBounds(700 - 80, 10, 50, 40);
 		tMinute.setFont(SWTResourceManager.getFont("Liberation Sans", 25, SWT.NORMAL));
 		tMinute.setVisible(true);
-		tMinute.setText(String.format("%02d", timeBox.getMinutes()));
+		tMinute.setText(String.format("%02d", new Date().getMinutes()));
 		tMinute.addMouseListener(new textMouseListener());
 		tMinute.addVerifyListener(new VerifyListener() {
 			public void verifyText(VerifyEvent event) {
@@ -183,40 +156,12 @@ public class VRFinder {
 			}
 		});
 
-		tOdPostaje.addVerifyListener(new VerifyListener() {
-			public void verifyText(VerifyEvent event) {
-				String outs = "??";
-				String inputs = "";
-				char myChar = event.character;
-				inputs = tOdPostaje.getText() + event.text;
-
-				if (myChar == '\b') {
-					inputs = inputs.substring(0, inputs.length() - 1);
-				}
-				if (inputs.length() > 1)
-					outs = Stupac.OpisPostajeFinder(inputs);
-				lblSearchPostajaOd.setText(outs);
-			}
-		});
-
-		tDoPostaje.addVerifyListener(new VerifyListener() {
-			public void verifyText(VerifyEvent event) {
-				String outs = "??";
-				String inputs = "";
-				char myChar = event.character;
-				inputs = tDoPostaje.getText() + event.text;
-				if (myChar == '\b') {
-					inputs = inputs.substring(0, inputs.length() - 1);
-				}
-				if (inputs.length() > 1)
-					outs = Stupac.OpisPostajeFinder(inputs);
-				lblSearchPostajaDo.setText(outs);
-			}
-		});
+		tOdPostaje.addVerifyListener(new SearchVerifyListener(lblSearchPostajaOd));
+		tDoPostaje.addVerifyListener(new SearchVerifyListener(lblSearchPostajaDo));
 
 	}
 
-	private class BtnExitSelectionListener extends SelectionAdapter {
+	protected class BtnExitSelectionListener extends SelectionAdapter {
 		@Override
 		public void widgetDefaultSelected(SelectionEvent e) {
 			shell.dispose();
@@ -229,7 +174,7 @@ public class VRFinder {
 		}
 	}
 
-	private class BtnDummySelectionListener extends SelectionAdapter {
+	protected class BtnDummySelectionListener extends SelectionAdapter {
 		public void widgetDefaultSelected(SelectionEvent e) {
 			if (lblSearchPostajaDo.getText().equals("??") || lblSearchPostajaOd.getText().equals("??") || lblSearchPostajaDo.getText().equals("") || lblSearchPostajaOd.getText().equals("")) {
 				MessageBox mb1 = new MessageBox(shell, SWT.OK | SWT.ICON_ERROR);
@@ -281,9 +226,27 @@ public class VRFinder {
 		}
 	}
 
-	protected class timeMouseListener extends MouseAdapter {
-		public void mouseDown(MouseEvent e) {
-			new VirtualKeyboard(shell);
+	protected class SearchVerifyListener implements VerifyListener {
+		Label label;
+		
+		SearchVerifyListener(Label label) {
+			this.label = label;
+		}
+		
+		@Override
+		public void verifyText(VerifyEvent event) {
+			Text t= (Text) event.widget;
+			String outs = "??";
+			String inputs = "";
+			char myChar = event.character;
+			inputs = t.getText() + event.text;
+
+			if (myChar == '\b') {
+				inputs = inputs.substring(0, inputs.length() - 1);
+			}
+			if (inputs.length() > 1)
+				outs = Stupac.OpisPostajeFinder(inputs);
+			label.setText(outs);
 		}
 	}
 
