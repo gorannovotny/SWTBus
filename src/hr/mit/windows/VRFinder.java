@@ -181,7 +181,6 @@ public class VRFinder {
 				mb1.setMessage("Nisu upisane postaje !");
 				mb1.open();
 				stupac = null;
-				shell.dispose();
 				return;
 			}
 
@@ -203,6 +202,7 @@ public class VRFinder {
 				mb.open();
 				stupac = null;
 			} else {
+				btnExit.setEnabled(false);
 				Picker picker = new Picker(btnDummy, Stupac.getArrayList(), 0);
 				btnDummy = picker.open();
 				if (btnDummy.getData() != null)
