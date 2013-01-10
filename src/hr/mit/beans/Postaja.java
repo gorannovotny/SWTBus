@@ -60,7 +60,30 @@ public class Postaja {
 		} catch (SQLException e) {
 			throw new RuntimeException(e);
 		}
+	}
 
+	public static Postaja getByNaziv(String naziv) {
+		String pos1 = naziv;
+
+		pos1 = pos1.replace('Ž', '_');
+		pos1 = pos1.replace('Š', '_');
+		pos1 = pos1.replace('Č', '_');
+		pos1 = pos1.replace('Ć', '_');
+		pos1 = pos1.replace('Đ', '_');
+
+		String sql = "select a.ID,a.Naziv from PTPostaje a WHERE Upper(Naziv) like Upper(?) and PGrid=? order by Naziv limit 1";
+		try {
+			PreparedStatement ps = DbUtil.getConnection().prepareStatement(sql);
+			ps.setString(1, pos1 + "%");
+			ps.setInt(2, DbUtil.getPGRID());
+			ResultSet rs = ps.executeQuery();
+			if (rs.next()) {
+				return new Postaja(rs.getInt(1), rs.getString(2), 0.0, 0.0, rs.getInt(1));
+			} else
+				return null;
+		} catch (SQLException e) {
+			throw new RuntimeException(e);
+		}
 	}
 
 	public static Postaja get(int index) {

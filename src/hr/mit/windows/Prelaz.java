@@ -1,5 +1,6 @@
 package hr.mit.windows;
 
+import hr.mit.beans.Postaja;
 import hr.mit.beans.Stavka;
 import hr.mit.beans.Stupac;
 
@@ -16,12 +17,14 @@ import org.eclipse.wb.swt.SWTResourceManager;
 
 public class Prelaz extends VRFinder {
 
+	private Postaja prelaz;
+
 	public Prelaz(Shell parent) {
 		super(parent);
 	}
 
-	public Stavka open(String postaja) {
-		createContents(postaja);
+	public Stavka open(Stavka stavka) {
+		createContents(stavka);
 		shell.open();
 		shell.layout();
 		Display display = parent.getDisplay();
@@ -30,17 +33,17 @@ public class Prelaz extends VRFinder {
 				display.sleep();
 			}
 		}
-		return null;
+		return new Stavka(stupac, stavka.getDoPostaje(), prelaz, stavka.getKarta(), stavka.getPopust());
 	}
 
-	protected void createContents(String postaja) {
+	protected void createContents(Stavka stavka) {
 		shell = new Shell(parent, SWT.APPLICATION_MODAL);
 		shell.setSize(760, 400);
 		shell.setBounds(20, 20, 760, 500);
 		tOdPostaje = new Text(shell, SWT.BORDER);
 		tOdPostaje.setBounds(10, 60, 360, 50);
 		tOdPostaje.setFont(SWTResourceManager.getFont("Liberation Sans", 25, SWT.NORMAL));
-		tOdPostaje.setText(postaja);
+		tOdPostaje.setText(stavka.getDoPostaje().getNaziv());
 		tOdPostaje.setEnabled(false);
 		tDoPostaje = new Text(shell, SWT.BORDER);
 		tDoPostaje.setBounds(388, 60, 360, 50);
@@ -49,18 +52,18 @@ public class Prelaz extends VRFinder {
 		btnDummy = new Button(shell, SWT.NONE);
 		btnDummy.addSelectionListener(new BtnDummySelectionListener());
 		btnDummy.setBounds(10, 150, 738, 50);
-		btnDummy.setFont(SWTResourceManager.getFont("Liberation Sans", 20, SWT.NORMAL)); // 20
+		btnDummy.setFont(SWTResourceManager.getFont("Liberation Sans", 20, SWT.NORMAL));
 		btnDummy.setAlignment(SWT.LEFT);
 		btnDummy.setText("Traži");
 
 		btnExit = new Button(shell, SWT.NONE);
 		btnExit.addSelectionListener(new BtnExitSelectionListener());
 		btnExit.setBounds(675, 5, 75, 50);
-		btnExit.setFont(SWTResourceManager.getFont("Liberation Sans", 20, SWT.NORMAL)); // 20 btnExit.setAlignment(SWT.LEFT);
+		btnExit.setFont(SWTResourceManager.getFont("Liberation Sans", 20, SWT.NORMAL));
 		btnExit.setText("Izlaz");
 
 		lblNewLabel = new Label(shell, SWT.NONE);
-		lblNewLabel.setFont(SWTResourceManager.getFont("Liberation Sans", 30, SWT.NORMAL));// 30
+		lblNewLabel.setFont(SWTResourceManager.getFont("Liberation Sans", 30, SWT.NORMAL));
 		lblNewLabel.setBounds(10, 10, 410, 44);
 		lblNewLabel.setText("Prelaz");
 
@@ -69,7 +72,7 @@ public class Prelaz extends VRFinder {
 		lblSearchPostajaOd = new Label(shell, SWT.NONE);
 		lblSearchPostajaOd.setFont(SWTResourceManager.getFont("Liberation Sans", 16, SWT.NORMAL));// 30
 		lblSearchPostajaOd.setBounds(10 + 35, 115, 290, 35);
-		lblSearchPostajaOd.setText(postaja);
+		lblSearchPostajaOd.setText(stavka.getDoPostaje().getNaziv());
 
 		lblSearchPostajaDo = new Label(shell, SWT.NONE);
 		lblSearchPostajaDo.setFont(SWTResourceManager.getFont("Liberation Sans", 16, SWT.NORMAL));// 30
@@ -78,27 +81,6 @@ public class Prelaz extends VRFinder {
 
 		tDoPostaje.addVerifyListener(new SearchVerifyListener(lblSearchPostajaDo));
 
-		/*
-		 * lblTimeLabel = new Label(shell, SWT.NONE); lblTimeLabel.setFont(SWTResourceManager.getFont("Liberation Sans", 18, SWT.NORMAL));// 30 lblTimeLabel.setBounds(520 - 80, 20, 110, 35); lblTimeLabel.setText("Polazak u"); lblTimeLabel.setVisible(true);
-		 * 
-		 * lblTimeLabelO = new Label(shell, SWT.NONE); lblTimeLabelO.setFont(SWTResourceManager.getFont("Liberation Sans", 18, SWT.NORMAL));// 30 lblTimeLabelO.setBounds(640 + 50 - 80, 18, 8, 35); lblTimeLabelO.setText(":"); lblTimeLabelO.setVisible(true);
-		 * 
-		 * timeBox = new DateTime(shell, SWT.TIME | SWT.SHORT); // timeBox.setBounds(645 - 80, 10, 100, 44); timeBox.setFont(SWTResourceManager.getFont("Liberation Sans", 18, SWT.NORMAL));// 30 timeBox.setVisible(false); timeBox.addMouseListener(new timeMouseListener());
-		 * 
-		 * tSati = new Text(shell, SWT.BORDER); tSati.setBounds(640 - 80, 10, 50, 40); tSati.setFont(SWTResourceManager.getFont("Liberation Sans", 25, SWT.NORMAL)); tSati.setVisible(true); tSati.setText(String.format("%02d", timeBox.getHours())); tSati.addMouseListener(new textMouseListener()); tSati.addVerifyListener(new VerifyListener() { public void verifyText(VerifyEvent event) { event.doit = true; String inTimeStr = ""; inTimeStr = tSati.getText() + event.text;
-		 * 
-		 * if (DbUtil.checkIfNumber(inTimeStr)) { int num = Integer.parseInt(inTimeStr); event.doit = (num < 24); } else event.doit = false; } });
-		 * 
-		 * tMinute = new Text(shell, SWT.BORDER); tMinute.setBounds(700 - 80, 10, 50, 40); tMinute.setFont(SWTResourceManager.getFont("Liberation Sans", 25, SWT.NORMAL)); tMinute.setVisible(true); tMinute.setText(String.format("%02d", timeBox.getMinutes())); tMinute.addMouseListener(new textMouseListener()); tMinute.addVerifyListener(new VerifyListener() { public void verifyText(VerifyEvent event) { event.doit = true; String inTimeStr = ""; inTimeStr = tMinute.getText() + event.text;
-		 * 
-		 * if (DbUtil.checkIfNumber(inTimeStr)) { int num = Integer.parseInt(inTimeStr); event.doit = (num < 60); } else event.doit = false; } });
-		 * 
-		 * tOdPostaje.addVerifyListener(new VerifyListener() { public void verifyText(VerifyEvent event) { String outs = "??"; String inputs = ""; char myChar = event.character; inputs = tOdPostaje.getText() + event.text;
-		 * 
-		 * if (myChar == '\b') { inputs = inputs.substring(0, inputs.length() - 1); } if (inputs.length() > 1) outs = Stupac.OpisPostajeFinder(inputs); lblSearchPostajaOd.setText(outs); } });
-		 * 
-		 * tDoPostaje.addVerifyListener(new VerifyListener() { public void verifyText(VerifyEvent event) { String outs = "??"; String inputs = ""; char myChar = event.character; inputs = tDoPostaje.getText() + event.text; if (myChar == '\b') { inputs = inputs.substring(0, inputs.length() - 1); } if (inputs.length() > 1) outs = Stupac.OpisPostajeFinder(inputs); lblSearchPostajaDo.setText(outs); } });
-		 */
 	}
 
 	protected class BtnDummySelectionListener extends SelectionAdapter {
@@ -117,10 +99,13 @@ public class Prelaz extends VRFinder {
 				mb.setMessage("Nema rezultata pretraživanja !");
 				mb.open();
 			} else {
+				btnExit.setEnabled(false);
 				Picker picker = new Picker(btnDummy, Stupac.getArrayList(), 0);
 				btnDummy = picker.open();
-				// if (btnDummy.getData() != null)
-				// stupac = Stupac.get((Integer) btnDummy.getData());
+				if (btnDummy.getData() != null) {
+					stupac = Stupac.get((Integer) btnDummy.getData());
+					prelaz = Postaja.getByNaziv(tDoPostaje.getText());
+				}
 			}
 			shell.dispose();
 		}

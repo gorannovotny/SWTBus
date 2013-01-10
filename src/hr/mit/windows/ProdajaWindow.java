@@ -177,7 +177,7 @@ public class ProdajaWindow {
 			btnPrint.setEnabled(false);
 			btnClear.setEnabled(false);
 		}
-		if (!Stavka.getList().isEmpty() && Stavka.getList().get(0).getKarta().mozePrelaz())
+		if (!Stavka.getList().isEmpty() && Stavka.getList().get(0).getKarta().getPrelaz())
 			btnPrelaz.setEnabled(true);
 		else
 			btnPrelaz.setEnabled(false);
@@ -524,7 +524,9 @@ public class ProdajaWindow {
 		@Override
 		public void widgetDefaultSelected(SelectionEvent e) {
 			Prelaz p = new Prelaz(shell);
-			p.open(Stavka.getList().get(0).getDoPostaje().getNaziv());
+			Stavka s = p.open(Stavka.getList().get(0));
+			Stavka.getList().add(s);
+			stavkaToScreen();
 		}
 
 		@Override

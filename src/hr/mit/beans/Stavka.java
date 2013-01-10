@@ -23,7 +23,17 @@ public class Stavka {
 	private Stupac stupac;
 	private BigDecimal cijenaZamjenske;
 	private Boolean jeZamjenska;
+	private Boolean prelazna;
+	
+	public Boolean jePrelazna() {
+		return prelazna;
+	}
 
+	public void jePrelazna(Boolean prelazna) {
+		this.prelazna = prelazna;
+	}
+
+	
 	public Boolean getJeZamjenska() {
 		return jeZamjenska;
 	}

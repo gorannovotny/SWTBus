@@ -1,5 +1,6 @@
 package hr.mit.windows;
 
+import hr.mit.beans.Postaja;
 import hr.mit.beans.Stupac;
 import hr.mit.utils.DbUtil;
 
@@ -32,7 +33,7 @@ public class VRFinder {
 	private Text tMinute;
 	protected Button btnDummy;
 	protected Button btnExit;
-	private Stupac stupac = null;
+	protected Stupac stupac = null;
 	protected Label lblNewLabel;
 	protected Label lblSearchPostajaOd;
 	protected Label lblSearchPostajaDo;
@@ -176,6 +177,7 @@ public class VRFinder {
 
 	protected class BtnDummySelectionListener extends SelectionAdapter {
 		public void widgetDefaultSelected(SelectionEvent e) {
+		
 			if (lblSearchPostajaDo.getText().equals("??") || lblSearchPostajaOd.getText().equals("??") || lblSearchPostajaDo.getText().equals("") || lblSearchPostajaOd.getText().equals("")) {
 				MessageBox mb1 = new MessageBox(shell, SWT.OK | SWT.ICON_ERROR);
 				mb1.setMessage("Nisu upisane postaje !");
@@ -244,8 +246,10 @@ public class VRFinder {
 			if (myChar == '\b') {
 				inputs = inputs.substring(0, inputs.length() - 1);
 			}
-			if (inputs.length() > 1)
-				outs = Stupac.OpisPostajeFinder(inputs);
+			if (inputs.length() > 1){
+				Postaja p = Postaja.getByNaziv(inputs);
+				if (p != null) outs = p.getNaziv();
+			}
 			label.setText(outs);
 		}
 	}
