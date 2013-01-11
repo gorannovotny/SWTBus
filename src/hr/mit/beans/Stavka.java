@@ -23,13 +23,13 @@ public class Stavka {
 	private Stupac stupac;
 	private BigDecimal cijenaZamjenske;
 	private Boolean jeZamjenska;
-	private Boolean prelazna;
+	private Boolean prelazna = false;
 	
 	public Boolean jePrelazna() {
 		return prelazna;
 	}
 
-	public void jePrelazna(Boolean prelazna) {
+	public void setJePrelazna(Boolean prelazna) {
 		this.prelazna = prelazna;
 	}
 
@@ -127,6 +127,8 @@ public class Stavka {
 		String k = karta.getNaziv();
 		if (jeZamjenska)
 			k = "(Z)" + k;
+		if (jePrelazna())
+			k = "Prelaz -> " + doPostaje.getNaziv();
 		if (k.length() > 19)
 			k = k.substring(0, 19);
 		String out;
