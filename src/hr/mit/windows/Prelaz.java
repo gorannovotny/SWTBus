@@ -33,9 +33,12 @@ public class Prelaz extends VRFinder {
 				display.sleep();
 			}
 		}
-		Stavka s = new Stavka(stupac, stavka.getDoPostaje(), prelaz, stavka.getKarta(), stavka.getPopust()); 
-		s.setJePrelazna(true);
-		return s;
+		if (prelaz != null) {
+			stavka = new Stavka(stupac, stavka.getDoPostaje(), prelaz, stavka.getKarta(), stavka.getPopust());
+			stavka.setJePrelazna(true);
+		} else
+			stavka = null;
+		return stavka;
 	}
 
 	protected void createContents(Stavka stavka) {

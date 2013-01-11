@@ -121,9 +121,9 @@ public class ProdajaWindow {
 		stavka.setJeZamjenska(btnZk.getSelection());
 		stavka.setProdajnoMjesto(ProdajnoMjesto.get((Integer) cProdMjesto.getData()));
 		stavka.setBrojKarte(textBrKarte.getText());
-		//josip - 27.12.2012 -- cijenu upisujemo samo u ta dva slucaja
+		// josip - 27.12.2012 -- cijenu upisujemo samo u ta dva slucaja
 		if (stavka.getJeZamjenska() || (stavka.getKarta().getNacinDolocanjaCene() == Karta.RUCNI_UNOS))
-		   stavka.setCijena(textCijena.getText());
+			stavka.setCijena(textCijena.getText());
 	}
 
 	protected void stavkaToScreen() {
@@ -157,7 +157,7 @@ public class ProdajaWindow {
 			cProdMjesto.setEnabled(false);
 			textBrKarte.setEnabled(false);
 			textCijena.setEnabled(false);
-			//****** za bjelice upisujemo cijenu
+			// ****** za bjelice upisujemo cijenu
 			if (stavka.getKarta().getNacinDolocanjaCene() == Karta.RUCNI_UNOS) {
 				textCijena.setEnabled(true);
 				if (!textCijena.isListening(SWT.MouseDown))
@@ -266,7 +266,7 @@ public class ProdajaWindow {
 		cKarta.setAlignment(SWT.LEFT);
 		cKarta.setFont(SWTResourceManager.getFont("Liberation Sans", 22, SWT.NORMAL));
 		cKarta.setBounds(5, 150, 390, 70);
-//		cKarta.setText(Karta.getArrayListMobilna().get(0));
+		// cKarta.setText(Karta.getArrayListMobilna().get(0));
 		Popust.setKartaStupac(Karta.getMobilna(Starter.KARTA_DEFAULT), Starter.stupac);
 		cKarta.setData(Starter.KARTA_DEFAULT);
 
@@ -525,8 +525,10 @@ public class ProdajaWindow {
 		public void widgetDefaultSelected(SelectionEvent e) {
 			Prelaz p = new Prelaz(shell);
 			Stavka s = p.open(Stavka.getList().get(0));
-			Stavka.getList().add(s);
-			stavkaToScreen();
+			if (s != null) {
+				Stavka.getList().add(s);
+				stavkaToScreen();
+			}
 		}
 
 		@Override
