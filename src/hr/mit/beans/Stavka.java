@@ -128,7 +128,7 @@ public class Stavka {
 		if (jeZamjenska)
 			k = "(Z)" + k;
 		if (jePrelazna())
-			k = "Prelaz -> " + doPostaje.getNaziv();
+			k = "prijelaz-" + doPostaje.getNaziv();
 		if (k.length() > 19)
 			k = k.substring(0, 19);
 		String out;

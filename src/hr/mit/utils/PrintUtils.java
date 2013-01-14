@@ -35,14 +35,23 @@ public class PrintUtils {
 
 	private static String createString(Vozac vozac, List<Stavka> stavkaList) {
 		SimpleDateFormat sdf = new SimpleDateFormat("dd.MM.yyyy. HH:mm");
-		StringBuffer sb = new StringBuffer();
+		StringBuffer sb      = new StringBuffer();
 		int BrKt = 0;
-		for (Stavka stavka : stavkaList) {
+		double gotovinaKn = 0;
+		for (Stavka stavka : stavkaList) { 
+
+			if (stavka.jePrelazna()) {
+				sb.append("\r");
+				sb.append("\r");
+			}
 			
 			if (stavka.getJeZamjenska()) 
 				BrKt = 0;
 			else
 	            BrKt = 1;
+			
+			if (! stavka.getJeZamjenska()) 
+				gotovinaKn = gotovinaKn + stavka.getProdajnaCijena().doubleValue();
 	            
 			sb.append("AP d.d. Varazdin u stecaju\rGospodarska 56\rOIB: 51631089795\r\rPrijevoznik: AP d.d\r");
 			sb.append(stavkaList.get(0).getRelacija() + "\r \r");
@@ -50,6 +59,8 @@ public class PrintUtils {
 			sb.append("Vrsta karte       Popust  Cijena\r................................\r");
 			if (stavka.getJeZamjenska()) // dodamo opis zamjenska
 				sb.append("ZAMJENSKA KARTA" + "\r");
+			if (stavka.jePrelazna()) // dodamo opis zamjenska
+				sb.append("PRIJELAZNA KARTA" + "\r");
 			sb.append(stavka.getDesc()+"\r"); // opis karte
 			sb.append("................................\r");
 			sb.append(String.format("Osnovica PDV 25%%         %7.2f\r", stavka.getNettoCijena().doubleValue()*BrKt ));
@@ -73,6 +84,10 @@ public class PrintUtils {
 				sb.append(String.format("Cijena kupona: %7.2f\r",  stavka.getCijenaVoznje()));
 				sb.append("................................\r");
 			}
+		}
+		if (gotovinaKn != 0){
+				sb.append(String.format("PLAĆENO GOTOVINOM Kn:    %7.2f\r",  gotovinaKn));
+				sb.append(" \r");
 		}
 		sb.append(" \r \r");
 		return sb.toString();
