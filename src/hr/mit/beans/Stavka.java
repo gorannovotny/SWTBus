@@ -263,4 +263,11 @@ public class Stavka {
 		return cijenaKarte.getInoDistanca() / 1000;
 	}
 
+	public void setCijenaPrelaz(Stavka oldstavka) {
+		// 'this' je prelazna stavka
+		// oldstavka je napunjena
+		// izračunaš cijenu na osnovu this i oldstavka i setiraš cijenu
+		setCijena(new BigDecimal(128));
+	}
+
 }
