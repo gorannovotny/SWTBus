@@ -22,15 +22,15 @@ public class Stavka {
 	private CijenaKarte cijenaKarte;
 	private Stupac stupac;
 	private BigDecimal cijenaZamjenske;
-	private Boolean jeZamjenska;
-	private Boolean prelazna = false;
+	private Boolean jeZamjenska = false;
+	private Boolean jePrelazna;
 	
-	public Boolean jePrelazna() {
-		return prelazna;
+	public Boolean getJePrelazna() {
+		return jePrelazna;
 	}
 
 	public void setJePrelazna(Boolean prelazna) {
-		this.prelazna = prelazna;
+		this.jePrelazna = prelazna;
 	}
 
 	
@@ -120,15 +120,19 @@ public class Stavka {
 		this.popust = popust;
 		this.brojKarte = "";
 		this.jeZamjenska = false;
+		this.jePrelazna  = false;
 		this.cijenaKarte = new CijenaKarte(stupac, karta, odPostaje, doPostaje);
 	}
 
 	public String getDesc() {
 		String k = karta.getNaziv();
+	/*	
 		if (jeZamjenska)
 			k = "(Z)" + k;
-		if (jePrelazna())
-			k = "prijelaz-" + doPostaje.getNaziv();
+		if (jePrelazna)
+			//k = "prijelaz-" + doPostaje.getNaziv();
+		    k = k;
+	*/	
 		if (k.length() > 19)
 			k = k.substring(0, 19);
 		String out;
@@ -136,8 +140,36 @@ public class Stavka {
 		return out;
 	}
 
+	public String getDodInfoRelacije() {
+		String k = "";
+		if (jeZamjenska)
+			k =  k;
+		if (jePrelazna)
+		    k = "-" + doPostaje.getNaziv();
+		if (k.length() > 19)
+			k = k.substring(0, 19);
+		return k;
+	}
+
+	public String getDodOpisKarte() {
+		String k = "";
+		if ((jeZamjenska)&&(jePrelazna))
+			k =  "PRIJELAZNA ZAMJENSKA";
+		else if (jeZamjenska)
+			k =  "ZAMJENSKA KARTA";
+		else if (jePrelazna)
+		    k = "PRIJELAZNA KARTA";
+		
+		if (k.length() > 22)
+			k = k.substring(0, 22);
+		return k;
+	}
+
+	
+	
+	
 	public String getRelacija() {
-		return odPostaje.getNaziv() + " - " + doPostaje.getNaziv();
+		return odPostaje.getNaziv() + "-" + doPostaje.getNaziv();
 	}
 
 	public String getRelacijaKontra() {
@@ -240,6 +272,22 @@ public class Stavka {
 		this.cijenaZamjenske = cijena;
 	}
 
+	public Integer getKmLinije() {
+		return cijenaKarte.getDistancaLinije() / 1000;
+	}
+
+	public Integer getKmDomaci() {
+		return cijenaKarte.getDomDistanca() / 1000;
+	}
+
+	public Integer getKmCenika() {
+		return cijenaKarte.getDistancaCenika() / 1000;
+	}
+
+	public Integer getKmIno() {
+		return cijenaKarte.getInoDistanca() / 1000;
+	}
+
 	public void setCijena(String s) {
 		try {
 			NumberFormat nf = NumberFormat.getNumberInstance();
@@ -250,24 +298,33 @@ public class Stavka {
 			setCijena(BigDecimal.ZERO);
 		}
 	}
-
-	public Integer getKmLinije() {
-		return cijenaKarte.getDistancaLinije() / 1000;
-	}
-
-	public Integer getKmDomaci() {
-		return cijenaKarte.getDomDistanca() / 1000;
-	}
-
-	public Integer getKmIno() {
-		return cijenaKarte.getInoDistanca() / 1000;
-	}
-
+	
 	public void setCijenaPrelaz(Stavka oldstavka) {
 		// 'this' je prelazna stavka
 		// oldstavka je napunjena
 		// izračunaš cijenu na osnovu this i oldstavka i setiraš cijenu
-		setCijena(new BigDecimal(128));
+		//
+		if ((oldstavka.karta.getNacinDolocanjaCene() == Karta.TARIFNI_DALJINAR)  &&    
+		    (this.karta.getNacinDolocanjaCene()      == Karta.TARIFNI_DALJINAR)  &&   // oba su po tarifnom daljinaru
+		    (oldstavka.karta.getTarifniRazredID() == this.karta.getTarifniRazredID()) // imaju iste tarifne razrede
+		   ) 
+		{   
+		 if (! oldstavka.jeZamjenska) {	
+			 int kmOld = oldstavka.getKmCenika();
+			 int kmNew = this.getKmCenika();
+			 int ukupniKm = kmOld + kmNew; // izracunamo ukupne km
+			 BigDecimal staraCijena = oldstavka.getProdajnaCijena();
+			 BigDecimal ukupnaTarifnaCena = this.cijenaKarte.izracunajTarifnoCeneKarte(ukupniKm);
+			 
+			 BigDecimal novaCijenaKarte = ukupnaTarifnaCena.subtract(staraCijena); 
+			 setCijena(novaCijenaKarte);
+		 }
+		 else // zamjenska prijelazna 
+		 {
+		    this.setJeZamjenska(oldstavka.jeZamjenska); // postavimo da je i ta zamjenska
+		    this.setBrojKarte(oldstavka.brojKarte);     // postavimo isti broj karte
+		    setCijena(new BigDecimal(0));               // zamjenske imaju cijenu prijelaza 0
+		 }
+		}
 	}
-
 }

@@ -36,36 +36,79 @@ public class PrintUtils {
 	private static String createString(Vozac vozac, List<Stavka> stavkaList) {
 		SimpleDateFormat sdf = new SimpleDateFormat("dd.MM.yyyy. HH:mm");
 		StringBuffer sb      = new StringBuffer();
-		int BrKt = 0;
-		double gotovinaKn = 0;
+		int BrKt  = 0;
+		int listIndex = 0;
+		double   gotovinaKn = 0;
+		
+		double  NettoCijena;
+		double  IznosPDV;
+		double  ZaPlatiti;
+		
+		boolean lhasnext; 
+        String ss;
 		for (Stavka stavka : stavkaList) { 
-
-			if (stavka.jePrelazna()) {
+			if (stavka.getJePrelazna()) {  //*** pocetni razmak 
 				sb.append("\r");
 				sb.append("\r");
 			}
 			
-			if (stavka.getJeZamjenska()) 
+			ZaPlatiti   = stavka.getProdajnaCijena().doubleValue();
+			IznosPDV    = stavka.getIznosPDV().doubleValue();
+			NettoCijena = ZaPlatiti - IznosPDV;
+			
+			if (stavka.getJeZamjenska() || stavka.getJePrelazna()) 
 				BrKt = 0;
 			else
-	            BrKt = 1;
-			
-			if (! stavka.getJeZamjenska()) 
+  	            BrKt = 1;	            
+
+			if (!stavka.getJeZamjenska()) 
 				gotovinaKn = gotovinaKn + stavka.getProdajnaCijena().doubleValue();
-	            
-			sb.append("AP d.d. Varazdin u stecaju\rGospodarska 56\rOIB: 51631089795\r\rPrijevoznik: AP d.d\r");
-			sb.append(stavkaList.get(0).getRelacija() + "\r \r");
+			
+			
+	        if (listIndex==0)    
+			    sb.append("AP d.d. Varazdin u stecaju\rGospodarska 56\rOIB: 51631089795\r\rPrijevoznik: AP d.d\r");
+	        
+//	        ss = stavkaList.get(0).getRelacija(); // relacija karte
+			if (!stavka.getJePrelazna())  
+		           ss = stavkaList.get(0).getRelacija();
+	         else    
+		           ss = stavka.getRelacija();
+
+	        //**** za prijelaznu kartu moramo dodati opis i od slijedeceg prijelaza ****
+			lhasnext = (listIndex < stavkaList.size()-1) ; 
+	        if (lhasnext){
+				if (stavkaList.get(listIndex+1).getJePrelazna()) 
+				{
+				  ss = ss + 	stavkaList.get(listIndex+1).getDodInfoRelacije();
+				  // za prijaleznu pribrojimo iznos osnovnoj
+				  ZaPlatiti   = ZaPlatiti   +  stavkaList.get(listIndex+1).getProdajnaCijena().doubleValue();
+				  IznosPDV    = IznosPDV    +  stavkaList.get(listIndex+1).getIznosPDV().doubleValue();
+				  NettoCijena = NettoCijena + (ZaPlatiti - IznosPDV);
+				}
+	        }
+			sb.append(ss+"\r");
+/*	        
+			sb.append(stavkaList.get(0).getRelacija()+
+					  stavkaList.get(1).getDodInfoRelacije()+"\r");
+*/					  
+//			if (stavka.jePrelazna())
+//			   sb.append(stavka.getDodInfoRelacije()+"\r");
+//			sb.append("\r");
 			sb.append("Broj karte: " + stavka.getBrojKarte() + "\r");
 			sb.append("Vrsta karte       Popust  Cijena\r................................\r");
+			/*
 			if (stavka.getJeZamjenska()) // dodamo opis zamjenska
 				sb.append("ZAMJENSKA KARTA" + "\r");
-			if (stavka.jePrelazna()) // dodamo opis zamjenska
+			if (stavka.getJePrelazna()) // dodamo opis zamjenska
 				sb.append("PRIJELAZNA KARTA" + "\r");
+			*/
+			if (stavka.getDodOpisKarte() != "")
+				sb.append(stavka.getDodOpisKarte() + "\r");
 			sb.append(stavka.getDesc()+"\r"); // opis karte
 			sb.append("................................\r");
-			sb.append(String.format("Osnovica PDV 25%%         %7.2f\r", stavka.getNettoCijena().doubleValue()*BrKt ));
-			sb.append(String.format("PDV 25%%                  %7.2f\r", stavka.getIznosPDV().doubleValue()*BrKt ));
-			sb.append(String.format("Za platiti               %7.2f\r",  stavka.getProdajnaCijena().doubleValue()*BrKt));
+			sb.append(String.format("Osnovica PDV 25%%         %7.2f\r", NettoCijena*BrKt ));
+			sb.append(String.format("PDV 25%%                  %7.2f\r", IznosPDV*BrKt ));
+			sb.append(String.format("Za platiti               %7.2f\r",  ZaPlatiti*BrKt));
 			sb.append("\r");
 			sb.append("Vozač: " + vozac.getSifra() + "\r");
 			sb.append(sdf.format(new Date()) + "\r");
@@ -84,9 +127,10 @@ public class PrintUtils {
 				sb.append(String.format("Cijena kupona: %7.2f\r",  stavka.getCijenaVoznje()));
 				sb.append("................................\r");
 			}
+            listIndex++; 
 		}
 		if (gotovinaKn != 0){
-				sb.append(String.format("PLAĆENO GOTOVINOM Kn:    %7.2f\r",  gotovinaKn));
+				sb.append(String.format("PLAĆENO GOTOVINOM KN:    %7.2f\r",  gotovinaKn));
 				sb.append(" \r");
 		}
 		sb.append(" \r \r");

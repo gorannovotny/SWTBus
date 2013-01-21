@@ -1,5 +1,6 @@
 package hr.mit.windows;
 
+import hr.mit.Starter;
 import hr.mit.beans.Postaja;
 import hr.mit.beans.Stavka;
 import hr.mit.beans.Stupac;
@@ -17,8 +18,9 @@ import org.eclipse.wb.swt.SWTResourceManager;
 
 public class Prelaz extends VRFinder {
 
-	private Postaja prelaz;
-
+	private Postaja prelazOd;
+    private Postaja prelazDo;
+	
 	public Prelaz(Shell parent) {
 		super(parent);
 	}
@@ -33,8 +35,9 @@ public class Prelaz extends VRFinder {
 				display.sleep();
 			}
 		}
-		if (prelaz != null) {
-			stavka = new Stavka(stupac, stavka.getDoPostaje(), prelaz, stavka.getKarta(), stavka.getPopust());
+		if (prelazDo != null) {
+//			stavka = new Stavka(stupac, stavka.getDoPostaje(), prelaz, stavka.getKarta(), stavka.getPopust()); // nije istina da se radi o istoj postaji
+			stavka = new Stavka(stupac, prelazOd, prelazDo, stavka.getKarta(), stavka.getPopust());
 			stavka.setJePrelazna(true);
 		} else
 			stavka = null;
@@ -109,7 +112,17 @@ public class Prelaz extends VRFinder {
 				btnDummy = picker.open();
 				if (btnDummy.getData() != null) {
 					stupac = Stupac.get((Integer) btnDummy.getData());
-					prelaz = Postaja.getByNaziv(tDoPostaje.getText());
+				//	Postaja.setStupac(stupac);
+					
+					prelazOd = Postaja.getByNaziv(tOdPostaje.getText());
+					prelazDo = Postaja.getByNaziv(tDoPostaje.getText());
+					Integer StupacId = stupac.getId(); 
+                    Integer ID1 = prelazOd.getId();
+                    Integer ID2 = prelazDo.getId();
+					Integer z1 = Postaja.GetZapStPostajePolaskaZaStupac(StupacId,ID1);
+					Integer z2 = Postaja.GetZapStPostajeDolaskaZaStupac(StupacId,ID2);
+					prelazOd.setZapSt(z1); // nateramo novo zapst 
+					prelazDo.setZapSt(z2); // nateramo novo zapst 
 				}
 			}
 			shell.dispose();

@@ -525,8 +525,9 @@ public class ProdajaWindow {
 		public void widgetDefaultSelected(SelectionEvent e) {
 			Prelaz p = new Prelaz(shell);
 			Stavka s = p.open(Stavka.getList().get(0));
-			s.setCijenaPrelaz(Stavka.getList().get(0));
 			if (s != null) {
+				s.setCijenaPrelaz(Stavka.getList().get(0));
+//				s.setCijenaPrelaz(Stavka.getList().get(0)); // josip
 				Stavka.getList().add(s);
 				stavkaToScreen();
 			}

@@ -13,11 +13,66 @@ public class Postaja {
 	private static ArrayList<Postaja> postajaList = new ArrayList<Postaja>();
 
 	private Integer zapSt;
-	private String naziv;
-	private String vremeOdhoda;
-	private String vremePrihoda;
+	private String  naziv;
+	private String  vremeOdhoda;
+	private String  vremePrihoda;
 	private Integer id;
 
+	
+	public static Integer GetZapStPostajePolaskaZaStupac(Integer StupacID,Integer  PostajaID){
+		Integer retval=0;
+		String sql = "select PVAR.ZapSt from PTStupciVr STP"+
+                     " inner join PTPostajeVarijantVR PVAR ON PVAR.VarijantaID = STP.varijantaVRID"+
+                     " inner join PTpostajeVR PVR ON PVR.ID = PVAR.nodePostajeVRID"+
+                     " where STP.ID=? and PVR.PostajaID=?"+ 
+                     " order by "+
+                     " case When STP.SmerVoznje='+' THEN PVAR.ZapSt END,"+
+                     " case When STP.SmerVoznje='-' THEN PVAR.ZapSt END DESC"+
+                     " Limit 1"; 
+		           
+		try {
+			PreparedStatement ps = DbUtil.getConnection().prepareStatement(sql);
+			ps.setInt(1, StupacID);
+			ps.setInt(2, PostajaID);
+			ResultSet rs = ps.executeQuery();
+			while (rs.next()) {
+				retval = DbUtil.getSingleResult(ps);	
+			}
+			rs.close();
+			ps.close();
+		} catch (SQLException e) {
+			e.printStackTrace();
+		}
+		return retval;	
+	}
+
+	public static Integer GetZapStPostajeDolaskaZaStupac(Integer StupacID, Integer  PostajaID){
+		Integer retval=0;
+		String sql = "select PVAR.ZapSt from PTStupciVr STP"+
+                     " inner join PTPostajeVarijantVR PVAR ON PVAR.VarijantaID = STP.varijantaVRID"+
+                     " inner join PTpostajeVR PVR ON PVR.ID = PVAR.nodePostajeVRID"+
+                     " where STP.ID=? and PVR.PostajaID=?"+ 
+                     " order by "+
+                     " case When STP.SmerVoznje='+' THEN PVAR.ZapSt END,"+
+                     " case When STP.SmerVoznje='-' THEN PVAR.ZapSt END DESC"+
+                     " Limit 1"; 
+		           
+		try {
+			PreparedStatement ps = DbUtil.getConnection().prepareStatement(sql);
+			ps.setInt(1, StupacID);
+			ps.setInt(2, PostajaID);
+			ResultSet rs = ps.executeQuery();
+			while (rs.next()) {
+				retval = DbUtil.getSingleResult(ps);	
+			}
+			rs.close();
+			ps.close();
+		} catch (SQLException e) {
+			e.printStackTrace();
+		}
+		return retval;	
+	}
+	
 	public static void setStupac(Stupac stupac) {
 		String sql = "SELECT c.ZapSt,e.Naziv,f.VremeOdhoda,f.VremePrihoda,e.ID from PTStupciVR a,PTVarijanteVR b,PTPostajeVarijantVR c,PTPostajeVR d,PTPostaje e,PTCasiVoznjeVR f where a.VarijantaVRID = b.ID and   c.VarijantaID = b.ID and   c.NodePostajeVRID = d.ID and   d.PostajaID = e.id and   a.id = ? AND f.StupacVRID = a.ID AND f.NodePostajeVarijanteVRID = c.ID AND e.Prodaja = 'D' ORDER BY 1";
 		if (stupac.getSmjer().equals("+"))
@@ -101,13 +156,17 @@ public class Postaja {
 	public Postaja(Integer zapSt, String naziv, double vOdhoda, double vPrihoda, Integer id) {
 		this.zapSt = zapSt;
 		this.naziv = naziv;
-		this.vremeOdhoda = DbUtil.getHHMM(vOdhoda);
+		this.vremeOdhoda  = DbUtil.getHHMM(vOdhoda);
 		this.vremePrihoda = DbUtil.getHHMM(vPrihoda);
 		this.id = id;
 	}
 
 	public Integer getZapSt() {
 		return zapSt;
+	}
+
+	public void setZapSt(Integer FzapSt ) {
+		zapSt = FzapSt;
 	}
 
 	public String getNaziv() {
@@ -125,4 +184,5 @@ public class Postaja {
 	public Integer getId() {
 		return id;
 	}
+
 }
