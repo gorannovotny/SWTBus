@@ -186,9 +186,11 @@ public class Stavka {
 		BigDecimal retval;
 		if (jeZamjenska)
 			retval = cijenaZamjenske.setScale(2);
+		else if (jePrelazna)
+			retval = cijenaKarte.getCijena();
 		else {
 			if (popust.getId() != 0)
-				retval = cijenaKarte.getCijena().multiply(BigDecimal.ONE.subtract(popust.getPopust().movePointLeft(2))).setScale(2);
+				retval = cijenaKarte.getCijena().multiply(BigDecimal.ONE.subtract(popust.getPopust().movePointLeft(2))).setScale(2,BigDecimal.ROUND_CEILING);
 			else
 				retval = cijenaKarte.getCijena().multiply(BigDecimal.ONE.subtract(getKarta().getPopustProcent().movePointLeft(2)));
 		}
@@ -314,7 +316,7 @@ public class Stavka {
 			 int kmNew = this.getKmCenika();
 			 int ukupniKm = kmOld + kmNew; // izracunamo ukupne km
 			 BigDecimal staraCijena = oldstavka.getProdajnaCijena();
-			 BigDecimal ukupnaTarifnaCena = this.cijenaKarte.izracunajTarifnoCeneKarte(ukupniKm);
+			 BigDecimal ukupnaTarifnaCena = this.cijenaKarte.izracunajTarifnoCeneKarte(ukupniKm).multiply(BigDecimal.ONE.subtract(popust.getPopust().movePointLeft(2))).setScale(2,BigDecimal.ROUND_CEILING);
 			 
 			 BigDecimal novaCijenaKarte = ukupnaTarifnaCena.subtract(staraCijena); 
 			 setCijena(novaCijenaKarte);
