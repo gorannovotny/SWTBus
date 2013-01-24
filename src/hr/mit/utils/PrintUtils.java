@@ -83,7 +83,8 @@ public class PrintUtils {
 				  // za prijaleznu pribrojimo iznos osnovnoj
 				  ZaPlatiti   = ZaPlatiti   +  stavkaList.get(listIndex+1).getProdajnaCijena().doubleValue();
 				  IznosPDV    = IznosPDV    +  stavkaList.get(listIndex+1).getIznosPDV().doubleValue();
-				  NettoCijena = NettoCijena + (ZaPlatiti - IznosPDV);
+				  NettoCijena = NettoCijena + (stavkaList.get(listIndex+1).getProdajnaCijena().doubleValue() - 
+						                       stavkaList.get(listIndex+1).getIznosPDV().doubleValue());
 				}
 	        }
 			sb.append(ss+"\r");
