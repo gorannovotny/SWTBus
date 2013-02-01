@@ -219,10 +219,13 @@ public class Obracun {
 
 	public static void print(Obracun o) {
 		char[] reset = { 27, 64, 13 };
+		char[] rotate = { 28, 73, 2 };
 		if (new File(".print").exists()) {
 			try {
 				FileWriter out = new FileWriter(Starter.ComPortPrinter);
 				out.write(reset);
+				if (Starter.PrintRotate != null)
+					out.write(rotate);
 				out.write(PrintUtils.filter(zaglavlje(o) + getObracun(o.getId())));
 				out.write(" \r \r \r");
 				out.flush();

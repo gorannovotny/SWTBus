@@ -18,6 +18,8 @@ public class Starter {
 	public static String SifraMobStroja = null;
 	public static String ComPortRfid= null;
 	public static String ComPortPrinter= null;
+	public static String PrintRotate= null;
+	
 	public static final Integer KARTA_DEFAULT = 3; 
 
 	public static void main(String[] args) {
@@ -28,6 +30,8 @@ public class Starter {
 			ComPortPrinter = p.getProperty("ComPortPrinter");
 			ComPortRfid    = p.getProperty("ComPortRfid");
 			SifraMobStroja = p.getProperty("SifraMobStroja");
+			PrintRotate = p.getProperty("PrintRotate");
+			
 		} catch (Exception e) {
 			throw new RuntimeException(e);
 		}		

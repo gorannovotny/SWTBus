@@ -15,6 +15,8 @@ public class PrintUtils {
 	private static char[] reset = { 27, 64, 13 };
 	private static char[] barcode = { 29, 107, 72, 15 };
 	private static char[] duplo = { 27, 87, 2 };
+	private static char[] rotate = { 28, 73, 2 };
+	
 
 	public static void print(Vozac vozac, List<Stavka> stavkaList) {
 		if (new File(".print").exists()) {
@@ -22,8 +24,9 @@ public class PrintUtils {
 			//	FileWriter out = new FileWriter("/dev/ttyS0");
                 FileWriter out = new FileWriter(Starter.ComPortPrinter);
 				out.write(reset);
+				if (Starter.PrintRotate != null)
+					out.write(rotate);
 				out.write(filter(createString(vozac, stavkaList)));
-	
 				out.flush();
 				out.close();
 			} catch (IOException e) {
