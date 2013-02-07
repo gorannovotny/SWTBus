@@ -207,6 +207,7 @@ public class Obracun {
 			retval.append(" \r");
 			retval.append("................................\r");
 			retval.append(String.format("%-24s %7.2f", "Blagajna", ukupno));
+			retval.append(" \r \r \r");
 			rs.close();
 			ps.close();
 			// }
@@ -224,10 +225,14 @@ public class Obracun {
 			try {
 				FileWriter out = new FileWriter(Starter.ComPortPrinter);
 				out.write(reset);
-				if (Starter.PrintRotate != null)
-					out.write(rotate);
-				out.write(PrintUtils.filter(zaglavlje(o) + getObracun(o.getId())));
-				out.write(" \r \r \r");
+
+				if ((Starter.PrintRotate != null) && (Starter.PrintRotate.equals("1")))
+					out.write(PrintUtils.filter(PrintUtils.reversePrint( zaglavlje(o) + getObracun(o.getId())  )));
+				else
+					out.write(PrintUtils.filter(zaglavlje(o) + getObracun(o.getId())));
+				
+//				out.write(PrintUtils.filter(zaglavlje(o) + getObracun(o.getId())));
+	//			out.write(" \r \r \r");
 				out.flush();
 				out.close();
 			} catch (IOException e) {

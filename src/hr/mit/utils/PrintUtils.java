@@ -23,7 +23,7 @@ public class PrintUtils {
 				// FileWriter out = new FileWriter("/dev/ttyS0");
 				FileWriter out = new FileWriter(Starter.ComPortPrinter);
 				out.write(reset);
-				if (Starter.PrintRotate != null)
+				if ((Starter.PrintRotate != null) && (Starter.PrintRotate.equals("1")))
 					out.write(filter(reversePrint(createString(vozac, stavkaList))));
 				else
 					out.write(filter(createString(vozac, stavkaList)));
@@ -35,6 +35,43 @@ public class PrintUtils {
 		}
 		System.out.println(reversePrint(createString(vozac, stavkaList)));
 	}
+
+	public static void printPripremaPapira() {
+		if (new File(".print").exists()) {
+			try {
+				FileWriter out = new FileWriter(Starter.ComPortPrinter);
+				out.write(reset);
+				if ((Starter.PrintRotate != null) && (Starter.PrintRotate.equals("1")))
+					out.write(filter(reversePrint(pripremiPapir())));
+				else
+					out.write(filter(pripremiPapir()));
+				out.flush();
+				out.close();
+			} catch (IOException e) {
+				e.printStackTrace();
+			}
+		}
+		System.out.println(pripremiPapir());
+	}
+	
+    private static String pripremiPapir(){
+		StringBuffer sb = new StringBuffer();
+		sb.append("********************************\r");
+		sb.append("AP d.d. Varazdin\r");
+		sb.append("Gospodarska 56\r");
+		sb.append("OIB: 51631089795\r");
+		sb.append("\r");
+		sb.append("Prijevoznik: AP d.d\r");
+		sb.append("Vrijeme: " + (new SimpleDateFormat("dd.MM.yy\nHH:mm:ss").format(new Date())) + "\r");
+		sb.append("--------------------------------\r");
+		sb.append("--------------------------------\r");
+		sb.append(" P R I P R E M A    P A P I R A \r");
+		sb.append("--------------------------------\r");
+		sb.append("--------------------------------\r");
+		sb.append("********************************\r");
+		sb.append(" \r \r \r");
+		return sb.toString();
+    } 	
 
 	private static String createString(Vozac vozac, List<Stavka> stavkaList) {
 		SimpleDateFormat sdf = new SimpleDateFormat("dd.MM.yyyy. HH:mm");
@@ -128,9 +165,8 @@ public class PrintUtils {
 		}
 		if (gotovinaKn != 0) {
 			sb.append(String.format("PLAĆENO GOTOVINOM KN:    %7.2f\r", gotovinaKn));
-			sb.append(" \r");
 		}
-		sb.append(" \r \r");
+		sb.append(" \r \r \r");
 		return sb.toString();
 	}
 
@@ -167,8 +203,10 @@ public class PrintUtils {
 		StringBuffer out = new StringBuffer();
 		String[] lines = in.split("\r");
 		for (int i = lines.length - 1; i >= 0; i--) {
-			out = out.append(lines[i] + "\r");
+		 if ((i < lines.length - 3) || (lines[i].length() > 2)) 
+			  out = out.append(lines[i] + "\r");
 		}
+		out = out.append(" \r \r \r");
 		return out.toString();
 	}
 

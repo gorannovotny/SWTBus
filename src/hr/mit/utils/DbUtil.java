@@ -18,7 +18,7 @@ public class DbUtil {
 	public static int getFirma() {
 		return 5;
 	}
-
+	
 	public static int getPrevoznikSifra() {
 		return 1; // AP d.d. vž
 	}
@@ -186,7 +186,7 @@ public class DbUtil {
 	    }
 	   
 	public static String getVersionInfo() {
-		return "2013/01.16";
+		return "2013/02.07";
 	}
 	
 

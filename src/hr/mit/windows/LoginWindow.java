@@ -5,6 +5,7 @@ import hr.mit.beans.Stupac;
 import hr.mit.beans.Vozac;
 import hr.mit.beans.Vozilo;
 import hr.mit.utils.DbUtil;
+import hr.mit.utils.PrintUtils;
 import hr.mit.utils.FileChecksum;
 
 import java.io.File;
@@ -94,6 +95,19 @@ public class LoginWindow {
 		lOpisVozac.setFont(SWTResourceManager.getFont("Liberation Sans", 20, SWT.NORMAL));
 		lOpisVozac.setBounds(310, 120, 480, 30);
 
+		tLozinka = new Text(shlPrijava, SWT.BORDER | SWT.PASSWORD);
+		tLozinka.setText("");
+		tLozinka.setFont(SWTResourceManager.getFont("Liberation Sans", 30, SWT.NORMAL));
+		tLozinka.setBounds(165, 160, 175, 50);
+		tLozinka.addMouseListener(new textMouseListener());
+
+		lLozinka = new Label(shlPrijava, SWT.NONE);
+		lLozinka.setText("Lozinka");
+		lLozinka.setFont(SWTResourceManager.getFont("Liberation Sans", 30, SWT.NORMAL));
+		lLozinka.setBackground(SWTResourceManager.getColor(SWT.COLOR_GRAY));
+		lLozinka.setBounds(5, 160, 160, 50);
+		
+		
 		lblVozilo = new Label(shlPrijava, SWT.NONE);
 		lblVozilo.setBackground(SWTResourceManager.getColor(SWT.COLOR_GRAY));
 		lblVozilo.setFont(SWTResourceManager.getFont("Liberation Sans", 30, SWT.NORMAL));
@@ -110,6 +124,8 @@ public class LoginWindow {
 		lOpisVozilo.setFont(SWTResourceManager.getFont("Liberation Sans", 20, SWT.NORMAL));
 		lOpisVozilo.setText("");
 
+		
+		
 		tLinija = new Text(shlPrijava, SWT.BORDER);
 		tLinija.setFont(SWTResourceManager.getFont("Liberation Sans", 30, SWT.NORMAL));
 //		tLinija.setBounds(165, 260, 125, 50);
@@ -143,8 +159,8 @@ public class LoginWindow {
 		lblVerzijaPrograma = new Label(shlPrijava, SWT.NONE);
 		lblVerzijaPrograma.setBackground(SWTResourceManager.getColor(SWT.COLOR_GRAY));
 		lblVerzijaPrograma.setFont(SWTResourceManager.getFont("Liberation Sans", 14, SWT.NORMAL));
-		lblVerzijaPrograma.setBounds(5, 425 + 140, 420, 25);
-		lblVerzijaPrograma.setText("Verzija programa: " + DbUtil.getVersionInfo() + ", prn.port: " + Starter.ComPortPrinter);
+		lblVerzijaPrograma.setBounds(5, 425 + 140, 420+100, 25);
+		lblVerzijaPrograma.setText("Verzija programa: " + DbUtil.getVersionInfo() + ", prn.port: " + Starter.ComPortPrinter +", rtp: "+Starter.PrintRotate);
 
 		btnUcitaj = new Button(shlPrijava, SWT.NONE);
 		btnUcitaj.addSelectionListener(new UcitajBazuButtonListener());
@@ -169,26 +185,21 @@ public class LoginWindow {
 		btnNastavak.setFont(SWTResourceManager.getFont("Liberation Sans", 20, SWT.NORMAL));
 		btnNastavak.setBounds(638, 486, 150, 50);
 
-		tVozac.addModifyListener(new TVozacModifyListener());
-		tVozac.setText("24");
-		tVozac.addMouseListener(new textMouseListener());
-		tVozilo.addModifyListener(new TVoziloModifyListener());
-		tVozilo.setText("557");
-		tVozilo.addMouseListener(new textMouseListener());
-		tLinija.addModifyListener(new TLinijaModifyListener());
-		tLinija.setText("50547");
-		tLozinka = new Text(shlPrijava, SWT.BORDER | SWT.PASSWORD);
-		tLozinka.setText("TEST");
-		tLozinka.setFont(SWTResourceManager.getFont("Liberation Sans", 30, SWT.NORMAL));
-		tLozinka.setBounds(165, 160, 175, 50);
-		tLozinka.addMouseListener(new textMouseListener());
-		lLozinka = new Label(shlPrijava, SWT.NONE);
-		lLozinka.setText("Lozinka");
-		lLozinka.setFont(SWTResourceManager.getFont("Liberation Sans", 30, SWT.NORMAL));
-		lLozinka.setBackground(SWTResourceManager.getColor(SWT.COLOR_GRAY));
-		lLozinka.setBounds(5, 160, 160, 50);
 		tLinija.addMouseListener(new textMouseListener());
 		btnNastavak.addSelectionListener(new NextButtonListener());
+		tVozac.addModifyListener(new TVozacModifyListener());
+		tVozac.addMouseListener(new textMouseListener());
+		tVozilo.addModifyListener(new TVoziloModifyListener());
+		tVozilo.addMouseListener(new textMouseListener());
+		tLinija.addModifyListener(new TLinijaModifyListener());
+
+		if (Starter.DebugMode != null)  
+			if (Starter.DebugMode.equals("D") || Starter.DebugMode.equals("1")){	
+				  tVozac.setText("24");
+			      tLozinka.setText("12345");
+				  tVozilo.setText("557");
+			  	  tLinija.setText("50547");
+		}
 
 	}
 
@@ -212,6 +223,10 @@ public class LoginWindow {
 	private class BtnPrintTestSelectionListener extends SelectionAdapter {
 		@Override
 		public void widgetSelected(SelectionEvent e) {
+			
+			PrintUtils.printPripremaPapira();
+			
+		/*	
 			StringBuffer sb = new StringBuffer();
 			sb.append("********************************\r");
 			sb.append("AP d.d. Varazdin\r");
@@ -241,6 +256,7 @@ public class LoginWindow {
 				}
 			} else
 				System.out.println(sb.toString());
+		*/	
 		}
 	}
 
@@ -249,6 +265,8 @@ public class LoginWindow {
 		public void widgetSelected(SelectionEvent e) {
 			Starter.vozac = Vozac.getBySifra(Integer.parseInt(tVozac.getText()));
 			Starter.vozilo = Vozilo.getBySifra(tVozilo.getText());
+			String ss  = tLozinka.getText();
+			String ssp = Starter.vozac.getPassword();
 
 			if (!tLinija.getText().toString().isEmpty())
 				Starter.stupac = Stupac.getByID(new Integer(tLinija.getText()));
@@ -256,7 +274,9 @@ public class LoginWindow {
 				MessageBox mb = new MessageBox(shlPrijava, SWT.OK | SWT.ICON_ERROR);
 				mb.setMessage("Morate prijaviti vozača,vozilo i liniju!");
 				mb.open();
-			} else if (Starter.vozac.getPassword().equals(DbUtil.md5hash(tLozinka.getText()))) {
+			} 
+			else 
+				if ((ss.isEmpty()) || (!Starter.vozac.getPassword().equals(DbUtil.md5hash(tLozinka.getText())))) {
 				MessageBox mb = new MessageBox(shlPrijava, SWT.OK | SWT.ICON_ERROR);
 				mb.setMessage("Neispravna lozinka!");
 				mb.open();
