@@ -140,7 +140,10 @@ public class VirtualKeyboard {
 				shell.dispose();
 			} else if (b.getText().equals("\u2b05")) {
 				polje.setSelection(polje.getCharCount() - 1, polje.getCharCount());
-				polje.cut();
+				if (polje.getData() == "PASS")
+					polje.setText(polje.getText(0, polje.getText().length() - 2));
+				else
+					polje.cut();
 			} else {
 				polje.insert(b.getText());
 				polje.clearSelection();

@@ -9,10 +9,13 @@ import hr.mit.utils.PrintUtils;
 import hr.mit.utils.FileChecksum;
 
 import java.io.File;
+import java.io.FileInputStream;
+import java.io.FileOutputStream;
 import java.io.FileWriter;
 import java.io.IOException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
+import java.util.Properties;
 
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.events.ModifyEvent;
@@ -44,6 +47,7 @@ public class LoginWindow {
 	private Button btnNastavak;
 	private Button btnGasenje;
 	private Button btnPrintTest;
+	private Button btnConfig;
 
 	protected Label lOpisVozilo;
 	protected Label lOpisVozac;
@@ -97,6 +101,7 @@ public class LoginWindow {
 
 		tLozinka = new Text(shlPrijava, SWT.BORDER | SWT.PASSWORD);
 		tLozinka.setText("");
+		tLozinka.setData("PASS");
 		tLozinka.setFont(SWTResourceManager.getFont("Liberation Sans", 30, SWT.NORMAL));
 		tLozinka.setBounds(165, 160, 175, 50);
 		tLozinka.addMouseListener(new textMouseListener());
@@ -168,6 +173,12 @@ public class LoginWindow {
 		btnUcitaj.setFont(SWTResourceManager.getFont("Liberation Sans", 20, SWT.NORMAL));
 		btnUcitaj.setBounds(5, 486, 150, 50);
 
+		btnConfig = new Button(shlPrijava, SWT.CENTER);
+		btnConfig.addSelectionListener(new SaveSetupButtonListener());
+		btnConfig.setText("Pohrani postavke");
+		btnConfig.setFont(SWTResourceManager.getFont("Liberation Sans", 20, SWT.NORMAL));
+		btnConfig.setBounds(5, 400, 250, 50);
+		
 		btnPrintTest = new Button(shlPrijava, SWT.NONE);
 		btnPrintTest.addSelectionListener(new BtnPrintTestSelectionListener());
 		btnPrintTest.setText("Priprema papira");
@@ -185,6 +196,7 @@ public class LoginWindow {
 		btnNastavak.setFont(SWTResourceManager.getFont("Liberation Sans", 20, SWT.NORMAL));
 		btnNastavak.setBounds(638, 486, 150, 50);
 
+		
 		tLinija.addMouseListener(new textMouseListener());
 		btnNastavak.addSelectionListener(new NextButtonListener());
 		tVozac.addModifyListener(new TVozacModifyListener());
@@ -193,12 +205,21 @@ public class LoginWindow {
 		tVozilo.addMouseListener(new textMouseListener());
 		tLinija.addModifyListener(new TLinijaModifyListener());
 
-		if (Starter.DebugMode != null)  
+			
+		if (Starter.DebugMode != null)  {
 			if (Starter.DebugMode.equals("D") || Starter.DebugMode.equals("1")){	
 				  tVozac.setText("24");
 			      tLozinka.setText("12345");
 				  tVozilo.setText("557");
 			  	  tLinija.setText("50547");
+		       } 
+		}else {
+			if (Starter.LoginStupacID != null) 
+			  	  tLinija.setText(Starter.LoginStupacID);
+			if (Starter.LoginVozac != null) 
+			  	  tVozac.setText(Starter.LoginVozac);
+			if (Starter.LoginVozilo != null) 
+			  	  tVozilo.setText(Starter.LoginVozilo);
 		}
 
 	}
@@ -329,6 +350,7 @@ public class LoginWindow {
 		}
 	}
 
+
 	protected class TLinijaModifyListener implements ModifyListener {
 		@Override
 		public void modifyText(ModifyEvent e) {
@@ -395,4 +417,29 @@ public class LoginWindow {
 		}
 	}
 
+	protected class SaveSetupButtonListener extends SelectionAdapter {@Override
+		public void widgetSelected(SelectionEvent ev) {
+		   Starter.LoginVozac    = tVozac.getText();
+ 	       Starter.LoginVozilo   = tVozilo.getText();
+		   Starter.LoginStupacID = tLinija.getText();
+		   
+			Properties p = new Properties();
+			try {
+				p.load(new FileInputStream("mobile.conf"));
+				if (Starter.LoginStupacID != null)
+				    p.setProperty("StupacID",Starter.LoginStupacID.toString());
+				if (Starter.LoginVozilo != null)
+				    p.setProperty("Vozilo",Starter.LoginVozilo.toString());
+				if (Starter.LoginVozac != null)
+				    p.setProperty("Vozac",Starter.LoginVozac.toString());
+				p.store(new FileOutputStream("mobile.conf"), null);
+			} catch (Exception e) {
+				throw new RuntimeException(e);
+			}		
+			
+		}
+
+	}
+	
+	
 }
