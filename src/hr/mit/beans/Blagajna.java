@@ -18,9 +18,15 @@ public class Blagajna {
 
 			for (Stavka stavka : stavkaList) {
 				ps.setInt(1, stavka.getKarta().getId());
-
+/*
 				ps.setDouble(3, stavka.getProdajnaCijena().doubleValue());
-				ps.setDouble(4, stavka.getPopust().getPopust().doubleValue());
+				ps.setDouble(4, stavka.getProdajnaCijena().doubleValue() );
+*/				
+				ps.setDouble(3, stavka.getPunaCijena().doubleValue()); // josip 12.2.2013
+				// popust je u iznosu , ne u postotku
+				ps.setDouble(4, stavka.getPunaCijena().doubleValue()-
+						        stavka.getProdajnaCijena().doubleValue());
+				
 				ps.setInt(5, vozac.getId());
 				ps.setInt(6, stavka.getStupac().getId());
 				ps.setInt(7, stavka.getOdPostaje().getId());
@@ -57,7 +63,7 @@ public class Blagajna {
 				ps.execute();
 			}
 			DbUtil.getConnection2().commit();
-			DbUtil.getConnection2().setAutoCommit(true);
+			DbUtil.getConnection2().setAutoCommit(true); 
 			ps.close();
 		} catch (SQLException e) {
 			e.printStackTrace();

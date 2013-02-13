@@ -182,6 +182,20 @@ public class Stavka {
 		return getProdajnaCijena().multiply(new BigDecimal(0.2));
 	}
 
+	public BigDecimal getPunaCijena() {
+		BigDecimal retval;
+		if (jeZamjenska)
+			retval = cijenaZamjenske.setScale(2);
+		else if (jePrelazna)
+			retval = cijenaKarte.getCijena();
+		else {
+			retval = cijenaKarte.getCijena();
+		}
+		retval = CijenaKarte.zaokruzi(retval, this.getKarta().getRoundN()); //josip 27.12.2012
+		return retval.setScale(2);
+	}
+	
+	
 	public BigDecimal getProdajnaCijena() {
 		BigDecimal retval;
 		if (jeZamjenska)

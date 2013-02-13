@@ -390,9 +390,15 @@ public class ProdajaWindow {
 			lBlagajna.setText("Blagajna: " + Obracun.getSaldo().toString() + " Kn");
 			PrintUtils.print(Starter.vozac, Stavka.getList());
 			Stavka.saveList();
-			Stavka.clear();
+			Stavka.clear();			
+			
+			/** josip 12.02.2013 **/
+			cPopust.setData(0);
+			cPopust.setText(Popust.getList()[0]);
+			stavka.setPopust(Popust.get((Integer) cPopust.getData()));
+
 			stavkaToScreen();
-		}
+       }
 	}
 
 	protected class PickerListener extends SelectionAdapter {
@@ -456,6 +462,7 @@ public class ProdajaWindow {
 					btnZk.setForeground(SWTResourceManager.getColor(SWT.COLOR_WIDGET_FOREGROUND));
 					stavka.setKarta(Karta.getMobilna(Starter.KARTA_DEFAULT));
 					Popust.setKartaStupac(Karta.getMobilna(Starter.KARTA_DEFAULT), Starter.stupac);
+					stavka.setPopust(Popust.get((Integer) cPopust.getData())); // josip 12.02.2013
 				}
 				stavka.setJeZamjenska(btnZk.getSelection());
 			} else if (e.widget.equals(cPopust)) {
@@ -482,6 +489,11 @@ public class ProdajaWindow {
 		@Override
 		public void widgetDefaultSelected(SelectionEvent e) {
 			Stavka.clear();
+			/** josip 12.02.2013 **/
+			cPopust.setData(0);
+			cPopust.setText(Popust.getList()[0]);
+			stavka.setPopust(Popust.get((Integer) cPopust.getData()));
+
 			stavkaToScreen();
 		}
 
